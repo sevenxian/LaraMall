@@ -24,6 +24,14 @@ Route::get('/', function () {
 Route::group(['prefix' => 'home', 'namespace' => 'Home'], function (){
     // 商城首页
     Route::get('index', 'IndexController@index')->name('home.index');
+    // 用户注册
+    Route::get('register', 'UserController@register')->name('home.register');
+    // 用户登录
+    Route::get('login', 'UserController@login')->name('home.login');
+    // 商品列表页
+    Route::get('list', 'GoodsController@list')->name('home.list');
+    // 商品详情页
+    Route::get('detail', 'GoodsController@detail')->name('home.detail');
 });
 
 /**

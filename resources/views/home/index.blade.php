@@ -1,5 +1,12 @@
 @extends('home.layouts.master')
 
+@section('style')
+    <link href="/AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css" />
+    <link href="/basic/css/demo.css" rel="stylesheet" type="text/css" />
+    <link href="/css/hmstyle.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/skin.css" rel="stylesheet" type="text/css" />
+@stop
+
 @section('content')
     <div class="banner">
         <!--轮播 -->
@@ -50,27 +57,27 @@
                                                     <div class="sort-side">
                                                         <dl class="dl-sort">
                                                             <dt><span title="蛋糕">蛋糕</span></dt>
-                                                            <dd><a title="蒸蛋糕" href="#"><span>蒸蛋糕</span></a></dd>
-                                                            <dd><a title="脱水蛋糕" href="#"><span>脱水蛋糕</span></a></dd>
-                                                            <dd><a title="瑞士卷" href="#"><span>瑞士卷</span></a></dd>
-                                                            <dd><a title="软面包" href="#"><span>软面包</span></a></dd>
-                                                            <dd><a title="马卡龙" href="#"><span>马卡龙</span></a></dd>
-                                                            <dd><a title="千层饼" href="#"><span>千层饼</span></a></dd>
-                                                            <dd><a title="甜甜圈" href="#"><span>甜甜圈</span></a></dd>
-                                                            <dd><a title="蒸三明治" href="#"><span>蒸三明治</span></a></dd>
-                                                            <dd><a title="铜锣烧" href="#"><span>铜锣烧</span></a></dd>
+                                                            <dd><a title="蒸蛋糕" href="/home/list"><span>蒸蛋糕</span></a></dd>
+                                                            <dd><a title="脱水蛋糕" href="/home/list"><span>脱水蛋糕</span></a></dd>
+                                                            <dd><a title="瑞士卷" href="/home/list"><span>瑞士卷</span></a></dd>
+                                                            <dd><a title="软面包" href="/home/list"><span>软面包</span></a></dd>
+                                                            <dd><a title="马卡龙" href="/home/list"><span>马卡龙</span></a></dd>
+                                                            <dd><a title="千层饼" href="/home/list"><span>千层饼</span></a></dd>
+                                                            <dd><a title="甜甜圈" href="/home/list"><span>甜甜圈</span></a></dd>
+                                                            <dd><a title="蒸三明治" href="/home/list"><span>蒸三明治</span></a></dd>
+                                                            <dd><a title="铜锣烧" href="/home/list"><span>铜锣烧</span></a></dd>
                                                         </dl>
                                                         <dl class="dl-sort">
                                                             <dt><span title="蛋糕">点心</span></dt>
-                                                            <dd><a title="蒸蛋糕" href="#"><span>蒸蛋糕</span></a></dd>
-                                                            <dd><a title="脱水蛋糕" href="#"><span>脱水蛋糕</span></a></dd>
-                                                            <dd><a title="瑞士卷" href="#"><span>瑞士卷</span></a></dd>
-                                                            <dd><a title="软面包" href="#"><span>软面包</span></a></dd>
-                                                            <dd><a title="马卡龙" href="#"><span>马卡龙</span></a></dd>
-                                                            <dd><a title="千层饼" href="#"><span>千层饼</span></a></dd>
-                                                            <dd><a title="甜甜圈" href="#"><span>甜甜圈</span></a></dd>
-                                                            <dd><a title="蒸三明治" href="#"><span>蒸三明治</span></a></dd>
-                                                            <dd><a title="铜锣烧" href="#"><span>铜锣烧</span></a></dd>
+                                                            <dd><a title="蒸蛋糕" href="/home/list"><span>蒸蛋糕</span></a></dd>
+                                                            <dd><a title="脱水蛋糕" href="/home/list"><span>脱水蛋糕</span></a></dd>
+                                                            <dd><a title="瑞士卷" href="/home/list"><span>瑞士卷</span></a></dd>
+                                                            <dd><a title="软面包" href="/home/list"><span>软面包</span></a></dd>
+                                                            <dd><a title="马卡龙" href="/home/list"><span>马卡龙</span></a></dd>
+                                                            <dd><a title="千层饼" href="/home/list"><span>千层饼</span></a></dd>
+                                                            <dd><a title="甜甜圈" href="/home/list"><span>甜甜圈</span></a></dd>
+                                                            <dd><a title="蒸三明治" href="/home/list"><span>蒸三明治</span></a></dd>
+                                                            <dd><a title="铜锣烧" href="/home/list"><span>铜锣烧</span></a></dd>
                                                         </dl>
 
                                                     </div>
@@ -570,24 +577,6 @@
             </div>
 
 
-            <!--轮播-->
-
-            <script type="text/javascript">
-                (function() {
-                    $('.am-slider').flexslider();
-                });
-                $(document).ready(function() {
-                    $("li").hover(function() {
-                        $(".category-content .category-list li.first .menu-in").css("display", "none");
-                        $(".category-content .category-list li.first").removeClass("hover");
-                        $(this).addClass("hover");
-                        $(this).children("div.menu-in").css("display", "block")
-                    }, function() {
-                        $(this).removeClass("hover")
-                        $(this).children("div.menu-in").css("display", "none")
-                    });
-                })
-            </script>
 
 
 
@@ -665,22 +654,6 @@
             </div>
             <div class="clear"></div>
         </div>
-        <script type="text/javascript">
-            if ($(window).width() < 640) {
-                function autoScroll(obj) {
-                    $(obj).find("ul").animate({
-                        marginTop: "-39px"
-                    }, 500, function() {
-                        $(this).css({
-                            marginTop: "0px"
-                        }).find("li:first").appendTo(this);
-                    })
-                }
-                $(function() {
-                    setInterval('autoScroll(".demo")', 3000);
-                })
-            }
-        </script>
     </div>
     <div class="shopMainbg">
         <div class="shopMain" id="shopmain">
@@ -2104,9 +2077,16 @@
                 </p>
             </div>
         </div>
-
     </div>
-    @include('home.public.navCir')
     @include('home.public.tip')
 @stop
 
+@section('javascript')
+    <script type="text/javascript" src="/AmazeUI-2.4.2/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/AmazeUI-2.4.2/assets/js/amazeui.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="basic/js/jquery.min.js "><\/script>');
+    </script>
+    <script type="text/javascript" src="/basic/js/quick_links.js "></script>
+    <script type="text/javascript" src="/js/index.js "></script>
+@stop
