@@ -31,9 +31,9 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function (){
     // 用户登录
     Route::get('login', 'UserController@login')->name('home.login');
     // 商品列表页
-    Route::get('list', 'GoodsController@list')->name('home.list');
+    Route::get('goodsList', 'GoodsController@goodsList')->name('home.goodsList');
     // 商品详情页
-    Route::get('detail', 'GoodsController@detail')->name('home.detail');
+    Route::get('goodsDetail', 'GoodsController@goodsDetail')->name('home.goodsDetail');
     // 个人中心
     Route::get('member', 'MemberController@index')->name('home.member');
 });

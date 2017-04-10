@@ -13,7 +13,7 @@ class GoodsController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author zhulinjie
      */
-    public function list()
+    public function goodsList()
     {
         return view('home.goods.list');    
     }
@@ -24,7 +24,7 @@ class GoodsController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author zhulinjie
      */
-    public function detail()
+    public function goodsDetail()
     {
         return view('home.goods.detail');
     }

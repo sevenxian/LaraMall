@@ -1,12 +1,34 @@
 @extends('home.layouts.master')
 
-@section('style')
-    <link href="/AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css" />
-    <link href="/basic/css/demo.css" rel="stylesheet" type="text/css" />
-    <link href="/css/seastyle.css" rel="stylesheet" type="text/css" />
+@section('title')
+    商品列表页
+@stop
+
+@section('coreCss')
+    <link href="/AmazeUI-2.4.2/assets/css/amazeui.css" rel="stylesheet" type="text/css"/>
+    <link href="/AmazeUI-2.4.2/assets/css/admin.css" rel="stylesheet" type="text/css"/>
+@stop
+
+@section('externalCss')
+    <link href="/basic/css/demo.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/seastyle.css" rel="stylesheet" type="text/css"/>
+@stop
+
+@section('coreJs')
+    <script type="text/javascript" src="/basic/js/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="/js/script.js"></script>
+@stop
+
+@section('header')
+    @include('home.public.amContainer')
+@stop
+
+@section('nav')
+    @include('home.public.nav')
 @stop
 
 @section('content')
+    <b class="line"></b>
     <div class="search">
         <div class="search-list">
             <div class="nav-table">
@@ -107,7 +129,7 @@
                         <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 boxes">
                             <li>
                                 <div class="i-pic limit">
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -121,7 +143,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -135,7 +157,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -149,7 +171,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -163,7 +185,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -177,7 +199,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -191,7 +213,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -205,7 +227,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -219,7 +241,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -233,7 +255,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -247,7 +269,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -261,7 +283,7 @@
                             <li>
                                 <div class="i-pic limit">
 
-                                    <a href="/home/detail"><img src="/images/imgsearch1.jpg" /></a>
+                                    <a href="/home/goodsDetail"><img src="/images/imgsearch1.jpg"/></a>
                                     <p class="title fl">【良品铺子旗舰店】手剥松子218g 坚果炒货零食新货巴西松子包邮</p>
                                     <p class="price fl">
                                         <b>¥</b>
@@ -282,7 +304,7 @@
 
                         <li>
                             <div class="i-pic check">
-                                <img src="/images/cp.jpg" />
+                                <img src="/images/cp.jpg"/>
                                 <p class="check-title">萨拉米 1+1小鸡腿</p>
                                 <p class="price fl">
                                     <b>¥</b>
@@ -295,7 +317,7 @@
                         </li>
                         <li>
                             <div class="i-pic check">
-                                <img src="/images/cp2.jpg" />
+                                <img src="/images/cp2.jpg"/>
                                 <p class="check-title">ZEK 原味海苔</p>
                                 <p class="price fl">
                                     <b>¥</b>
@@ -308,7 +330,7 @@
                         </li>
                         <li>
                             <div class="i-pic check">
-                                <img src="/images/cp.jpg" />
+                                <img src="/images/cp.jpg"/>
                                 <p class="check-title">萨拉米 1+1小鸡腿</p>
                                 <p class="price fl">
                                     <b>¥</b>
@@ -358,13 +380,17 @@
                 </div>
             </div>
         </div>
+
     </div>
+
+    @include('home.public.navCir')
+
     @include('home.public.tip')
+
+    <div class="theme-popover-mask"></div>
 @stop
 
-@section('javascript')
-    <script type="text/javascript" src="/basic/js/jquery-1.7.min.js"></script>
-    <script type="text/javascript" src="/js/script.js"></script>
+@section('customJs')
     <script>
         window.jQuery || document.write('<script src="basic/js/jquery-1.9.min.js"><\/script>');
     </script>
