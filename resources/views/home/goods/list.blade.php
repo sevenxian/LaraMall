@@ -7,7 +7,6 @@
 @stop
 
 @section('content')
-    <b class="line"></b>
     <div class="search">
         <div class="search-list">
             <div class="nav-table">

@@ -11,7 +11,9 @@
 |
 */
 
-// 公共路由
+/**
+ * 公共路由
+ */
 Route::get('/', function () {
     return redirect('home/index');
 });
@@ -32,6 +34,8 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function (){
     Route::get('list', 'GoodsController@list')->name('home.list');
     // 商品详情页
     Route::get('detail', 'GoodsController@detail')->name('home.detail');
+    // 个人中心
+    Route::get('member', 'MemberController@index')->name('home.member');
 });
 
 /**
@@ -42,4 +46,6 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function (){
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function (){
     // 后台首页
     Route::get('index', 'IndexController@index')->name('admin.index');
+    // 后台登录
+    Route::get('login', 'UserController@login')->name('admin.login');
 });

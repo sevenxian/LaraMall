@@ -17,7 +17,13 @@ class GoodsController extends Controller
     {
         return view('home.goods.list');    
     }
-    
+
+    /**
+     * 商品详情页
+     * 
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author zhulinjie
+     */
     public function detail()
     {
         return view('home.goods.detail');

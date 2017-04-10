@@ -7,8 +7,14 @@ use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
+    /**
+     * 后台首页
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author zhulinjie
+     */
     public function index()
     {
-        return 'admin.index';
+        return view('admin.index');
     }
 }
