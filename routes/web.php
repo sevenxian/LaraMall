@@ -11,19 +11,26 @@
 |
 */
 
-/**
- * 公共路由
- */
 Route::get('/', function () {
     return redirect('home/index');
 });
+
+/**
+ * 公共路由
+ * 路由前缀 common
+ * 目录 Common
+ */
+Route::group(['prefix' => 'common', 'namespace' => 'Common'], function () {
+    // ...
+});
+
 
 /**
  * 前台
  * 路由前缀 home
  * 目录 Home
  */
-Route::group(['prefix' => 'home', 'namespace' => 'Home'], function (){
+Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     // 商城首页
     Route::get('index', 'IndexController@index')->name('home.index');
     // 用户注册
@@ -45,7 +52,7 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function (){
  * 路由前缀 admin
  * 目录 Admin
  */
-Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function (){
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     // 后台首页
     Route::get('index', 'IndexController@index')->name('admin.index');
     // 后台登录
