@@ -8,6 +8,8 @@
                     <span>首页</span>
                 </a>
             </li>
+            @inject('aside', 'App\Presenters\AsidePresenter')
+
             <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-book"></i>
@@ -19,16 +21,15 @@
                     <li><a class="" href="{{ url('admin/users') }}">后台用户</a></li>
                 </ul>
             </li>
-            <li class="sub-menu">
+            <li class="sub-menu ">
                 <a href="javascript:;" class="">
-                    <i class="icon-cogs"></i>
+                    <i class="icon-th"></i>
                     <span>分类管理</span>
-                    <span class="arrow"></span>
+                    <span class="arrow {{ $aside->openTag(['admin/classification', 'admin/classification/create']) }}"></span>
                 </a>
-                <ul class="sub">
-                    <li><a class="" href="calendar.html">网站分类</a></li>
-                    <li><a class="" href="grids.html">分类标签</a></li>
-
+                <ul class="sub" {{ $aside->displayBlock(['admin/classification', 'admin/classification/create']) }}>
+                    <li><a class="icon-align-center" href="{{ route('classification.index') }}"> 分类列表</a></li>
+                    <li><a class=" icon-indent-left" href="{{ route('classification.create') }}"> 添加分类</a></li>
                 </ul>
             </li>
             <li class="sub-menu">
@@ -71,11 +72,8 @@
                     <span>权限管理</span>
                     <span class="arrow"></span>
                 </a>
-                <ul class="sub">
-                    <li><a class="" href="basic_table.html">Basic Table</a></li>
-                    <li><a class="" href="dynamic_table.html">Dynamic Table</a></li>
-                </ul>
             </li>
+
             <li>
                 <a class="" href="login.html">
                     <i class="icon-user"></i>

@@ -66,10 +66,13 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
     // 后台用户登陆块
     Route::resource('user', 'UserController', ['names' => [
-        'store' => 'admin.user.login'
+        'store' => 'admin.user.login',
     ]]);
     // 后台用户管理
     Route::resource('users','AdminUserController');
 
-    
+    // 分类块
+    Route::resource('classification', 'ClassificationController');
+    // 分类列表
+    Route::any('classificationList', 'ClassificationController@categoryList');
 });
