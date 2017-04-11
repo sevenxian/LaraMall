@@ -41,6 +41,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::get('goodsList', 'GoodsController@goodsList')->name('home.goodsList');
     // 商品详情页
     Route::get('goodsDetail', 'GoodsController@goodsDetail')->name('home.goodsDetail');
+    // 分类
+    Route::get('sort', 'GoodsController@sort')->name('home.sort');
+    // 购物车
+    Route::get('goods/shopCart', 'GoodsController@shopCart')->name('home.goods.shopCart');
     // 个人中心
     Route::get('personal', 'PersonalController@index')->name('home.personal');
     // 个人信息
