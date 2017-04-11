@@ -3,7 +3,7 @@
         <div data-original-title="Toggle Navigation" data-placement="right" class="icon-reorder tooltips"></div>
     </div>
     <!--logo start-->
-    <a href="#" class="logo">Flat<span>lab</span></a>
+    <a href="#" class="logo">Lara<span>Mall</span></a>
     <!--logo end-->
     <div class="nav notify-row" id="top_menu">
         <!--  notification start -->
