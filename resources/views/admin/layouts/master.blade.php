@@ -55,13 +55,13 @@
     <script src="/admins/js/bootstrap.min.js"></script>
     <script src="/admins/js/jquery.scrollTo.min.js"></script>
     <script src="/admins/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="/js/bootstrapValidator.min.js"></script>
 @show
 
 @yield('externalJs')
 
 <!--common script for all pages-->
 <script src="/admins/js/common-scripts.js"></script>
-<script src="/js/bootstrapValidator.min.js"></script>
 
 <!--script for this page-->
 @yield('customJs')
