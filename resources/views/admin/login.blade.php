@@ -17,15 +17,14 @@
                 <!-- Errors Messages -->
                 @include('notice.error')
                 <div class="form-group">
-                    <input type="text" class="form-control" name="tel" placeholder="手机号码" autofocus>
+                    <input type="text" value="{{ old('tel') }}" class="form-control" name="tel" placeholder="手机号码" autofocus>
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control" name="password" placeholder="密码">
                 </div>
-                <div class="form-line form-group">
-                    <input type="text" name="captcha" class="form-control pull-left" style="width: 160px"
-                           placeholder="验证码">
-                    <img id="captcha" src="{{ captcha_src() }}" class="pull-right" data-captcha-config="default">
+                <div class="form-line form-group" style="position: relative">
+                    <input type="text" name="captcha" class="form-control pull-left" placeholder="验证码">
+                    <img id="captcha" style="position: absolute;right: 1px;z-index: 999" src="{{ captcha_src() }}" class="pull-right" data-captcha-config="default">
                 </div>
                 <button class="btn btn-lg btn-login btn-block" type="submit">登陆</button>
 
