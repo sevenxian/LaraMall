@@ -1,42 +1,70 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script src="{{ asset('js/bootstrapValidator.min.js') }}"></script>
-</head>
-<body>
-    <form class="form-signin" action="" id="profileForm" method="post">
-        <div class="form-group">
-            <input type="text" name="username">
-            <button class="btn btn-lg btn-login btn-block" type="submit">Login</button>
-        </div>
-    </form>
-
-    {{--<form class="form-signin" action="" id="profileForm" method="post">--}}
-        {{--<div class="form-group">--}}
-            {{--<label class="control-label">Name</label>--}}
-            {{--<input type="text" name="username" value="{{ old('username') }}" class="form-control"--}}
-                   {{--placeholder="Teacher Numbering..">--}}
-        {{--</div>--}}
-        {{--<button class="btn btn-lg btn-login btn-block" type="submit">Login</button>--}}
-    {{--</form>--}}
-</body>
-
-<script>
-    $('#profileForm').bootstrapValidator({
-        fields: {
-            username: {
-                // The "group" option can be set via HTML attribute
-                // <input type="text" class="form-control" name="lastName" data-bv-group=".group" />
-                validators: {
-                    notEmpty: {
-                        message: 'The last name is required and cannot be empty'
+@extends('admin.layouts.master')
+@section('title')
+    后台登陆
+@stop
+@section('header') @stop
+@section('sidebar') @stop
+@section('content')
+    <div class="container">
+        <form class="form-signin" action="{{ route('admin.user.login') }}" id="profileForm" method="post">
+            {{ csrf_field() }}
+            <h2 class="form-signin-heading">管理员登录</h2>
+            <div class="login-wrap">
+                <!-- Errors Messages -->
+                @include('notice.error')
+                <div class="form-group">
+                    <input type="text" class="form-control" name="tel" placeholder="手机号码" autofocus>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="password" placeholder="密码">
+                </div>
+                <div class="form-line form-group">
+                    <input type="text" name="captcha" class="form-control pull-left" style="width: 160px"
+                           placeholder="验证码">
+                    <img id="captcha" src="{{ captcha_src() }}" class="pull-right" data-captcha-config="default">
+                </div>
+                <button class="btn btn-lg btn-login btn-block" type="submit">登陆</button>
+            </div>
+        </form>
+    </div>
+@stop
+@section('customJs')
+    <script>
+        // 切换图片
+        $('#captcha').on('click', function () {
+            var captcha = $(this);
+            var url = '/captcha/' + captcha.data('captcha-config') + '?' + Math.random();
+            captcha.attr('src', url);
+        });
+        $('#profileForm').bootstrapValidator({
+            fields: {
+                tel: {
+                    validators: {
+                        notEmpty: {
+                            message: '手机号码不能为空!'
+                        },
+                        stringLength: {
+                            min: 11,
+                            max: 11,
+                            message: '请输入正确的手机号码!'
+                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空!'
+                        }
+                    }
+                },
+                captcha: {
+                    validators: {
+                        notEmpty: {
+                            message: '验证码不能为空!'
+                        }
                     }
                 }
             }
-        }
-    });
-</script>
-</html>
+        });
+    </script>
+@stop
