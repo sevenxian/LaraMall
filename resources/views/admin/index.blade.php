@@ -5,8 +5,8 @@
 @stop
 
 @section('externalCss')
-    <link href="assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
-    <link rel="stylesheet" href="css/owl.carousel.css" type="text/css">
+    <link href="/admins/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="/admins/css/owl.carousel.css" type="text/css">
 @stop
 
 @section('content')
@@ -196,7 +196,7 @@
                     <section class="panel">
                         <div class="panel-body">
                             <a href="#" class="task-thumb">
-                                <img src="img/avatar1.jpg" alt="">
+                                <img src="/admins/img/avatar1.jpg" alt="">
                             </a>
                             <div class="task-thumb-details">
                                 <h1><a href="#">Anjelina Joli</a></h1>
@@ -374,19 +374,19 @@
                                                 </p>
                                                 <div class="album">
                                                     <a href="#">
-                                                        <img alt="" src="img/sm-img-1.jpg">
+                                                        <img alt="" src="/admins/img/sm-img-1.jpg">
                                                     </a>
                                                     <a href="#">
-                                                        <img alt="" src="img/sm-img-2.jpg">
+                                                        <img alt="" src="/admins/img/sm-img-2.jpg">
                                                     </a>
                                                     <a href="#">
-                                                        <img alt="" src="img/sm-img-3.jpg">
+                                                        <img alt="" src="/admins/img/sm-img-3.jpg">
                                                     </a>
                                                     <a href="#">
-                                                        <img alt="" src="img/sm-img-1.jpg">
+                                                        <img alt="" src="/admins/img/sm-img-1.jpg">
                                                     </a>
                                                     <a href="#">
-                                                        <img alt="" src="img/sm-img-2.jpg">
+                                                        <img alt="" src="/admins/img/sm-img-2.jpg">
                                                     </a>
                                                 </div>
                                             </div>
@@ -571,7 +571,7 @@
                         <aside class="post-highlight yellow v-align">
                             <div class="panel-body text-center">
                                 <div class="pro-thumb">
-                                    <img src="img/ring.jpg" alt="">
+                                    <img src="/admins/img/ring.jpg" alt="">
                                 </div>
                             </div>
                         </aside>
@@ -646,7 +646,7 @@
                                     <div class="panel-body">
                                         <h4>Jonathan Smith</h4>
                                         <div class="follow-ava">
-                                            <img src="img/follower-avatar.jpg" alt="">
+                                            <img src="/admins/img/follower-avatar.jpg" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -712,23 +712,23 @@
 @stop
 
 @section('coreJs')
-    <script src="js/jquery.js"></script>
-    <script src="js/jquery-1.8.3.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.scrollTo.min.js"></script>
-    <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="/admins/js/jquery.js"></script>
+    <script src="/admins/js/jquery-1.8.3.min.js"></script>
+    <script src="/admins/js/bootstrap.min.js"></script>
+    <script src="/admins/js/jquery.scrollTo.min.js"></script>
+    <script src="/admins/js/jquery.nicescroll.js" type="text/javascript"></script>
 @stop
 
 @section('externalJs')
-    <script src="js/jquery.sparkline.js" type="text/javascript"></script>
-    <script src="assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
-    <script src="js/owl.carousel.js"></script>
-    <script src="js/jquery.customSelect.min.js"></script>
+    <script src="/admins/js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="/admins/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="/admins/js/owl.carousel.js"></script>
+    <script src="/admins/js/jquery.customSelect.min.js"></script>
 @stop
 
 @section('customJs')
-    <script src="js/sparkline-chart.js"></script>
-    <script src="js/easy-pie-chart.js"></script>
+    <script src="/admins/js/sparkline-chart.js"></script>
+    <script src="/admins/js/easy-pie-chart.js"></script>
 
     <script>
 
