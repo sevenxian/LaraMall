@@ -1,42 +1,42 @@
-@extends('admin.layouts.master')
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="{{ asset('js/bootstrapValidator.min.js') }}"></script>
+</head>
+<body>
+    <form class="form-signin" action="" id="profileForm" method="post">
+        <div class="form-group">
+            <input type="text" name="username">
+            <button class="btn btn-lg btn-login btn-block" type="submit">Login</button>
+        </div>
+    </form>
 
-@section('title')
-    后台登陆
-@stop
+    {{--<form class="form-signin" action="" id="profileForm" method="post">--}}
+        {{--<div class="form-group">--}}
+            {{--<label class="control-label">Name</label>--}}
+            {{--<input type="text" name="username" value="{{ old('username') }}" class="form-control"--}}
+                   {{--placeholder="Teacher Numbering..">--}}
+        {{--</div>--}}
+        {{--<button class="btn btn-lg btn-login btn-block" type="submit">Login</button>--}}
+    {{--</form>--}}
+</body>
 
-@section('header') @stop
-
-@section('sidebar') @stop
-
-@section('content')
-    <div class="container">
-        <form class="form-signin" action="index.html">
-            <h2 class="form-signin-heading">管理员登录</h2>
-            <div class="login-wrap">
-                <!-- Errors Messages -->
-                @include('notice.error')
-                <input type="text" class="form-control" placeholder="手机号码" autofocus>
-                <input type="password" class="form-control" placeholder="密码">
-                <div class="form-line">
-                    <input type="text" name="captcha" class="form-control pull-left" style="width: 160px"
-                           placeholder="验证码">
-                    <img id="captcha" src="{{ captcha_src() }}" class="pull-right" data-captcha-config="default">
-                </div>
-                <button class="btn btn-lg btn-login btn-block" type="submit">登陆</button>
-
-            </div>
-
-        </form>
-    </div>
-@stop
-
-@section('customJs')
-    <script>
-        // 切换图片
-        $('#captcha').on('click', function () {
-            var captcha = $(this);
-            var url = '/captcha/' + captcha.data('captcha-config') + '?' + Math.random();
-            captcha.attr('src', url);
-        });
-    </script>
-@stop
+<script>
+    $('#profileForm').bootstrapValidator({
+        fields: {
+            username: {
+                // The "group" option can be set via HTML attribute
+                // <input type="text" class="form-control" name="lastName" data-bv-group=".group" />
+                validators: {
+                    notEmpty: {
+                        message: 'The last name is required and cannot be empty'
+                    }
+                }
+            }
+        }
+    });
+</script>
+</html>
