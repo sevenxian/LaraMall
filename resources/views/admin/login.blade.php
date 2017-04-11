@@ -4,6 +4,8 @@
     FlatLab - Flat & Responsive Bootstrap Admin Template
 @stop
 
+@section('header') @stop
+
 @section('sidebar') @stop
 
 @section('content')

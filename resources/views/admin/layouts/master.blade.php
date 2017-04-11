@@ -34,7 +34,9 @@
 
 <section id="container" class="">
     <!--header start-->
-    @include('admin.public.header')
+    @section('header')
+        @include('admin.public.header')
+    @show
     <!--header end-->
     <!--sidebar start-->
     @section('sidebar')
