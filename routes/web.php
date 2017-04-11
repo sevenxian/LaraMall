@@ -36,6 +36,8 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function (){
     Route::get('goodsDetail', 'GoodsController@goodsDetail')->name('home.goodsDetail');
     // 个人中心
     Route::get('personal', 'PersonalController@index')->name('home.personal');
+    // 个人信息
+    Route::get('personal/information', 'PersonalController@information')->name('home.personal.information');
 });
 
 /**
