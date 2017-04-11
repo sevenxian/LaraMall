@@ -1,15 +1,14 @@
 <?php
 
 namespace App\Repositories;
-
-
 use App\Model\AdminUser;
 
+
 /**
- * Class UsersLoginRepository
+ * Class AdminUserRepository
  * @package App\Repositories
  */
-class UsersLoginRepository
+class AdminUserRepository
 {
     /**
      * @var AdminUser
@@ -17,14 +16,13 @@ class UsersLoginRepository
     protected $adminUser;
 
     /**
-     * UsersLoginRepository constructor.
-     * @param $adminUser
+     * AdminUserRepository constructor.
+     * @param AdminUser $adminUser
      */
     public function __construct(AdminUser $adminUser)
     {
         $this->adminUser = $adminUser;
     }
-
     /**
      * 添加用户
      *

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\UserLoginRequest;
-use App\Repositories\UsersLoginRepository;
+use App\Repositories\AdminUserRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -23,7 +23,7 @@ class UserController extends Controller
      * UserController constructor.
      * @param $users
      */
-    public function __construct(UsersLoginRepository $users)
+    public function __construct(AdminUserRepository $users)
     {
         $this->users = $users;
     }

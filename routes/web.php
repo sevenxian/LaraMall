@@ -68,6 +68,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController', ['names' => [
         'store' => 'admin.user.login'
     ]]);
+    // 后台用户管理
+    Route::resource('users','AdminUserController');
 
     
 });
