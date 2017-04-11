@@ -10,7 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-// 商城首页
+
+/**
+ * 商城首页
+ */
 Route::get('/', function () {
     return redirect('home/index');
 });
@@ -23,7 +26,6 @@ Route::get('/', function () {
 Route::group(['prefix' => 'common', 'namespace' => 'Common'], function () {
     // ...
 });
-
 
 /**
  * 前台
@@ -66,4 +68,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController', ['names' => [
         'store' => 'admin.user.login'
     ]]);
+
+    
 });
