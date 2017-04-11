@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 
-use App\Model\UsersLogin;
+use App\Model\AdminUser;
 
 /**
  * Class UsersLoginRepository
@@ -12,19 +12,28 @@ use App\Model\UsersLogin;
 class UsersLoginRepository
 {
     /**
-     * @var UsersLogin
+     * @var AdminUser
      */
-    protected $userLogin;
+    protected $adminUser;
 
     /**
      * UsersLoginRepository constructor.
-     * @param $userLogin
+     * @param $adminUser
      */
-    public function __construct
-    (
-        UsersLogin $userLogin
-    )
+    public function __construct(AdminUser $adminUser)
     {
-        $this->userLogin = $userLogin;
+        $this->adminUser = $adminUser;
+    }
+
+    /**
+     * 添加用户
+     *
+     * @param array $data
+     * @return static
+     * @author: Luoyan
+     */
+    public function createByUser(array $data)
+    {
+        return $this->adminUser->create($data);
     }
 }
