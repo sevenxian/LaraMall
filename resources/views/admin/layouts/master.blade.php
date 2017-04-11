@@ -28,6 +28,7 @@
     <script src="/admins/js/html5shiv.js"></script>
     <script src="/admins/js/respond.min.js"></script>
     <![endif]-->
+    <link rel="stylesheet" href="/css/bootstrapValidator.min.css">
 </head>
 
 <body>
@@ -51,6 +52,7 @@
 <!-- js placed at the end of the document so the pages load faster -->
 @section('coreJs')
     <script src="/admins/js/jquery.js"></script>
+    <script src="/js/bootstrapValidator.min.js"></script>
     <script src="/admins/js/bootstrap.min.js"></script>
     <script src="/admins/js/jquery.scrollTo.min.js"></script>
     <script src="/admins/js/jquery.nicescroll.js" type="text/javascript"></script>

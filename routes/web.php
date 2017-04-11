@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// 商城首页
 Route::get('/', function () {
     return redirect('home/index');
 });
@@ -57,4 +57,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::get('index', 'IndexController@index')->name('admin.index');
     // 后台登录
     Route::get('login', 'UserController@login')->name('admin.login');
+
+    // 后台用户登陆块
+    Route::resource('user', 'UserController', ['names' => [
+        'store' => 'admin.user.login'
+    ]]);
 });
