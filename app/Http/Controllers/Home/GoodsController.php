@@ -28,4 +28,25 @@ class GoodsController extends Controller
     {
         return view('home.goods.detail');
     }
+
+    /**
+     * 购物车
+     * 
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author zhulinjie
+     */
+    public function shopCart()
+    {
+        return view('home.goods.shopCart');
+    }
+
+    /**
+     * 分类
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author zhulinjie
+     */
+    public function sort(){
+        return view('home.goods.sort');
+    }
 }

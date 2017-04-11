@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\UserLoginRequest;
 use App\Repositories\UsersLoginRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -31,5 +32,10 @@ class UserController extends Controller
     public function login()
     {
         return view('admin.login');
+    }
+
+    public function store(UserLoginRequest $request)
+    {
+        dd($request->all());
     }
 }

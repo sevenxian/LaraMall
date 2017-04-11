@@ -16,6 +16,7 @@
 
     <!--external css-->
     <link href="/admins/assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/bootstrapValidator.min.css">
     @yield('externalCss')
 
     <!-- Custom styles for this template -->
@@ -60,6 +61,7 @@
 
 <!--common script for all pages-->
 <script src="/admins/js/common-scripts.js"></script>
+<script src="/js/bootstrapValidator.min.js"></script>
 
 <!--script for this page-->
 @yield('customJs')
