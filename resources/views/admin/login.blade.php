@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    FlatLab - Flat & Responsive Bootstrap Admin Template
+    后台登陆
 @stop
 
 @section('header') @stop
@@ -11,29 +11,32 @@
 @section('content')
     <div class="container">
         <form class="form-signin" action="index.html">
-            <h2 class="form-signin-heading">sign in now</h2>
+            <h2 class="form-signin-heading">管理员登录</h2>
             <div class="login-wrap">
-                <input type="text" class="form-control" placeholder="User ID" autofocus>
-                <input type="password" class="form-control" placeholder="Password">
-                <label class="checkbox">
-                    <input type="checkbox" value="remember-me"> Remember me
-                    <span class="pull-right"> <a href="#"> Forgot Password?</a></span>
-                </label>
-                <button class="btn btn-lg btn-login btn-block" type="submit">Sign in</button>
-                <p>or you can sign in via social network</p>
-                <div class="login-social-link">
-                    <a href="index.html" class="facebook">
-                        <i class="icon-facebook"></i>
-                        Facebook
-                    </a>
-                    <a href="index.html" class="twitter">
-                        <i class="icon-twitter"></i>
-                        Twitter
-                    </a>
+                <!-- Errors Messages -->
+                @include('notice.error')
+                <input type="text" class="form-control" placeholder="手机号码" autofocus>
+                <input type="password" class="form-control" placeholder="密码">
+                <div class="form-line">
+                    <input type="text" name="captcha" class="form-control pull-left" style="width: 160px"
+                           placeholder="验证码">
+                    <img id="captcha" src="{{ captcha_src() }}" class="pull-right" data-captcha-config="default">
                 </div>
+                <button class="btn btn-lg btn-login btn-block" type="submit">登陆</button>
 
             </div>
 
         </form>
     </div>
+@stop
+
+@section('customJs')
+    <script>
+        // 切换图片
+        $('#captcha').on('click', function () {
+            var captcha = $(this);
+            var url = '/captcha/' + captcha.data('captcha-config') + '?' + Math.random();
+            captcha.attr('src', url);
+        });
+    </script>
 @stop
