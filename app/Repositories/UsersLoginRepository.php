@@ -26,7 +26,7 @@ class UsersLoginRepository
     }
 
     /**
-     * 添加用户
+     * 添加用户方法
      *
      * @param array $data
      * @return static
