@@ -7,6 +7,7 @@
     <meta name="author" content="Mosaddek">
     <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <link rel="shortcut icon" href="/admins/img/favicon.html">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title')</title>
 
@@ -32,7 +33,6 @@
 </head>
 
 <body>
-
 <section id="container" class="">
     <!--header start-->
     @section('header')
@@ -56,8 +56,12 @@
     <script src="/admins/js/jquery.scrollTo.min.js"></script>
     <script src="/admins/js/jquery.nicescroll.js" type="text/javascript"></script>
     <script src="/js/bootstrapValidator.min.js"></script>
+    <script src="/layer/layer.js"></script>
+    <!-- Vue -->
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
 @show
-
 @yield('externalJs')
 
 <!--common script for all pages-->
@@ -66,5 +70,8 @@
 <!--script for this page-->
 @yield('customJs')
 
+
+<!--flashy-->
+@include('flashy::message')
 </body>
 </html>
