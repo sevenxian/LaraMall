@@ -7,7 +7,50 @@
 @section('content')
     <section id="main-content">
         <section class="wrapper">
-            <!-- 模态框 start -->
+            <!-- 添加子分类模态框 Start -->
+            <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="exampleModalLabel">添加子分类</h4>
+                        </div>
+                        <form id="formCategory" method="post" @submit.prevent="createChild($event)">
+                            <div class="modal-body">
+                                {{ csrf_field() }}
+                                <input type="hidden" class="pid" name="pid" :value="category.pid">
+                                <input type="hidden" class="level" name="level" :value="category.level">
+                                <div class="form-group">
+                                    <label for="addName" class="control-label">分类名称:</label>
+                                    <input type="text" class="form-control recipient-name" id="addName" name="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="addDescrib" class="control-label">描述:</label>
+                                    <input type="text" class="form-control describe" id="addDescribe" name="describe">
+                                </div>
+                                <div class="form-group">
+                                    <label for="curl" class="control-label col-lg-2">图片</label>
+                                    <label for="img"><img width="100px" class="img-responsive img_img"
+                                                          id="img_img"
+                                                          src="https://dn-phphub.qbox.me/uploads/images/201704/11/4430/U0ctyGJUV7.png"></label>
+                                    <input id="img" style="display: none" type="file" class="form-control img"
+                                           name="image">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
+                                <button class="btn btn-primary">提交</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- 添加子分类模态框 End -->
+
+            <!-- 修改分类模态框 start -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -16,41 +59,48 @@
                                         aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title" id="exampleModalLabel">修改分类</h4>
                         </div>
-                        <form id="formCategory" method="post"  @submit.prevent="submit(category.id, $event)">
+                        <form id="formCategory" method="post" @submit.prevent="submit(category.id, $event)">
                             <div class="modal-body">
                                 {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="recipient-name" class="control-label">分类名称:</label>
-                                    <input type="text" class="form-control" id="recipient-name" name="name"
+                                    <input type="text" class="form-control recipient-name" id="recipient-name"
+                                           name="name"
                                            :value="category.name">
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="control-label">描述:</label>
-                                    <input type="text" class="form-control" name="describe" :value="category.describe">
+                                    <input type="text" class="form-control describe" id="describe" name="describe"
+                                           :value="category.describe">
                                 </div>
                                 <div class="form-group">
                                     <label for="curl" class="control-label col-lg-2">图片</label>
-                                    <label for="img"><img width="100px" class="img-responsive" id="img_img"
+                                    <label for="img"><img width="100px" class="img-responsive img_img" id="img_img"
                                                           :src="(category.img != null) ? category.doma + category.img : 'https://dn-phphub.qbox.me/uploads/images/201704/11/4430/U0ctyGJUV7.png'"></label>
-                                    <input id="img" style="display: none" type="file" class="form-control"
+                                    <input id="img" style="display: none" type="file" class="form-control img"
                                            name="image">
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
                                 <button class="btn btn-primary">提交</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <!-- 模态框 end -->
+            <!-- 修改分类模态框 end -->
             <!-- page start-->
             <div class="row">
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
                             分类列表：@{{ getLevel(currentLevel) }}
+                            <button class="btn btn-primary  pull-right col-lg-1" @click="backTo()"
+                                    v-if="currentLevel != 1">上一级分类
+                            </button>
                         </header>
                         <table class="table table-striped table-advance table-hover">
                             <thead>
@@ -73,9 +123,16 @@
                                             data-whatever="@getbootstrap">修改
                                     </button>
                                 </td>
-                                <td>
-                                    <button class="btn btn-primary btn-xs"><i class="icon-eye-open"></i></button>
-                                    <button class="btn btn-success btn-xs"><i class="icon-plus"></i></button>
+                                <td v-if="currentLevel != 3">
+                                    <button class="btn btn-primary btn-xs" @click="catChild(data)"><i
+                                                class="icon-eye-open"></i></button>
+                                    <button class="btn btn-success btn-xs" @click="childSet(data.id, data.level)"
+                                            data-toggle="modal" data-target="#addModal"
+                                            data-whatever="@getbootstrap"><i class="icon-plus"></i></button>
+                                </td>
+                                <td v-else>
+                                    <button class="btn btn-primary btn-xs">绑定标签</button>
+                                </td>
                                 </td>
                             </tr>
                             </tbody>
