@@ -16,15 +16,17 @@ new Vue({
             },
             offset: 4, // 页码偏移量
             datas: [], // 页码内容
-            search: [], // 搜索条件
+            search: {level: 1}, // 搜索条件
             per_page: 10, // 一页显示的数据
             currentLevel: 0, // 当前分类层级
+            category: [], // 修改时显示的单个分类数据
         }
     },
     // 第一次执行
     mounted() {
         // 获取第一页数据
         this.fetchDatas(this.pagination.current_page);
+
     },
     // 计算属性
     computed: {
@@ -106,6 +108,73 @@ new Vue({
             } else {
                 return '无';
             }
+        },
+        // 根据 id 获取分类数据
+        fetchCategoryById(id, index) {
+            // layer 加载层
+            layer.load(2);
+            // 请求数据
+            axios.get('/admin/classification/' + id).then(response => {
+                // 将查询分类数据赋值都变量方便提供给修改模态框
+                this.category = response.data;
+                // 记录分类列表中的中得索引
+                this.category.index = index;
+                // layer 加载层关闭
+                layer.closeAll();
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("请求失败!", "分类信息请求失败!", "error");
+            });
+        },
+        // 表单上传
+        submit(id, event) {
+            // layer 加载层
+            layer.load(2);
+            // FormData 支援把 Form 元素丟進去
+            var formData = new FormData(event.target);
+            // 请求数据
+            axios.post('/admin/classificationUpdate/' + id, formData).then(response => {
+                // 判断修改是否成功
+                if (response.data.ServerNo != 200) {
+                    return sweetAlert("修改失败!", "分类修改!", "error");
+                }
+                // layer 加载层关闭
+                layer.closeAll();
+                // 隐藏模态框
+                $('#exampleModal').modal('hide');
+                // 更新分类列表中修改后的数据
+                this.$set(this.datas, this.category.index, response.data.ResultData);
+                // 清空修改表单内容
+                this.category = [];
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("请求失败!", "用户列表请求失败!", "error");
+            });
         }
     }
+});
+
+// 获取图标编码
+function getObjectURL(file) {
+    var url = null;
+    if (window.createObjectURL != undefined) {
+        url = window.createObjectURL(file);
+    } else if (window.URL != undefined) {
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL != undefined) {
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
+}
+
+// 立即显示图标
+$('#img').on('change', function () {
+    // 获取控件中得文件
+    var files = $(this).prop('files')[0];
+    // 获取当前 id
+    var id = $(this).prop('id');
+    // 获取图标编码
+    var url = getObjectURL(files);
+    // 立即显示图片
+    $('#' + id + '_img').attr({'src': url});
 });

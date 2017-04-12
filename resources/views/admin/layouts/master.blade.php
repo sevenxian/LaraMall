@@ -18,6 +18,7 @@
     <!--external css-->
     <link href="/admins/assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="/css/sweetalert.css">
     @yield('externalCss')
 
     <!-- Custom styles for this template -->
