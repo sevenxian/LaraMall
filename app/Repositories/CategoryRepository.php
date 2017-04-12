@@ -53,4 +53,29 @@ class CategoryRepository
         return $this->category->with('parentCategory')->where($where)->paginate($perPage);
     }
 
+    /**
+     * 根据 id 查找数据
+     *
+     * @param $id
+     * @return mixed
+     * @author: Luoyan
+     */
+    public function findById($id)
+    {
+        return $this->category->find($id);
+    }
+
+    /**
+     * 根据 Id 修改分类信息
+     *
+     * @param $id
+     * @param array $data
+     * @return mixed
+     * @author: Luoyan
+     */
+    public function updateById($id, array $data)
+    {
+        return $this->category->where('id', $id)->update($data);
+    }
+
 }

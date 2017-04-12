@@ -77,6 +77,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
     // 分类块
     Route::resource('classification', 'ClassificationController');
+    // 修改分类内容
+    Route::post('classificationUpdate/{id}', 'ClassificationController@update');
     // 分类列表
     Route::any('classificationList', 'ClassificationController@categoryList');
+    // 添加子分类
+    Route::post('classificationCreate', 'ClassificationController@categoryCreate');
 });

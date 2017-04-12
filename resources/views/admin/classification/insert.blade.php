@@ -36,7 +36,7 @@
                                                       name="describe"></textarea>
                                         </div>
                                     </div>
-                                    <div class="form-group ">
+                                    <div class="form-group">
                                         <label for="curl" class="control-label col-lg-2">图片</label>
                                         <div class="col-lg-10">
                                             <label for="img"><img width="100px" class="img-responsive" id="img_img"
