@@ -71,6 +71,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
     // 分类块
     Route::resource('classification', 'ClassificationController');
+    Route::post('classificationUpdate/{id}', 'ClassificationController@update');
     // 分类列表
     Route::any('classificationList', 'ClassificationController@categoryList');
 });
