@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Repositories\AdminUserRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
 {
@@ -24,15 +25,13 @@ class AdminUserController extends Controller
     }
 
     /**
-     * 管理员列表页
+     * 返回模板视图
      *
-     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author zhangyuchao
      */
-    public function index(Request $request)
+    public function index()
     {
-
         return view('admin.users.index');
     }
 
@@ -48,14 +47,38 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 添加管理员操作
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @author zhangyuchao
      */
     public function store(Request $request)
     {
-        //
+        // 密码判断
+        if(empty($request['password'])) return  responseMsg('密码不能为空',400);
+        if($request['password'] != $request['rel_password']) return  responseMsg('两次密码输入不一致',400);
+
+        // 判断手机号码是否存在
+        $tel = $this->adminUser->getOneData(['tel' => $request['tel']]);
+        if(!empty($tel))  return responseMsg('手机号码已存在',400);
+
+        // 数据处理
+        $param['password'] = bcrypt(trim($request['password']));
+        $param['tel'] = trim($request['tel']);
+        $param['nickname'] = trim($request['nickname']);
+
+        // 插入数据
+        $result = $this->adminUser->createByUser($param);
+
+        // 数据插入失败 返回错误信息
+        if(!$result)  return responseMsg('添加失败',400);
+
+        // 成功返回正确信息，组装数据，返回到前台,使用vue push 到列表里
+        $data = $result->toArray();
+        $data['address'] = '从未登录';
+        $data['last_login_at'] = $data['created_at'];
+         return responseMsg($data);
     }
 
     /**
@@ -81,25 +104,94 @@ class AdminUserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 管理员密码重置
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhangyuchao
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        // 参数判断
+        $password = trim($request['password']);
+        if(empty($request['id'])) return  responseMsg('非法操作',400);
+        if(empty($password)) return responseMsg('密码不能为空',400);
+
+        // 密码判断
+        if($password != $request['rel_password']) return  responseMsg('两次密码输入不一致',400);
+
+        // 查询单挑数据 判断密码是否更新
+        $data = $this->adminUser->getOneData(['id'=>$request['id']]);
+        if (Hash::check($password, $data->password)) {
+            return responseMsg('新密码与原始密码一致',400);
+        }
+        // 数据操作
+        $result = $this->adminUser->updateOneData(['id'=>$request['id']] , ['password'=>bcrypt($password)]);
+        if(empty($result)) return responseMsg('更新失败',400);
+        return responseMsg('重置密码成功',200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 删除操作
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhangyuchao
      */
     public function destroy($id)
     {
-        //
+        // 参数验证
+        if(empty($id)) return responseMsg('非法操作',400);
+
+        // 删除数据
+        $result = $this->adminUser->deleteOneData($id);
+
+        // 数据判断
+       if(empty($result)) return responseMsg('删除失败',400);
+        return responseMsg('删除成功');
+
+    }
+
+    /**
+     * 获取管理员列表
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhangyuchao
+     */
+    public function userList(Request $request)
+    {
+        // 设置默认页数
+        $nowPage = empty($request['page']) ? 1 : $request['page'];
+
+        // 判断搜索条件
+        switch ($request['where']['type']){
+            case 1:
+                $where['nickname'] = trim($request['where']['value']);
+                break;
+            case 2:
+                $where['tel'] = trim($request['where']['value']);
+                break;
+            default:
+                $where = [];
+                break;
+        }
+
+        // 获取列表数据
+        $result = $this->adminUser->getAllData($where,$nowPage,$request['perPage']);
+
+        // 获取数据失败，列表页面不能报错，赋值为空
+        if(empty($result)) $result = [];
+
+        // 获取数据总条数
+        $total  = $this->adminUser->getUserCount($where);
+        $response = [
+            "total" => $total,
+            "current_page" => $nowPage,
+            "last_page" => ceil($total / $request['perPage']),
+            "to" => $nowPage*$request['perPage'],
+            "data" => $result,
+        ];
+        return responseMsg($response);
     }
 }
