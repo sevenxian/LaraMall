@@ -1,4 +1,7 @@
-// 获取图标编码
+/**
+ * 获取图标编码
+ * @author Luoyan
+ */
 function getObjectURL(file) {
     var url = null;
     if (window.createObjectURL != undefined) {
@@ -11,7 +14,10 @@ function getObjectURL(file) {
     return url;
 }
 
-// 立即显示图标
+/**
+ * 立即显示图标
+ * @author Luoyan
+ */
 $('#img').on('change', function () {
     // 获取控件中得文件
     var files = $(this).prop('files')[0];

@@ -165,4 +165,25 @@ class ClassificationController extends Controller
 
         return false;
     }
+
+    /**
+     * 添加子元素操作
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author: Luoyan
+     */
+    public function categoryCreate(Request $request)
+    {
+        // 文件处理函数
+        $this->fileDo($request);
+        // 录入分类信息，并且判断录入结果
+        if ($this->category->createByCategory($request->all())) {
+            // 录入成功跳转分类列表
+            return responseMsg('添加成功!');
+        }
+
+        // 修改失败
+        return responseMsg('添加失败!', 400);
+    }
 }
