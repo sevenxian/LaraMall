@@ -15,9 +15,11 @@ new Vue({
     // 方法定义
     methods: {
         submit() {
+            // 获取管理员ID
            var  adminID = userListVue.adminId;
             // FormData支援把 Form 元素丟進去
             var formData = new FormData(event.target);
+            // 把ID添加进formData
             formData.append('id',adminID);
             // 发送参数
              axios.post('/admin/usersUpdate', formData).then(response => {

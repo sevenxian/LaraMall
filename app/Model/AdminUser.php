@@ -27,4 +27,9 @@ class AdminUser extends Authenticatable
      */
     protected $fillable = ['nickname', 'tel', 'password', 'avatar', 'last_login_ip', 'last_login_at'];
 
+    /**
+     * @var array
+     */
+    protected $hidden = ['password'];
+
 }

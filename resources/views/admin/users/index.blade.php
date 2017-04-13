@@ -56,7 +56,7 @@
 
                                 <td>
                                     <button  @click="getAdminId(data.id)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updatePassword" data-whatever="@getbootstrap"  >重置密码</button>
-                                    <button  @click="deleteAdmin(data.id,index)" class="btn btn-danger btn-xs">删除</button>
+                                    <button  @click="deleteAdmin(data.id)" class="btn btn-danger btn-xs">删除</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -142,7 +142,5 @@
     <!-- 重置管理员信息表单 -->
     <script src="{{ asset('admins/handle/users/update.js') }}"></script>
     <!-- 当前页面表单验证 js -->
-    {{--<script src="{{ asset('admins/handle/users/insert_form_validation.js') }}"></script>--}}
-
-
+    <script src="{{ asset('admins/handle/users/insert_form_validation.js') }}"></script>
 @stop

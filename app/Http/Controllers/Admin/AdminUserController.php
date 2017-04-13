@@ -122,6 +122,7 @@ class AdminUserController extends Controller
 
         // 查询单挑数据 判断密码是否更新
         $data = $this->adminUser->getOneData(['id'=>$request['id']]);
+
         if (Hash::check($password, $data->password)) {
             return responseMsg('新密码与原始密码一致',400);
         }
@@ -161,9 +162,6 @@ class AdminUserController extends Controller
      */
     public function userList(Request $request)
     {
-        // 设置默认页数
-        $nowPage = empty($request['page']) ? 1 : $request['page'];
-
         // 判断搜索条件
         switch ($request['where']['type']){
             case 1:
@@ -176,22 +174,11 @@ class AdminUserController extends Controller
                 $where = [];
                 break;
         }
-
         // 获取列表数据
-        $result = $this->adminUser->getAllData($where,$nowPage,$request['perPage']);
-
-        // 获取数据失败，列表页面不能报错，赋值为空
-        if(empty($result)) $result = [];
-
+        $result = $this->adminUser->getAllData($where,$request['perPage']);
+        // 数据是否获取成功
+        if(empty($result)) return responseMsg('',400);
         // 获取数据总条数
-        $total  = $this->adminUser->getUserCount($where);
-        $response = [
-            "total" => $total,
-            "current_page" => $nowPage,
-            "last_page" => ceil($total / $request['perPage']),
-            "to" => $nowPage*$request['perPage'],
-            "data" => $result,
-        ];
-        return responseMsg($response);
+        return responseMsg($result);
     }
 }

@@ -39,16 +39,16 @@ class AdminUserRepository
      * 分页获取管理员数据
      *
      * @param array $where
-     * @param int $nowPage
      * @param int $perPage
-     * @return bool|array
+     * @return bool
      * @author zhangyuchao
      */
-    public function getAllData($where = [] , $nowPage , $perPage = 20)
+    public function getAllData($where = [] , $perPage = 20)
     {
-        $data = $this->adminUser->where($where)->forPage($nowPage,$perPage)->orderBy('last_login_at','desc')->get();
+        // 按照管理员登录的时间老获取数据
+        $data = $this->adminUser->where($where)->orderBy('last_login_at','desc')->paginate($perPage);
         if(empty($data)) return false;
-        return $data->toArray();
+        return $data;
     }
 
 
@@ -93,7 +93,6 @@ class AdminUserRepository
     {
         // 条件 和 参数 不能为空
         if(empty($where) || empty($params)) return false;
-
         // 修改数据
         return  $this->adminUser->where($where)->update($params);
     }
