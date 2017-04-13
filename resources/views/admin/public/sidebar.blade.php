@@ -14,10 +14,10 @@
                 <a href="javascript:;" class="">
                     <i class="icon-book"></i>
                     <span>用户管理</span>
-                    <span class="arrow {{ $aside->openTag(['admin/users']) }}"></span>
+                    <span class="arrow {{ $aside->openTag(['admin/users','admin/subscribers']) }}"></span>
                 </a>
-                <ul class="sub" {{ $aside->displayBlock(['admin/users']) }}>
-                    <li><a class="" href="">前台用户</a></li>
+                <ul class="sub" {{ $aside->displayBlock(['admin/users','admin/subscribers']) }}>
+                    <li><a class="" href="{{ url('admin/subscribers') }}">前台用户</a></li>
                     <li><a class="" href="{{ url('admin/users') }}">后台用户</a></li>
                 </ul>
             </li>
