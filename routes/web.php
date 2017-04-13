@@ -68,27 +68,30 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController', ['names' => [
         'store' => 'admin.user.login',
     ]]);
-    // 后台管理员管理
-    Route::resource('users','AdminUserController');
-    // 后台管理员列表
-    Route::any('usersList','AdminUserController@userList');
-    // 管理员重置密码
-    Route::post('usersUpdate','AdminUserController@update');
-
-    // 分类块
-    Route::resource('classification', 'ClassificationController');
-    // 修改分类内容
-    Route::post('classificationUpdate/{id}', 'ClassificationController@update');
-    // 分类列表
-    Route::any('classificationList', 'ClassificationController@categoryList');
-    // 添加子分类
-    Route::post('classificationCreate', 'ClassificationController@categoryCreate');
-
-    // 商品管理
-    Route::resource('goods', 'GoodsController');
-    // 获取商品列表数据
-    Route::any('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
     
-    // 后台用户管理
-    Route::resource('subscribers','SubscribersController');
+    // 认证后的操作路由
+    Route::group(['middleware' => 'user:admin'], function () {
+        // 后台用户管理
+        Route::resource('users', 'AdminUserController');
+        // 后台管理员列表
+        Route::any('usersList', 'AdminUserController@userList');
+        // 管理员重置密码
+        Route::post('usersUpdate', 'AdminUserController@update');
+        // 后台用户管理
+        Route::resource('subscribers','SubscribersController');
+
+        // 分类块
+        Route::resource('classification', 'ClassificationController');
+        // 修改分类内容
+        Route::post('classificationUpdate/{id}', 'ClassificationController@update');
+        // 分类列表
+        Route::any('classificationList', 'ClassificationController@categoryList');
+        // 添加子分类
+        Route::post('classificationCreate', 'ClassificationController@categoryCreate');
+
+        // 商品管理
+        Route::resource('goods', 'GoodsController');
+        // 获取商品列表数据
+        Route::any('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
+    });
 });
