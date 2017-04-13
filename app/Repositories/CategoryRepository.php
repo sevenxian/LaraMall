@@ -50,7 +50,7 @@ class CategoryRepository
      */
     public function categoryPaginate($perPage = 10, array $where = [])
     {
-        return $this->category->with('parentCategory')->where($where)->paginate($perPage);
+        return $this->category->withTrashed()->with('parentCategory')->where($where)->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     /**
@@ -78,4 +78,29 @@ class CategoryRepository
         return $this->category->where('id', $id)->update($data);
     }
 
+    /**
+     * 软删除一条数据
+     *
+     * @param $id
+     * @return int
+     * @author: Luoyan
+     */
+    public function softDeletes($id)
+    {
+        return $this->category->destroy($id);
+    }
+
+    /**
+     * 回复软删除的数据
+     *
+     * @param $id
+     * @return mixed
+     * @author: Luoyan
+     */
+    public function softRstore($id)
+    {
+        return $this->category->withTrashed()
+            ->where('id', $id)
+            ->restore();
+    }
 }

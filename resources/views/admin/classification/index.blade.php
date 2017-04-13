@@ -39,7 +39,7 @@
                                 <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
                                     关闭
                                 </button>
-                                <button type="submit" class="btn btn-primary">提交</button>
+                                <button type="submit" class="btn btn-primary submit">提交</button>
                             </div>
                         </form>
                     </div>
@@ -120,16 +120,27 @@
                                             data-toggle="modal" data-target="#exampleModal"
                                             data-whatever="@getbootstrap">修改
                                     </button>
+                                    <button class="btn btn-danger btn-xs" @click="toggleEnabledBy(data.id, index, 0)"
+                                            v-if="data.deleted_at == null">
+                                        禁用
+                                    </button>
+                                    <button class="btn btn-success btn-xs" @click="toggleEnabledBy(data.id, index, 1)"
+                                            v-else>
+                                        启用
+                                    </button>
                                 </td>
-                                <td v-if="currentLevel != 3">
+                                <td v-if="currentLevel != 3 && data.deleted_at == null">
                                     <button class="btn btn-primary btn-xs" @click="catChild(data)"><i
                                                 class="icon-eye-open"></i></button>
                                     <button class="btn btn-success btn-xs" @click="childSet(data.id, data.level)"
                                             data-toggle="modal" data-target="#addModal"
                                             data-whatever="@getbootstrap"><i class="icon-plus"></i></button>
                                 </td>
-                                <td v-else>
+                                <td v-else-if="currentLevel == 3 && data.deleted_at == null">
                                     <button class="btn btn-primary btn-xs">绑定标签</button>
+                                </td>
+                                <td v-else="data.deleted_at != null">
+
                                 </td>
                             </tr>
                             </tbody>
