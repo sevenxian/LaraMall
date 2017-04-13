@@ -54,7 +54,7 @@ class CategoryRepository
     }
 
     /**
-     * 根据 id 查找数据
+     * 根据 id 查找数据 / 附带父类信息
      *
      * @param $id
      * @return mixed
@@ -62,7 +62,7 @@ class CategoryRepository
      */
     public function findById($id)
     {
-        return $this->category->find($id);
+        return $this->category->with('parentCategory')->find($id);
     }
 
     /**
