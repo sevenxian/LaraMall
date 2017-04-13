@@ -22,20 +22,28 @@ class GoodsController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * 商品列表界面
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author zhulinjie
      */
     public function index()
     {
         return view('admin.goods.index');
     }
 
+    /**
+     * 获取商品列表数据
+     *
+     * @param Request $request
+     * @return mixed
+     * @author zhulinjie
+     */
     public function goodsList(Request $request)
     {
         $data = $request->all();
-        dd($data);
-        return $this->goods->goodsList($data['perPage'], $data['where']);
+        $result = $this->goods->goodsList($data['perPage'], $data['where']);
+        return responseMsg($result);
     }
 
     /**
@@ -45,7 +53,7 @@ class GoodsController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.goods.create');
     }
 
     /**
@@ -56,7 +64,15 @@ class GoodsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $data['category_id'] = 1;
+        $data['goods_label_id'] = 5;
+        $data['goods_label'] = json_encode([]);
+        $data['goods_original'] = json_encode([]);
+        $data['goods_thumbnail'] = json_encode([]);
+        $data['goods_info'] = '商品详情';
+
+        $res = $this->goods->addGoods($data);
     }
 
     /**

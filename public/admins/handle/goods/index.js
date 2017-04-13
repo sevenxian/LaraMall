@@ -1,3 +1,8 @@
+/**
+ * 商品列表
+ *
+ * @author zhulinjie
+ */
 new Vue({
     el: ".wrapper",
     data(){
@@ -11,7 +16,7 @@ new Vue({
             offset: 4, // 页码偏移量
             datas: [], // 页码内容
             per_page: 10, // 一页显示的数据
-            search:'', // 搜索条件
+            search: {}, // 搜索条件
         }
     },
     // 第一次执行
@@ -49,6 +54,10 @@ new Vue({
         // 下一页省略号
         nextOmit() {
             return (this.pagination.last_page - this.pagination.current_page) > this.offset;
+        },
+        // 判断是存在数据
+        isData(){
+            return this.datas.length;
         }
     },
     methods: {
@@ -65,8 +74,8 @@ new Vue({
                 // layer 加载层关闭
                 layer.closeAll();
                 // 响应式更新数据
-                this.datas = response.data.data;
-                this.pagination = response.data;
+                this.datas = response.data.ResultData.data;
+                this.pagination = response.data.ResultData;
             }).catch(error => {
                 // layer 加载层关闭
                 layer.closeAll();
@@ -85,9 +94,14 @@ new Vue({
             this.fetchDatas(page);
         },
         // 搜索
-        searchList() {
-            alert(this.pagination.current_page);
+        searchList(e) {
+            var goods_title = e.target.goods_title.value;
+            if(!goods_title){
+                this.search = [];
+            }else{
+                this.search = {goods_title: goods_title};
+            }
             this.fetchDatas(this.pagination.current_page);
-        },
+        }
     }
 });

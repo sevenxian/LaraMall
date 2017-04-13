@@ -15,12 +15,12 @@
                             商品列表
                         </header>
                         <div class="panel-body">
-                            <form class="form-inline" role="form">
+                            <form class="form-inline" role="form" @submit.prevent="searchList">
                                 <div class="form-group">
                                     <label class="sr-only" for="exampleInputEmail2">Email address</label>
-                                    <input type="text" name="goods_title" class="form-control" id="exampleInputEmail2" v-model="search" placeholder="商品名称">
+                                    <input type="text" name="goods_title" class="form-control" id="exampleInputEmail2" placeholder="商品名称">
                                 </div>
-                                <button type="submit" @click.prevent="searchList" class="btn btn-success">搜索</button>
+                                <button type="submit" class="btn btn-success">搜索</button>
                             </form>
                         </div>
                         <table class="table table-striped table-advance table-hover">
@@ -45,9 +45,10 @@
                                         <button class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
                                     </td>
                                 </tr>
+                                <tr v-if="!isData"><td colspan="5" class="text-center">暂无数据</td></tr>
                             </tbody>
                         </table>
-                        <center>@include('common.page')</center>
+                        <center v-if="isData">@include('common.page')</center>
                     </section>
                 </div>
             </div>
