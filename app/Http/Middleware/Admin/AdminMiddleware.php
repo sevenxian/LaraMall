@@ -16,10 +16,10 @@ class AdminMiddleware
     public function handle($request, Closure $next, $guard = null)
     {
         // 判断用户是否认证
-//        if (!\Auth::guard($guard)->check()) {
-//
-//            return redirect()->route('admin.login');
-//        }
+        if (!\Auth::guard($guard)->check()) {
+
+            return redirect()->route('admin.login');
+        }
 
         return $next($request);
     }
