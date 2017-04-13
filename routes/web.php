@@ -68,9 +68,14 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController', ['names' => [
         'store' => 'admin.user.login',
     ]]);
-    
     // 友情链接管理
     Route::resource('friendLink','FriendLinkController');
+    // 后台用户管理
+    Route::resource('users','AdminUserController');
+    // 后台管理员列表
+    Route::any('usersList','AdminUserController@userList');
+    // 管理员重置密码
+    Route::post('usersUpdate','AdminUserController@update');
     // 分类块
     Route::resource('classification', 'ClassificationController');
     // 修改分类内容

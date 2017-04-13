@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class AdminUser extends Authenticatable
 {
+    use SoftDeletes;
     /**
      * @var string
      */
@@ -24,4 +26,5 @@ class AdminUser extends Authenticatable
      * @var array
      */
     protected $fillable = ['nickname', 'tel', 'password', 'avatar', 'last_login_ip', 'last_login_at'];
+
 }

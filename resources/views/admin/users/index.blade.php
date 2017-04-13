@@ -1,19 +1,19 @@
 @extends('admin.layouts.master')
-@section('title','友情链接列表')
+@section('title','管理员列表')
 @section('content')
     <section id="main-content">
         <section class="wrapper">
 
             <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading" style="padding: 20px;">
-                            <font><font>
-                                    友情链接列表
-                                </font></font>
-                            <button type="button" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">添加友情链接</button>
-                        </header>
-                    </section>
+                    <div class="col-lg-12">
+                        <section class="panel">
+                            <header class="panel-heading" style="padding: 20px;">
+                                <font><font>
+                                        管理员列表
+                                    </font></font>
+                                <button type="button" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">添加管理员</button>
+                            </header>
+                        </section>
                 </div>
                 <div class="col-lg-12">
                     <section class="panel userList">
@@ -38,10 +38,10 @@
                         <table class="table table-striped table-advance table-hover">
                             <thead>
                             <tr>
-                                <th>链接名称</th>
-                                <th>图片/文字</th>
-                                <th>链接地址</th>
-                                <th>图片名称</th>
+                                <th>管理员名称</th>
+                                <th>联系方式</th>
+                                <th>最后登录时间</th>
+                                <th>最后登录IP</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -51,8 +51,11 @@
                                 <td><font><font>@{{ data.tel }}</font></font></td>
                                 <td v-if="data.last_login_at == data.created_at"><font><font>刚刚创建 </font></font></td>
                                 <td v-else><font><font>@{{ data.last_login_at }} </font></font></td>
+                                <td v-if="data.last_login_ip"><font><font> @{{ data.last_login_ip }}</font></font></td>
+                                <td v-else><font><font> 尚未登录 </font></font></td>
+
                                 <td>
-                                    <button  @click="getAdminId(data.id)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updatePassword" data-whatever="@getbootstrap"  >修改</button>
+                                    <button  @click="getAdminId(data.id)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updatePassword" data-whatever="@getbootstrap"  >重置密码</button>
                                     <button  @click="deleteAdmin(data.id,index)" class="btn btn-danger btn-xs">删除</button>
                                 </td>
                             </tr>
@@ -66,26 +69,26 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="exampleModalLabel">添加友情链接</h4>
+                                    <h4 class="modal-title" id="exampleModalLabel">添加管理员</h4>
                                 </div>
-                                <div class="modal-body" id='FriendLink'>
+                                <div class="modal-body">
                                     <form class="userForm"  @submit.prevent="submit($event)">
                                         {{ csrf_field() }}
                                         <div class="form-group">
-                                            <label for="recipient-name" class="control-label">链接名称:</label>
-                                            <input type="text" class="form-control" id="name" name="name">
+                                            <label for="recipient-name" class="control-label">用户名:</label>
+                                            <input type="text" class="form-control" id="nickname" name="nickname">
                                         </div>
                                         <div class="form-group">
-                                            <label for="message-text" class="control-label">图片/文字:</label>
-                                            <input type="text" class="form-control" name="type" id="type">
+                                            <label for="message-text" class="control-label">手机号码:</label>
+                                            <input type="text" class="form-control" name="tel" id="tel">
                                         </div>
                                         <div class="form-group">
-                                            <label for="message-text" class="control-label">链接地址:</label>
-                                            <input type="text" class="form-control"  name="url"  id="url">
+                                            <label for="message-text" class="control-label">密码:</label>
+                                            <input type="password" class="form-control"  name="password"  id="password">
                                         </div>
                                         <div class="form-group">
-                                            <label for="message-text" class="control-label">图片名称:</label>
-                                            <input type="text" class="form-control"  name="image" id="image">
+                                            <label for="message-text" class="control-label">确认密码:</label>
+                                            <input type="password" class="form-control"  name="rel_password" id="rel_password">
                                         </div>
                                         <div class="modal-footer" style="margin-top: 45px;">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -103,26 +106,18 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="exampleModalLabel">修改友情链接</h4>
+                                    <h4 class="modal-title" id="exampleModalLabel">重置密码</h4>
                                 </div>
                                 <div class="modal-body">
                                     <form class="userForm"  @submit.prevent="submit($event)">
-                                        {{ csrf_field() }}
+                                       {{ csrf_field() }}
                                         <div class="form-group">
-                                            <label for="recipient-name" class="control-label">链接名称:</label>
-                                            <input type="text" class="form-control" id="name" name="name">
+                                            <label for="message-text" class="control-label">密码:</label>
+                                            <input type="password" class="form-control"  name="password"  id="password">
                                         </div>
                                         <div class="form-group">
-                                            <label for="message-text" class="control-label">图片/文字:</label>
-                                            <input type="text" class="form-control" name="type" id="type">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="message-text" class="control-label">链接地址:</label>
-                                            <input type="text" class="form-control"  name="url"  id="url">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="message-text" class="control-label">图片名称:</label>
-                                            <input type="text" class="form-control"  name="image" id="image">
+                                            <label for="message-text" class="control-label">确认密码:</label>
+                                            <input type="password" class="form-control"  name="rel_password" id="rel_password">
                                         </div>
                                         <div class="modal-footer" style="margin-top: 45px;">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -140,5 +135,14 @@
     </section>
 @stop
 @section('customJs')
-    <script src="{{ asset('admins/handle/link/insert.js') }}"></script>
+    {{--<!-- 获取列表页js -->--}}
+    <script src="{{ asset('admins/handle/users/index.js') }}"></script>
+    <!-- 创建管理员表单 -->
+    <script src="{{ asset('admins/handle/users/insert.js') }}"></script>
+    <!-- 重置管理员信息表单 -->
+    <script src="{{ asset('admins/handle/users/update.js') }}"></script>
+    <!-- 当前页面表单验证 js -->
+    {{--<script src="{{ asset('admins/handle/users/insert_form_validation.js') }}"></script>--}}
+
+
 @stop

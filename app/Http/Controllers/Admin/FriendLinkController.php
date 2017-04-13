@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class FriendLinkController extends Controller
 {
     /**
-     * 友情链接管理页面
+     * 返回友情链接模板视图
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author wutao
@@ -17,6 +17,16 @@ class FriendLinkController extends Controller
     {
         return view('admin.links.link');
     }
+
+    /**
+     *  添加友情链接模板
+     *
+     * @author wutao
+     */
+    public function create()
+    {
+        return view('admin.links.create');
+    }
     /**
      * 添加友情链接
      *
@@ -24,9 +34,14 @@ class FriendLinkController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->except('_token');
-        dd($data);
-        $data = DB::table('data_friend_link')->insert($data);
+        $message ='aaaa';
+        return responseMsg($message,200);
+        dd($request);
+        // 插入数据
+        $result = $this->friendLink->createByUser($param);
+
+        // 数据插入失败 返回错误信息
+        if(!$result)  return responseMsg('添加失败',400);
     }
     /**
      * 修改友情链接
