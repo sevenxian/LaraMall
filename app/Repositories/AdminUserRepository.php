@@ -14,67 +14,62 @@ class AdminUserRepository
     /**
      * AdminUserRepository constructor.
      * @param AdminUser $adminUser
+     * @author zhangyuchao
      */
     public function __construct(AdminUser $adminUser)
     {
         $this->adminUser = $adminUser;
     }
+
     /**
-     * 添加用户方法
+     *  添加用户方法
      *
      * @param array $data
      * @return static
-     * @author: Luoyan
+     * @author zhangyuchao
      */
     public function createByUser(array $data)
     {
-        return $this->adminUser->create($data);
+        return  $this->adminUser->create($data);
     }
 
     /**
      * 分页获取管理员数据
      *
      * @param array $where
-     * @param int $nowPage
      * @param int $perPage
-     * @return bool|array
+     * @return mixed
      * @author zhangyuchao
      */
-    public function getAllData($where = [] , $nowPage , $perPage = 20)
+    public function getAllData(array $where , $perPage = 20)
     {
-        $data = $this->adminUser->where($where)->forPage($nowPage,$perPage)->orderBy('last_login_at','desc')->get();
-        if(empty($data)) return false;
-        return $data->toArray();
+         // 按照管理员登录的时间老获取数据
+        return $this->adminUser->where($where)->orderBy('last_login_at','desc')->paginate($perPage);
     }
-
 
     /**
      * 根据条件获取单条数据
      *
      * @param array $where
-     * @return bool
+     * @return mixed
      * @author zhangyuchao
      */
-    public function getOneData($where = [])
+    public function getOneData(array $where)
     {
-        // 条件不可以为空
-        if(empty($where)) return false;
-        $data = $this->adminUser->where($where)->first();
-        return $data;
+        return $this->adminUser->where($where)->first();
     }
 
     /**
-     * 根据条件计算总条数
+     * 根据条件获取总数
      *
      * @param array $where
      * @return mixed
      * @author zhangyuchao
      */
-    public function getUserCount($where = [])
+    public function getUserCount(array $where)
     {
-        // 根据条件计算数据总条数
-        $count = $this->adminUser->where($where)->count();
-        return $count;
+        return $this->adminUser->where($where)->count();
+
     }
 
     /**
@@ -82,15 +77,11 @@ class AdminUserRepository
      *
      * @param array $where
      * @param array $params
-     * @return bool
+     * @return mixed
      * @author zhangyuchao
      */
-    public function updateOneData($where = [] ,$params = [])
+    public function updateOneData(array $where , array $params)
     {
-        // 条件 和 参数 不能为空
-        if(empty($where) || empty($params)) return false;
-
-        // 修改数据
         return  $this->adminUser->where($where)->update($params);
     }
 

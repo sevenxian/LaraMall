@@ -7,6 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class AdminUser extends Authenticatable
 {
+    /**
+     *  软删除
+     */
     use SoftDeletes;
     /**
      * @var string
@@ -22,5 +25,10 @@ class AdminUser extends Authenticatable
      * @var array
      */
     protected $fillable = ['nickname', 'tel', 'password', 'avatar', 'last_login_ip', 'last_login_at'];
+
+    /**
+     * @var array
+     */
+    protected $hidden = ['password'];
 
 }
