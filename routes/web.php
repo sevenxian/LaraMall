@@ -86,5 +86,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::any('classificationList', 'ClassificationController@categoryList');
         // 添加子分类
         Route::post('classificationCreate', 'ClassificationController@categoryCreate');
+        // 后台用户管理
+        Route::resource('subscribers','SubscribersController');
     });
 });
