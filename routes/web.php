@@ -68,6 +68,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController', ['names' => [
         'store' => 'admin.user.login',
     ]]);
+    // 后台用户管理
+    Route::resource('users','AdminUserController');
+    // 后台管理员列表
+    Route::any('usersList','AdminUserController@userList');
+    // 管理员重置密码
+    Route::post('usersUpdate','AdminUserController@update');
 
     // 分类块
     Route::resource('classification', 'ClassificationController');

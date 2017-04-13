@@ -5,7 +5,7 @@
             <li class="active">
                 <a class="" href="index.html">
                     <i class="icon-dashboard"></i>
-                    <span>控制面板</span>
+                    <span>首页</span>
                 </a>
             </li>
             @inject('aside', 'App\Presenters\AsidePresenter')
@@ -13,42 +13,15 @@
             <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-book"></i>
-                    <span>UI Elements</span>
+                    <span>用户管理</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub">
-                    <li><a class="" href="general.html">General</a></li>
-                    <li><a class="" href="buttons.html">Buttons</a></li>
-                    <li><a class="" href="widget.html">Widget</a></li>
-                    <li><a class="" href="slider.html">Slider</a></li>
-                    <li><a class="" href="font_awesome.html">Font Awesome</a></li>
+                    <li><a class="" href="">前台用户</a></li>
+                    <li><a class="" href="{{ url('admin/users') }}">后台用户</a></li>
                 </ul>
             </li>
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-cogs"></i>
-                    <span>Components</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li><a class="" href="grids.html">Grids</a></li>
-                    <li><a class="" href="calendar.html">Calendar</a></li>
-                    <li><a class="" href="charts.html">Charts</a></li>
-                </ul>
-            </li>
-            <li class="sub-menu">
-                <a href="javascript:;" class="">
-                    <i class="icon-tasks"></i>
-                    <span>Form Stuff</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub">
-                    <li><a class="" href="form_component.html">Form Components</a></li>
-                    <li><a class="" href="form_wizard.html">Form Wizard</a></li>
-                    <li><a class="" href="form_validation.html">Form Validation</a></li>
-                </ul>
-            </li>
-            <li class="sub-menu {{ $aside->openTag(['admin/classification', 'classification/create']) }}">
+            <li class="sub-menu ">
                 <a href="javascript:;" class="">
                     <i class="icon-th"></i>
                     <span>分类管理</span>
@@ -74,30 +47,57 @@
                 </ul>
             </li>
             <li>
-                <a class="" href="inbox.html">
-                    <i class="icon-envelope"></i>
-                    <span>Mail </span>
-                    <span class="label label-danger pull-right mail-info">2</span>
+                <a class="" href="login.html">
+                    <i class="icon-user"></i>
+                    <span>订单管理</span>
+                </a>
+            </li>
+            <li>
+                <a class="" href="login.html">
+                    <i class="icon-user"></i>
+                    <span>评论管理</span>
+                </a>
+            </li>
+            <li>
+                <a class="" href="login.html">
+                    <i class="icon-user"></i>
+                    <span>网站配置</span>
+                    <ul class="sub">
+                        <li><a class="" href="dynamic_table.html">基本配置</a></li>
+                        <li><a class="" href="dynamic_table.html">网站组件</a></li>
+                        <li><a class="" href="basic_table.html">友情链接</a></li>
+                    </ul>
+                </a>
+            </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-th"></i>
+                    <span>权限管理</span>
+                    <span class="arrow"></span>
+                </a>
+            </li>
+            <li>
+                <a class="" href="login.html">
+                    <i class="icon-user"></i>
+                    <span>售后管理</span>
                 </a>
             </li>
             <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
-                    <span>Extra</span>
+                    <span>操作日志</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub">
-                    <li><a class="" href="blank.html">Blank Page</a></li>
-                    <li><a class="" href="profile.html">Profile</a></li>
-                    <li><a class="" href="invoice.html">Invoice</a></li>
-                    <li><a class="" href="404.html">404 Error</a></li>
-                    <li><a class="" href="500.html">500 Error</a></li>
+                    <li><a class="" href="blank.html">用户登录日志</a></li>
+                    <li><a class="" href="profile.html">用户操作日志</a></li>
+                    <li><a class="" href="profile.html">管理员操作日志</a></li>
                 </ul>
             </li>
             <li>
                 <a class="" href="login.html">
                     <i class="icon-user"></i>
-                    <span>Login Page</span>
+                    <span>缓存管理</span>
                 </a>
             </li>
         </ul>
