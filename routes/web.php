@@ -68,7 +68,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController', ['names' => [
         'store' => 'admin.user.login',
     ]]);
-    // 后台用户管理
+    // 后台管理员管理
     Route::resource('users','AdminUserController');
     // 后台管理员列表
     Route::any('usersList','AdminUserController@userList');
@@ -83,4 +83,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::any('classificationList', 'ClassificationController@categoryList');
     // 添加子分类
     Route::post('classificationCreate', 'ClassificationController@categoryCreate');
+    // 后台用户管理
+    Route::resource('subscribers','SubscribersController');
 });
