@@ -12,6 +12,7 @@ class AdminUser extends Authenticatable
      */
     use SoftDeletes;
     /**
+     * 管理员表
      * @var string
      */
     protected $table = 'data_admin_users';
