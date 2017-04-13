@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Repositories\AdminUserRepository;
+use App\Tools\Common;
+use App\Tools\LogOperation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+
 
 class AdminUserController extends Controller
 {
@@ -13,15 +16,16 @@ class AdminUserController extends Controller
      * @var AdminUserRepository
      */
     protected $adminUser;
-
+    protected $log;
     /**
      * AdminUserController constructor.
      * @param AdminUserRepository $adminUser
      * @author zhangyuchao
      */
-    public function __construct(AdminUserRepository $adminUser)
+    public function __construct(AdminUserRepository $adminUser,LogOperation $logOperation)
     {
         $this->adminUser = $adminUser;
+        $this->log = $logOperation;
     }
 
     /**
@@ -68,11 +72,14 @@ class AdminUserController extends Controller
         $result = $this->adminUser->createByUser($param);
         // 数据插入失败 返回错误信息
         if(!$result)  return responseMsg('添加失败',400);
-        // 成功返回正确信息，组装数据，返回到前台,使用vue push 到列表里
+        // 成功返回正确信息，组装数据，返回到前台,使用vue 添加到列表里
         $data = $result->toArray();
         $data['address'] = '从未登录';
         $data['last_login_at'] = $data['created_at'];
 
+        // 写入操作日志 谁在什么时间什么地点做了些什么提交的参数是什么
+        $message = Common::getLogMessage(1,'zhangyuchao', $request->getClientIp(),$request->url(),$request->all(),config('log.adminLog')[2]);
+        $this->log->writeAdminLog($message);
         return responseMsg($data);
     }
 
