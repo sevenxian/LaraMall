@@ -43,3 +43,22 @@ function responseMsg($message, $status = 200)
         'ResultData' => $message
     ]);
 }
+
+
+/**
+ * 检测文件是否是图片
+ *
+ * @param Request $file
+ * @return bool|string
+ * @author: Luoyan
+ */
+function checkImage($file)
+{
+    // 验证文件是否合法
+    if ($file->isValid()) {
+        // 判断文件后缀是否是图片
+        return in_array(strtolower($file->extension()), ['jpeg', 'jpg', 'gif', 'gpeg', 'png']);
+    }
+
+    return false;
+}

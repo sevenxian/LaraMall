@@ -10,7 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-// 商城首页
+
+/**
+ * 商城首页
+ */
 Route::get('/', function () {
     return redirect('home/index');
 });
@@ -23,7 +26,6 @@ Route::get('/', function () {
 Route::group(['prefix' => 'common', 'namespace' => 'Common'], function () {
     // ...
 });
-
 
 /**
  * 前台
@@ -64,9 +66,17 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
     // 后台用户登陆块
     Route::resource('user', 'UserController', ['names' => [
-        'store' => 'admin.user.login'
+        'store' => 'admin.user.login',
     ]]);
-
+    
     // 友情链接管理
     Route::resource('friendLink','FriendLinkController');
+    // 分类块
+    Route::resource('classification', 'ClassificationController');
+    // 修改分类内容
+    Route::post('classificationUpdate/{id}', 'ClassificationController@update');
+    // 分类列表
+    Route::any('classificationList', 'ClassificationController@categoryList');
+    // 添加子分类
+    Route::post('classificationCreate', 'ClassificationController@categoryCreate');
 });

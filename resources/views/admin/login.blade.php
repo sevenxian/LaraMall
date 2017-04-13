@@ -7,7 +7,6 @@
 @section('content')
     <div class="container">
         <form class="form-signin" action="{{ route('admin.user.login') }}" id="profileForm" method="post">
-            {{ csrf_field() }}
             <h2 class="form-signin-heading">管理员登录</h2>
             <div class="login-wrap">
                 <!-- Errors Messages -->

@@ -5,9 +5,11 @@
             <li class="active">
                 <a class="" href="index.html">
                     <i class="icon-dashboard"></i>
-                    <span>Dashboard</span>
+                    <span>控制面板</span>
                 </a>
             </li>
+            @inject('aside', 'App\Presenters\AsidePresenter')
+
             <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-book"></i>
@@ -46,15 +48,15 @@
                     <li><a class="" href="form_validation.html">Form Validation</a></li>
                 </ul>
             </li>
-            <li class="sub-menu">
+            <li class="sub-menu {{ $aside->openTag(['admin/classification', 'classification/create']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-th"></i>
-                    <span>Data Tables</span>
-                    <span class="arrow"></span>
+                    <span>分类管理</span>
+                    <span class="arrow {{ $aside->openTag(['admin/classification', 'admin/classification/create']) }}"></span>
                 </a>
-                <ul class="sub">
-                    <li><a class="" href="basic_table.html">Basic Table</a></li>
-                    <li><a class="" href="dynamic_table.html">Dynamic Table</a></li>
+                <ul class="sub" {{ $aside->displayBlock(['admin/classification', 'admin/classification/create']) }}>
+                    <li><a class="icon-align-center" href="{{ route('classification.index') }}"> 分类列表</a></li>
+                    <li><a class=" icon-indent-left" href="{{ route('classification.create') }}"> 添加分类</a></li>
                 </ul>
             </li>
             <li>

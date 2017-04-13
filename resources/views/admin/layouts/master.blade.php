@@ -7,6 +7,7 @@
     <meta name="author" content="Mosaddek">
     <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <link rel="shortcut icon" href="/admins/img/favicon.html">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title')</title>
 
@@ -17,6 +18,7 @@
     <!--external css-->
     <link href="/admins/assets/font-awesome/css/font-awesome.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="/css/sweetalert.css">
     @yield('externalCss')
 
     <!-- Custom styles for this template -->
@@ -32,7 +34,6 @@
 </head>
 
 <body>
-
 <section id="container" class="">
     <!--header start-->
     @section('header')
@@ -55,16 +56,23 @@
     <script src="/admins/js/bootstrap.min.js"></script>
     <script src="/admins/js/jquery.scrollTo.min.js"></script>
     <script src="/admins/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="/js/bootstrapValidator.min.js"></script>
+    <script src="/layer/layer.js"></script>
+    <!-- Vue -->
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
 @show
-
 @yield('externalJs')
 
 <!--common script for all pages-->
 <script src="/admins/js/common-scripts.js"></script>
-<script src="/js/bootstrapValidator.min.js"></script>
 
 <!--script for this page-->
 @yield('customJs')
 
+
+<!--flashy-->
+@include('flashy::message')
 </body>
 </html>
