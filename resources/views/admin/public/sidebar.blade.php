@@ -59,6 +59,20 @@
                     <li><a class=" icon-indent-left" href="{{ route('classification.create') }}"> 添加分类</a></li>
                 </ul>
             </li>
+            <li class="sub-menu">
+                <a href="javascript:;" class="">
+                    <i class="icon-glass"></i>
+                    <span>商品管理</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li><a href="/admin/goods">商品列表</a></li>
+                    <li><a href="/admin/goods/create">添加商品</a></li>
+                    <li><a href="invoice.html">Invoice</a></li>
+                    <li><a href="404.html">404 Error</a></li>
+                    <li><a href="500.html">500 Error</a></li>
+                </ul>
+            </li>
             <li>
                 <a class="" href="inbox.html">
                     <i class="icon-envelope"></i>
