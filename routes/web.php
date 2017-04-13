@@ -59,11 +59,8 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
  * 目录 Admin
  */
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
-    // 后台首页
-    Route::get('index', 'IndexController@index')->name('admin.index');
     // 后台登录
     Route::get('login', 'UserController@login')->name('admin.login');
-
     // 后台用户登陆块
     Route::resource('user', 'UserController', ['names' => [
         'store' => 'admin.user.login',
@@ -71,10 +68,14 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
     // 认证后的操作路由
     Route::group(['middleware' => 'user:admin'], function () {
+        // 后台首页
+        Route::get('index', 'IndexController@index')->name('admin.index');
         // 后台用户管理
         Route::resource('users', 'AdminUserController');
         // 后台管理员列表
         Route::any('usersList', 'AdminUserController@userList');
+        // 用户退出登陆
+        Route::any('logout', 'UserController@logout')->name('admin.logout');
         // 管理员重置密码
         Route::post('usersUpdate', 'AdminUserController@update');
 
@@ -87,6 +88,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 添加子分类
         Route::post('classificationCreate', 'ClassificationController@categoryCreate');
         // 后台用户管理
-        Route::resource('subscribers','SubscribersController');
+        Route::resource('subscribers', 'SubscribersController');
     });
 });

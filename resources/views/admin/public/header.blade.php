@@ -18,13 +18,13 @@
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                     <img alt="" src="/admins/img/avatar1_small.jpg">
-                    <span class="username">{{ auth('admin')->user()->nickname }}</span>
+                    <span class="username">{{ (!empty(auth('admin')->user())) ? auth('admin')->user()->nickname : '' }}</span>
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu extended logout">
                     <div class="log-arrow-up"></div>
                     {{--<li style="width:100%"><a href="#"><i class="icon-cog" ></i>个人设置 </a></li>--}}
-                    <li><a href="#"><i class="icon-key"></i> 退出 </a></li>
+                    <li><a href="{{ route('admin.logout') }}"><i class="icon-key"></i> 退出 </a></li>
                 </ul>
             </li>
             <!-- user login dropdown end -->
