@@ -25,11 +25,11 @@
             <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-cogs"></i>
-                    <span>Components</span>
+                    <span>网站配置</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub">
-                    <li><a class="" href="grids.html">Grids</a></li>
+                    <li><a class="" href="friendLink">友情链接管理</a></li>
                     <li><a class="" href="calendar.html">Calendar</a></li>
                     <li><a class="" href="charts.html">Charts</a></li>
                 </ul>

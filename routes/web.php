@@ -66,4 +66,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController', ['names' => [
         'store' => 'admin.user.login'
     ]]);
+
+    // 友情链接管理
+    Route::resource('friendLink','FriendLinkController');
 });
