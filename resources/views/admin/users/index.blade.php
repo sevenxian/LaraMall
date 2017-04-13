@@ -56,7 +56,7 @@
 
                                 <td>
                                     <button  @click="getAdminId(data.id)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updatePassword" data-whatever="@getbootstrap"  >重置密码</button>
-                                    <button  @click="deleteAdmin(data.id)" class="btn btn-danger btn-xs">删除</button>
+                                    <button  @click="deleteAdmin(data.id,index)" class="btn btn-danger btn-xs">删除</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -72,23 +72,23 @@
                                     <h4 class="modal-title" id="exampleModalLabel">添加管理员</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form class="userForm"  @submit.prevent="submit($event)">
+                                    <form class="userForm" onsubmit="return false;" @submit.prevent="submit($event)">
                                         {{ csrf_field() }}
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">用户名:</label>
-                                            <input type="text" class="form-control" id="nickname" name="nickname">
+                                            <input type="text" class="form-control"  name="nickname">
                                         </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">手机号码:</label>
-                                            <input type="text" class="form-control" name="tel" id="tel">
+                                            <input type="text" class="form-control" name="tel">
                                         </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">密码:</label>
-                                            <input type="password" class="form-control"  name="password"  id="password">
+                                            <input type="password" class="form-control"  name="password">
                                         </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">确认密码:</label>
-                                            <input type="password" class="form-control"  name="rel_password" id="rel_password">
+                                            <input type="password" class="form-control"  name="rel_password">
                                         </div>
                                         <div class="modal-footer" style="margin-top: 45px;">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -109,19 +109,18 @@
                                     <h4 class="modal-title" id="exampleModalLabel">重置密码</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form class="userForm"  @submit.prevent="submit($event)">
-                                       {{ csrf_field() }}
+                                    <form class="userForm">
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">密码:</label>
-                                            <input type="password" class="form-control"  name="password"  id="password">
+                                            <input type="password" class="form-control"  name="password"  v-model="data.password">
                                         </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">确认密码:</label>
-                                            <input type="password" class="form-control"  name="rel_password" id="rel_password">
+                                            <input type="password" class="form-control"  name="rel_password"  v-model="data.rel_password">
                                         </div>
                                         <div class="modal-footer" style="margin-top: 45px;">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                            <button type="submit"  class="btn btn-primary">提交</button>
+                                            <button type="button"  @click="userUpdate()" class="btn btn-primary">提交</button>
                                         </div>
                                     </form>
                                 </div>
@@ -135,12 +134,14 @@
     </section>
 @stop
 @section('customJs')
-    {{--<!-- 获取列表页js -->--}}
+    <!-- 定义token -->
+    <script> var token = "{{ csrf_token() }}" </script>
+    <!-- 获取列表页js -->
     <script src="{{ asset('admins/handle/users/index.js') }}"></script>
     <!-- 创建管理员表单 -->
     <script src="{{ asset('admins/handle/users/insert.js') }}"></script>
     <!-- 重置管理员信息表单 -->
     <script src="{{ asset('admins/handle/users/update.js') }}"></script>
-    <!-- 当前页面表单验证 js -->
+    <!-- 页面表单验证 js -->
     <script src="{{ asset('admins/handle/users/insert_form_validation.js') }}"></script>
 @stop

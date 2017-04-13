@@ -11,6 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class AdminUser extends Authenticatable
 {
+    /**
+     *  软删除
+     */
     use SoftDeletes;
     /**
      * @var string

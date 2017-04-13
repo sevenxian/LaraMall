@@ -9,26 +9,24 @@ new Vue({
         return {
             data:{
                 'id':'',
+                'password':'',
+                'rel_password':'',
+                '_token':token
             }
         }
     },
     // 方法定义
     methods: {
-        submit() {
+        userUpdate() {
             // 获取管理员ID
-           var  adminID = userListVue.adminId;
-            // FormData支援把 Form 元素丟進去
-            var formData = new FormData(event.target);
-            // 把ID添加进formData
-            formData.append('id',adminID);
+            this.data.id = userListVue.adminId;
             // 发送参数
-             axios.post('/admin/usersUpdate', formData).then(response => {
+             axios.post('/admin/usersUpdate', this.data).then(response => {
                // 判断返回结果
                 if(response.data.ServerNo == 200){
                     // 信息提示
                     layer.closeAll();
                     sweetAlert('重置成功','', "success");
-
                 }else{
                     // 添加失败信息提示
                     layer.closeAll();

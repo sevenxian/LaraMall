@@ -56,29 +56,24 @@ class AdminUserController extends Controller
     public function store(Request $request)
     {
         // 密码判断
-        if(empty($request['password'])) return  responseMsg('密码不能为空',400);
         if($request['password'] != $request['rel_password']) return  responseMsg('两次密码输入不一致',400);
-
         // 判断手机号码是否存在
         $tel = $this->adminUser->getOneData(['tel' => $request['tel']]);
         if(!empty($tel))  return responseMsg('手机号码已存在',400);
-
         // 数据处理
         $param['password'] = bcrypt(trim($request['password']));
         $param['tel'] = trim($request['tel']);
         $param['nickname'] = trim($request['nickname']);
-
         // 插入数据
         $result = $this->adminUser->createByUser($param);
-
         // 数据插入失败 返回错误信息
         if(!$result)  return responseMsg('添加失败',400);
-
         // 成功返回正确信息，组装数据，返回到前台,使用vue push 到列表里
         $data = $result->toArray();
         $data['address'] = '从未登录';
         $data['last_login_at'] = $data['created_at'];
-         return responseMsg($data);
+
+        return responseMsg($data);
     }
 
     /**
@@ -115,20 +110,19 @@ class AdminUserController extends Controller
         // 参数判断
         $password = trim($request['password']);
         if(empty($request['id'])) return  responseMsg('非法操作',400);
-        if(empty($password)) return responseMsg('密码不能为空',400);
-
         // 密码判断
         if($password != $request['rel_password']) return  responseMsg('两次密码输入不一致',400);
-
         // 查询单挑数据 判断密码是否更新
         $data = $this->adminUser->getOneData(['id'=>$request['id']]);
-
+        // 检测原始密码与新密码
         if (Hash::check($password, $data->password)) {
+
             return responseMsg('新密码与原始密码一致',400);
         }
         // 数据操作
         $result = $this->adminUser->updateOneData(['id'=>$request['id']] , ['password'=>bcrypt($password)]);
         if(empty($result)) return responseMsg('更新失败',400);
+
         return responseMsg('重置密码成功',200);
     }
 
@@ -143,14 +137,11 @@ class AdminUserController extends Controller
     {
         // 参数验证
         if(empty($id)) return responseMsg('非法操作',400);
-
-        // 删除数据
         $result = $this->adminUser->deleteOneData($id);
-
         // 数据判断
        if(empty($result)) return responseMsg('删除失败',400);
-        return responseMsg('删除成功');
 
+        return responseMsg('删除成功');
     }
 
     /**
@@ -178,7 +169,7 @@ class AdminUserController extends Controller
         $result = $this->adminUser->getAllData($where,$request['perPage']);
         // 数据是否获取成功
         if(empty($result)) return responseMsg('',400);
-        // 获取数据总条数
+
         return responseMsg($result);
     }
 }
