@@ -13,9 +13,9 @@ class CreateLogAdminUsersOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('log_admin_users_options', function (Blueprint $table) {
+        Schema::create('log_admin_users_operation', function (Blueprint $table) {
             $table->increments('id')->comment('管理员操作日志表');
-            $table->integer('admin_id')->index()->comment('管理员ID');
+            $table->integer('operator_id')->index()->comment('管理员ID');
             $table->ipAddress('login_ip')->comment('登录IP');
             $table->string('events')->comment('操作事件 (路由与参数)');
             $table->text('content')->comment('操作内容');
@@ -31,6 +31,6 @@ class CreateLogAdminUsersOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('log_admin_users_options');
+        Schema::dropIfExists('log_admin_users_operation');
     }
 }
