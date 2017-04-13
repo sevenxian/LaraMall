@@ -14,7 +14,7 @@ class CreateDataAdminUsersTable extends Migration
     public function up()
     {
         Schema::create('data_admin_users', function (Blueprint $table) {
-            $table->increments('id')->unsigned()->comment('后台用户管理表');
+            $table->increments('id')->unsigned()->comment('后台用户管理员表');
             $table->string('nickname',64)->comment('管理员昵称');
             $table->string('tel',32)->index()->comment('手机号码');
             $table->string('password',255)->comment('登录密码');
