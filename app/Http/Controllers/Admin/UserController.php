@@ -26,6 +26,8 @@ class UserController extends Controller
     public function __construct(AdminUserRepository $users)
     {
         $this->users = $users;
+        // 中间件
+        $this->middleware('user:admin')->only('logout');
     }
 
     /**
@@ -71,7 +73,7 @@ class UserController extends Controller
     {
         // 调用认证方法
         return $this->guard()->attempt(
-            // 获取需要认证的字段
+        // 获取需要认证的字段
             $this->credentials($request)
         );
     }
@@ -97,5 +99,20 @@ class UserController extends Controller
     public function guard()
     {
         return \Auth::guard('admin');
+    }
+
+    /**
+     * 用户推出认证
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @author: Luoyan
+     */
+    public function logout()
+    {
+        // 退出认证
+        $this->guard()->logout();
+
+        // 跳转到登陆页面
+        return redirect()->route('admin.login');
     }
 }
