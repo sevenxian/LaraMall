@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="/admins/img/favicon.html">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title')</title>
+    <title>@section('title') LaraMall 商城后台 @show</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/admins/css/bootstrap.min.css" rel="stylesheet">
