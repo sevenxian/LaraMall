@@ -10,7 +10,7 @@
             </li>
             @inject('aside', 'App\Presenters\AsidePresenter')
 
-            <li class="sub-menu">
+            <li class="sub-menu {{ $aside->openTag(['admin/users']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-book"></i>
                     <span>用户管理</span>
@@ -21,7 +21,7 @@
                     <li><a class="" href="{{ url('admin/users') }}">后台用户</a></li>
                 </ul>
             </li>
-            <li class="sub-menu ">
+            <li class="sub-menu {{ $aside->openTag(['admin/classification', 'admin/classification/create']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-th"></i>
                     <span>分类管理</span>
@@ -32,6 +32,19 @@
                     <li><a class=" icon-indent-left" href="{{ route('classification.create') }}"> 添加分类</a></li>
                 </ul>
             </li>
+
+            <li class="sub-menu {{ $aside->openTag([]) }}">
+                <a href="javascript:;" class="">
+                    <i class="icon-th"></i>
+                    <span>标签管理</span>
+                    <span class="arrow {{ $aside->openTag([]) }}"></span>
+                </a>
+                <ul class="sub" {{ $aside->displayBlock([]) }}>
+                    <li><a class="icon-align-center" href=""> 分类标签列表</a></li>
+                    <li><a class=" icon-indent-left" href="}"> 添加分类</a></li>
+                </ul>
+            </li>
+
             <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>

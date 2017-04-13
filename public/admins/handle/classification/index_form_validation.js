@@ -1,4 +1,4 @@
-$('#formCategory').bootstrapValidator({
+$('.validator-form').bootstrapValidator({
     fields: {
         name: {
             validators: {
@@ -16,3 +16,5 @@ $('#formCategory').bootstrapValidator({
         }
     }
 });
+// 自动开启验证
+$('.validator-form').bootstrapValidator('validate');
