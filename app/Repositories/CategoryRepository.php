@@ -2,13 +2,8 @@
 
 namespace App\Repositories;
 
-
 use App\Model\Category;
 
-/**
- * Class CategoryRepository
- * @package App\Repositories
- */
 class CategoryRepository
 {
 

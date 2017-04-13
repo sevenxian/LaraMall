@@ -3,10 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\GoodsRepository;
 use Illuminate\Http\Request;
 
 class GoodsController extends Controller
 {
+    /**
+     * @var
+     */
+    protected $goods;
+
+    /**
+     * GoodsController constructor.
+     */
+    public function __construct(GoodsRepository $goods)
+    {
+        $this->goods = $goods;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,9 +31,11 @@ class GoodsController extends Controller
         return view('admin.goods.index');
     }
 
-    public function goodsList()
+    public function goodsList(Request $request)
     {
-        return 'test';
+        $data = $request->all();
+        dd($data);
+        return $this->goods->goodsList($data['perPage'], $data['where']);
     }
 
     /**

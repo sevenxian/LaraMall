@@ -36,9 +36,9 @@
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
                     <span>商品管理</span>
-                    <span class="arrow"></span>
+                    <span class="arrow {{ $aside->openTag(['admin/goods', 'admin/goods/create']) }}"></span>
                 </a>
-                <ul class="sub">
+                <ul class="sub" {{ $aside->displayBlock(['admin/goods', 'admin/goods/create']) }}>
                     <li><a href="/admin/goods">商品列表</a></li>
                     <li><a href="/admin/goods/create">添加商品</a></li>
                     <li><a href="invoice.html">Invoice</a></li>
