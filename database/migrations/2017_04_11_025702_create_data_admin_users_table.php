@@ -18,8 +18,8 @@ class CreateDataAdminUsersTable extends Migration
             $table->string('nickname',64)->comment('管理员昵称');
             $table->string('tel',32)->index()->comment('手机号码');
             $table->string('password',255)->comment('登录密码');
-            $table->string('avatar',64)->comment('头像');
-            $table->ipAddress('last_login_ip')->comment('最后一次登录IP');
+            $table->string('avatar',64)->nullable()->comment('头像');
+            $table->ipAddress('last_login_ip')->nullable()->comment('最后一次登录IP');
             $table->timestamp('last_login_at')->comment('最后一次登录时间');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
