@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\UserLoginRequest;
-use App\Repositories\UsersLoginRepository;
+use App\Repositories\AdminUserRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -23,7 +23,7 @@ class UserController extends Controller
      * UserController constructor.
      * @param $users
      */
-    public function __construct(UsersLoginRepository $users)
+    public function __construct(AdminUserRepository $users)
     {
         $this->users = $users;
     }
@@ -54,7 +54,7 @@ class UserController extends Controller
             return back()->withErrors('手机号或密码错误!')->withInput();
         }
         // 友好提示
-//        \Flashy::info('欢迎回来! ^_^');
+        \Flashy::info('欢迎回来! ^_^');
 
         // 返回后台首页
         return redirect()->route('admin.index');
@@ -71,7 +71,7 @@ class UserController extends Controller
     {
         // 调用认证方法
         return $this->guard()->attempt(
-        // 获取需要认证的字段
+            // 获取需要认证的字段
             $this->credentials($request)
         );
     }
