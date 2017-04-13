@@ -194,7 +194,7 @@ new Vue({
             };
         },
         // 添加子分类请求操作
-        createChild() {
+        createChild(event) {
             // layer 加载层
             layer.load(2);
             // FormData 支援把 Form 元素丟進去
@@ -214,6 +214,35 @@ new Vue({
             }).catch(error => {
                 // layer 加载层关闭
                 sweetAlert("请求失败!", "用户列表请求失败!", "error");
+            });
+        },
+        // 禁用与启用
+        toggleEnabledBy(id, index, boolean) {
+            // layer 加载层
+            layer.load(2);
+            // 请求数据
+            axios.delete('/admin/classification/' + id, {
+                params: {
+                    boolean: boolean
+                }
+            }).then(response => {
+                // layer 加载层关闭
+                layer.closeAll();
+                // 判断请求结果
+                if (response.data.ServerNo != 200) {
+                    return sweetAlert("失败!", "操作失败!", "error");
+                }
+
+                if (boolean) {
+                    // 将删除 key 设置为空
+                    return this.datas[index].deleted_at = null
+                }
+
+                //  为删除 key 设置值
+                return this.datas[index].deleted_at = response.data.ServerTime;
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("请求失败!", "操作失败!", "error");
             });
         }
     }
