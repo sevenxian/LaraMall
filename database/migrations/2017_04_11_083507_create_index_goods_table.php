@@ -15,8 +15,8 @@ class CreateIndexGoodsTable extends Migration
     {
         Schema::create('index_goods', function (Blueprint $table) {
             $table->increments('id')->comment('商品索引表');
-            $table->integer('category_id')->comment('分类表ID');
-            $table->integer('goods_id')->comment('商品表ID');
+            $table->integer('goods_id')->comment('商品ID');
+            $table->integer('cargo_id')->comment('货品ID');
             $table->text('body')->comment('中文分词后的内容');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');

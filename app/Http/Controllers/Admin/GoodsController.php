@@ -66,7 +66,6 @@ class GoodsController extends Controller
     {
         $data = $request->all();
         $data['category_id'] = 1;
-        $data['goods_label_id'] = 5;
         $data['goods_label'] = json_encode([]);
         $data['goods_original'] = json_encode([]);
         $data['goods_thumbnail'] = json_encode([]);
