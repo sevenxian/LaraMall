@@ -24,6 +24,7 @@
     <!-- Custom styles for this template -->
     <link href="/admins/css/style.css" rel="stylesheet">
     <link href="/admins/css/style-responsive.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/sweetalert.css">
     @yield('customCss')
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
