@@ -1,8 +1,5 @@
 @extends('admin.layouts.master')
 @section('externalCss')
-    <link rel="stylesheet" type="text/css" href="/admins/assets/bootstrap-datepicker/css/datepicker.css" />
-    <link rel="stylesheet" type="text/css" href="/admins/assets/bootstrap-colorpicker/css/colorpicker.css" />
-    <link rel="stylesheet" type="text/css" href="/admins/assets/bootstrap-daterangepicker/daterangepicker.css" />
 @stop
 @section('content')
     <section id="main-content">
@@ -19,37 +16,63 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="addName" class="control-label">分类名称:</label>
-                                <span class="form-control">sdfasdf</span>
+                                <span class="form-control"></span>
                             </div>
                             <div class="form-group">
-                                <label class="control-label">标签:</label>
-                                <div class="panel-body">
-                                    <div class="checkboxes">
-                                        <label class="label_check col-sm-6" for="checkbox-01">
-                                            <input name="sample-checkbox-01" id="checkbox-01" value="1" type="checkbox"
-                                                   checked/> I agree to the terms &#38; conditions.
-                                        </label>
-                                        <label class="label_check col-sm-6" for="checkbox-02">
-                                            <input name="sample-checkbox-02" id="checkbox-02" value="1"
-                                                   type="checkbox"/> Please send me regular updates.
-                                        </label>
-                                        <label class="label_check col-sm-6" for="checkbox-03">
-                                            <input name="sample-checkbox-02" id="checkbox-03" value="1"
-                                                   type="checkbox"/> This is nice checkbox.
-                                        </label>
+                                <label for="addName" class="control-label">标签:</label>
+                                <div class="checkboxes">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="label_check" for="checkbox-01">
+                                                <input name="sample-checkbox-01" id="checkbox-01" value="1"
+                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="label_check" for="checkbox-02">
+                                                <input name="sample-checkbox-01" id="checkbox-02" value="1"
+                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="label_check" for="checkbox-03">
+                                                <input name="sample-checkbox-01" id="checkbox-03" value="1"
+                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="label_check" for="checkbox-04">
+                                                <input name="sample-checkbox-01" id="checkbox-04" value="1"
+                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="label_check" for="checkbox-05">
+                                                <input name="sample-checkbox-01" id="checkbox-05" value="1"
+                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="label_check" for="checkbox-06">
+                                                <input name="sample-checkbox-01" id="checkbox-06" value="1"
+                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-lg-6">
-                                    <input type="text" class="form-control" placeholder="标签名称">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" placeholder="标签名称">
+                                    </div>
+                                    <div class="tagsinput-add"></div>
                                 </div>
-                                <div class="tagsinput-add"></div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
-                                关闭
+                            关闭
                             </button>
                             <button type="submit" class="btn btn-primary submit">提交</button>
                         </div>
@@ -92,7 +115,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
-                                    关闭
+                                关闭
                                 </button>
                                 <button type="submit" class="btn btn-primary submit">提交</button>
                             </div>
@@ -136,7 +159,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
-                                    关闭
+                                关闭
                                 </button>
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </div>
@@ -152,7 +175,7 @@
                         <header class="panel-heading">
                             分类列表：@{{ getLevel(currentLevel) }}
                             <button class="btn btn-primary  pull-right col-lg-1" @click="backTo()"
-                                    v-if="currentLevel != 1">上一级分类
+                            v-if="currentLevel != 1">上一级分类
                             </button>
                         </header>
                         <table class="table table-striped table-advance table-hover">
@@ -172,24 +195,24 @@
                                 <td>@{{ (data.parent_category != null)?data.parent_category.name:'顶级分类' }}</td>
                                 <td>
                                     <button @click="fetchCategoryById(data.id, index)" class="btn btn-info btn-xs"
-                                            data-toggle="modal" data-target="#exampleModal"
-                                            data-whatever="@getbootstrap">修改
+                                    data-toggle="modal" data-target="#exampleModal"
+                                    data-whatever="@getbootstrap">修改
                                     </button>
                                     <button class="btn btn-danger btn-xs" @click="toggleEnabledBy(data.id, index, 0)"
-                                            v-if="data.deleted_at == null">
-                                        禁用
+                                    v-if="data.deleted_at == null">
+                                    禁用
                                     </button>
                                     <button class="btn btn-success btn-xs" @click="toggleEnabledBy(data.id, index, 1)"
-                                            v-else>
-                                        启用
+                                    v-else>
+                                    启用
                                     </button>
                                 </td>
                                 <td v-if="currentLevel != 3 && data.deleted_at == null">
                                     <button class="btn btn-primary btn-xs" @click="catChild(data)"><i
-                                                class="icon-eye-open"></i></button>
+                                            class="icon-eye-open"></i></button>
                                     <button class="btn btn-success btn-xs" @click="childSet(data.id, data.level)"
-                                            data-toggle="modal" data-target="#addModal"
-                                            data-whatever="@getbootstrap"><i class="icon-plus"></i></button>
+                                    data-toggle="modal" data-target="#addModal"
+                                    data-whatever="@getbootstrap"><i class="icon-plus"></i></button>
                                 </td>
                                 <td v-else-if="currentLevel == 3 && data.deleted_at == null">
                                     <button class="btn btn-primary btn-xs"
@@ -211,20 +234,7 @@
         </section>
     </section>
 @stop
-@section('externalJs')
-    <script src="/admins/js/jquery-ui-1.9.2.custom.min.js"></script>
 
-    <!--custom switch-->
-    <script src="/admins/js/bootstrap-switch.js"></script>
-    <script src="/admins/js/jquery.tagsinput.js"></script>
-    <!--custom checkbox & radio-->
-    <script type="text/javascript" src="/admins/js/ga.js"></script>
-
-    <script type="text/javascript" src="/admins/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="/admins/assets/bootstrap-daterangepicker/date.js"></script>
-    <script type="text/javascript" src="/admins/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <script type="text/javascript" src="/admins/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
-@stop
 @section('customJs')
     <script src="/admins/js/form-component.js"></script>
     <!-- 当前页面 js -->
