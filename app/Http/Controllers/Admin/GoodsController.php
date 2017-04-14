@@ -94,8 +94,8 @@ class GoodsController extends Controller
      */
     public function getCategory(Request $request)
     {
-        $data = $request->all();
-        $res = $this->category->getLevelCategory($data);
+        $param = $request->all();
+        $res = $this->category->getCategory($param);
         return responseMsg($res);
     }
 

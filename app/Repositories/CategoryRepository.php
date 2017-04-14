@@ -100,13 +100,13 @@ class CategoryRepository
     }
 
     /**
-     * 获取某一等级下的分类信息
+     * 获取分类
      *
      * @param $param
      * @author zhulinjie
      */
-    public function getLevelCategory($param)
+    public function getCategory($where)
     {
-        return $this->category->where($param)->get();
+        return $this->category->where($where)->get();
     }
 }

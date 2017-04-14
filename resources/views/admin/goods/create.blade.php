@@ -38,7 +38,7 @@
                                     <div class="col-md-11">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <select class="form-control" @change="getCategory">
+                                                <select class="form-control" @change="selected">
                                                     <option value="-1">请选择...</option>
                                                     <option :value="category.id" value="category.id" v-for="category in categorys">@{{ category.name }}</option>
                                                 </select>

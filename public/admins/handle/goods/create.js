@@ -3,26 +3,31 @@ new Vue({
     el: ".wrapper",
     data(){
       return {
-          categorys: []
+          categorys: [],
       }
     },
     mounted(){
         // 获取一级分类
-        axios.post('/admin/getCategory', {level: 1}).then(response => {
-            this.categorys = response.data.ResultData;
-        }).catch(error => {
-
-        });
+        this.getCategory({level: 1});
     },
     methods: {
+        // 添加商品
         addGoods(e){
             var fd = new FormData(e.target);
             axios.post('/admin/goods', fd).then(response => {
                 console.log(response);
             });
         },
-        getCategory(){
-            alert('1');
+        // 获取某一等级下的分类
+        getCategory(param){
+            axios.post('/admin/getCategory', param).then(response => {
+                this.categorys = response.data.ResultData;
+            }).catch(error => {
+
+            });
+        },
+        selected(e){
+            this.getCategory({pid: e.target.value});
         }
     }
 });
