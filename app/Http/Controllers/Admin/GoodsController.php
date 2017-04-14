@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsRepository;
 use Illuminate\Http\Request;
 
@@ -14,11 +15,19 @@ class GoodsController extends Controller
     protected $goods;
 
     /**
-     * GoodsController constructor.
+     * @var
      */
-    public function __construct(GoodsRepository $goods)
+    protected $category;
+
+    /**
+     * GoodsController constructor.
+     * @param GoodsRepository $goods
+     * @param CategoryRepository $category
+     */
+    public function __construct(GoodsRepository $goods, CategoryRepository $category)
     {
         $this->goods = $goods;
+        $this->category = $category;
     }
 
     /**
@@ -73,6 +82,20 @@ class GoodsController extends Controller
 
         $res = $this->goods->addGoods($data);
 
+        return responseMsg($res);
+    }
+
+    /**
+     * 获取分类信息
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhulinjie
+     */
+    public function getCategory(Request $request)
+    {
+        $data = $request->all();
+        $res = $this->category->getLevelCategory($data);
         return responseMsg($res);
     }
 

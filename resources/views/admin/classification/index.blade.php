@@ -1,6 +1,4 @@
 @extends('admin.layouts.master')
-@section('externalCss')
-@stop
 @section('content')
     <section id="main-content">
         <section class="wrapper">

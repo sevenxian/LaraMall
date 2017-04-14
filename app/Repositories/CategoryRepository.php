@@ -98,4 +98,15 @@ class CategoryRepository
             ->where('id', $id)
             ->restore();
     }
+
+    /**
+     * 获取某一等级下的分类信息
+     *
+     * @param $param
+     * @author zhulinjie
+     */
+    public function getLevelCategory($param)
+    {
+        return $this->category->where($param)->get();
+    }
 }

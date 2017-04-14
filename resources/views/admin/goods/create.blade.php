@@ -40,7 +40,7 @@
                                             <div class="col-md-4">
                                                 <select class="form-control" @change="getCategory">
                                                     <option value="-1">请选择...</option>
-                                                    <option value="">111</option>
+                                                    <option :value="category.id" value="category.id" v-for="category in categorys">@{{ category.name }}</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-4">

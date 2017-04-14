@@ -97,7 +97,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 商品管理
         Route::resource('goods', 'GoodsController');
         // 获取商品列表数据
-        Route::any('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
+        Route::post('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
+        // 获取分类列表
+        Route::post('getCategory', 'GoodsController@getCategory')->name('admin.getCategory');
 
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
