@@ -24,6 +24,8 @@ class CreateDataCargoTable extends Migration
             $table->json('cargo_original')->comment('货品原图:多个');
             $table->json('cargo_thumbnail')->comment('货品缩略图:多个');
             $table->text('cargo_info')->comment('货品详情');
+            $table->text('cargo_info')->comment('货品详情');
+            $table->tinyInteger('cargo_status')->default(1)->comment('货品状态 1:待售 2:上架 3:下架	默认为 1');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
         });
