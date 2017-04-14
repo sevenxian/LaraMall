@@ -90,5 +90,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('classificationCreate', 'ClassificationController@categoryCreate');
 
         // 分类标签块
+        Route::resource('categoryLabel', 'CategoryLabelController');
     });
 });

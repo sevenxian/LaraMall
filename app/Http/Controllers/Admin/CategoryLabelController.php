@@ -7,5 +7,8 @@ use App\Http\Controllers\Controller;
 
 class CategoryLabelController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('admin.categoryLabel.index');
+    }
 }
