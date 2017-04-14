@@ -62,20 +62,24 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     // 后台登录
     Route::get('login', 'UserController@login')->name('admin.login');
     // 后台用户登陆块
-    Route::resource('user', 'UserController', ['names' => [
-        'store' => 'admin.user.login',
-    ]]);
-    
+    Route::resource('user', 'UserController');
+
     // 认证后的操作路由
     Route::group(['middleware' => 'user:admin'], function () {
-        // 后台首页
-        Route::get('index', 'IndexController@index')->name('admin.index');
-        // 后台用户管理
-        Route::resource('users', 'AdminUserController');
+        // 后台用户管理块
+        Route::resource('subscribers', 'SubscribersController');
+        // 管理员重置密码
+        Route::post('usersUpdate', 'AdminUserController@update');
         // 后台管理员列表
         Route::any('usersList', 'AdminUserController@userList');
+        // 后台用户管理
+        Route::resource('users', 'AdminUserController');
+
+        // 后台首页
+        Route::get('index', 'IndexController@index')->name('admin.index');
         // 用户退出登陆
         Route::any('logout', 'UserController@logout')->name('admin.logout');
+
         // 管理员重置密码
         Route::post('usersUpdate', 'AdminUserController@update');
         // 后台用户管理
@@ -94,5 +98,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::resource('goods', 'GoodsController');
         // 获取商品列表数据
         Route::any('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
+
+        // 分类标签块
+        Route::resource('categoryLabel', 'CategoryLabelController');
     });
 });

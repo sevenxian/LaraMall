@@ -33,15 +33,15 @@
                 </ul>
             </li>
 
-            <li class="sub-menu">
+            <li class="sub-menu {{ $aside->openTag(['admin/categoryLabel']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-th"></i>
                     <span>标签管理</span>
-                    <span class="arrow"></span>
+                    <span class="arrow {{ $aside->openTag(['admin/categoryLabel']) }}"></span>
                 </a>
-                <ul class="sub">
-                    <li><a class="icon-align-center" href=""> 分类标签列表</a></li>
-                    <li><a class=" icon-indent-left" href="}"> 添加分类</a></li>
+                <ul class="sub" {{ $aside->displayBlock(['admin/categoryLabel']) }}>
+                    <li><a class="icon-align-center" href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>
+                    <li><a class=" icon-indent-left" href=""> 添加分类</a></li>
                 </ul>
             </li>
 

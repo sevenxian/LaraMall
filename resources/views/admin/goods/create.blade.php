@@ -34,6 +34,29 @@
                             </div>
                             <form id="goods" class="form-horizontal" role="form" @submit.prevent="addGoods">
                                 <div class="form-group">
+                                    <label for="inputGoodsTitle" class="col-md-1 control-label">商品分类</label>
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <select class="form-control" @change="getCategory">
+                                                    <option value="-1">请选择...</option>
+                                                    <option value="">111</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control">
+                                                    <option value="-1">请选择...</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control">
+                                                    <option value="-1">请选择...</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="inputGoodsTitle" class="col-md-1 control-label">商品名称</label>
                                     <div class="col-md-11">
                                         <input type="text" name="goods_title" class="form-control" id="inputGoodsTitle" placeholder="商品名称">

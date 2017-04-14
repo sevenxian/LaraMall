@@ -8,6 +8,9 @@ new Vue({
             axios.post('/admin/goods', fd).then(response => {
                 console.log(response);
             });
+        },
+        getCategory(){
+            alert('1');
         }
     }
 });
