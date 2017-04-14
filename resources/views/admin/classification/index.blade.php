@@ -42,11 +42,9 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-lg-6">
-                                    <div class="tagsinput-add-container" id="tagsinput_addTag">
-                                        <input type="text" class="form-control" placeholder=".col-lg-2">
-                                        <div class="tagsinput-add"></div>
-                                    </div>
+                                    <input type="text" class="form-control" placeholder="标签名称">
                                 </div>
+                                <div class="tagsinput-add"></div>
                             </div>
                         </div>
                         <div class="modal-footer">
