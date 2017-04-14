@@ -101,5 +101,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
+
     });
 });

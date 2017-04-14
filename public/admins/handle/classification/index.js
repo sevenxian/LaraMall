@@ -8,6 +8,7 @@ new Vue({
     // 响应式参数
     data() {
         return {
+            // 分页变量数据
             pagination: {
                 total: 0, // 总条数
                 from: 1, // 当前页码第一个栏数据是数据库第几条
@@ -21,6 +22,25 @@ new Vue({
             per_page: 10, // 一页显示的数据
             currentLevel: 1, // 当前分类层级
             category: [], // 修改时显示的单个分类数据
+            // 标签绑定变量
+            labelBind: {
+                // 标签列表中得索引, 通过这个索引找到当前需要绑定的是哪一条标签数据
+                index: '',
+                // 添加标签时双向绑定的变量
+                labelName: '',
+                // 所有标签
+                labels: [
+                    {id: 1, category_id: 1, category_label_name: '北京现代', status: 1},
+                    {id: 2, category_id: 2, category_label_name: '宝马', status: 1},
+                    {id: 3, category_id: 3, category_label_name: '奥迪', status: 1},
+                    {id: 4, category_id: 4, category_label_name: '玛莎拉蒂', status: 1},
+                    {id: 5, category_id: 5, category_label_name: '奔驰', status: 1},
+                    {id: 6, category_id: 6, category_label_name: '劳斯莱斯', status: 1},
+                    {id: 7, category_id: 7, category_label_name: '奥拓', status: 1},
+                    {id: 8, category_id: 8, category_label_name: '桑塔拉', status: 1},
+                    {id: 9, category_id: 9, category_label_name: '本田', status: 1},
+                ]
+            }
         }
     },
     // 第一次执行
@@ -244,6 +264,62 @@ new Vue({
                 // layer 加载层关闭
                 sweetAlert("请求失败!", "操作失败!", "error");
             });
+        },
+        // 新增一个标签
+        addNewLabel() {
+            // 判断分类绑定提交表单值是否为空
+            if (this.labelBind.labelName == '') return;
+            // 执行标签新增操作
+            axios.post('/admin/classificationUpdate/' + id, formData).then(response => {
+                // 判断修改是否成功
+                if (response.data.ServerNo != 200) {
+                    return sweetAlert("修改失败!", "分类修改!", "error");
+                }
+                // layer 加载层关闭
+                layer.closeAll();
+                // 隐藏模态框
+                $('#exampleModal').modal('hide');
+                // 更新分类列表中修改后的数据
+                this.$set(this.datas, this.category.index, response.data.ResultData);
+                // 清空修改表单内容
+                this.emptyForm();
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("请求失败!", "用户列表请求失败!", "error");
+            });
+
+
+
+
+
+            // layer 加载层
+            layer.load(2);
+            // 添加到标签列表之中，并且页面自动生成新元素
+            this.labelBind.labels.push({id: 1, category_label_name: this.labelBind.labelName});
+            // 清空输入的值
+            this.labelBind.labelName = '';
+            // layer 加载层关闭
+            layer.closeAll();
+        },
+        // 完成标签绑定
+        doneBind() {
+            // 判断是否选中了标签，如果没有选中标签不执行下面的操作
+            if ($('.c_on').size() == 0) return;
+            // 获取选中标签的 id
+            var values = $('.c_on > input[type="checkbox"]').map(function (i, e) {
+                return $(e).val();
+            });
+            console.log(values);
+            // 让所有多选标签恢复未选中状态
+            // $('.c_on').removeClass('c_on').addClass('c_off');
+            // TODO 完成一次标签的绑定
+        },
+        // 获取分类下得标签
+        fetchCategoryForLabel(index) {
+            // 得到需要标签列表中准确那一条数据的索引
+            this.labelBind.index = index;
+            // 获取当前分类已有的标签
+            // TODO 获取所有标签并且并且获取这个分类下已有的标签
         }
     }
 });
