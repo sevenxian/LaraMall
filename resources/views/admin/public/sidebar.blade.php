@@ -33,13 +33,13 @@
                 </ul>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag([]) }}">
+            <li class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon-th"></i>
                     <span>标签管理</span>
-                    <span class="arrow {{ $aside->openTag([]) }}"></span>
+                    <span class="arrow"></span>
                 </a>
-                <ul class="sub" {{ $aside->displayBlock([]) }}>
+                <ul class="sub">
                     <li><a class="icon-align-center" href=""> 分类标签列表</a></li>
                     <li><a class=" icon-indent-left" href="}"> 添加分类</a></li>
                 </ul>

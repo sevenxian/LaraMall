@@ -18,7 +18,7 @@ class AdminMiddleware
         // 判断用户是否认证
         if (!\Auth::guard($guard)->check()) {
 
-            return redirect()->route('admin.login');
+//            return redirect()->route('admin.login');
         }
 
         return $next($request);

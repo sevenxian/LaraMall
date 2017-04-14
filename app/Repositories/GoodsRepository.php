@@ -12,16 +12,27 @@ class GoodsRepository
      */
     protected $goods;
 
+    /**
+     * @var Analysis
+     */
     protected $analysis;
+
+    /**
+     * @var
+     */
+    protected $indexGoods;
 
     /**
      * GoodsRepository constructor.
      * @param Goods $goods
+     * @param Analysis $analysis
+     * @param IndexGoodsRepository $indexGoods
      */
-    public function __construct(Goods $goods, Analysis $analysis)
+    public function __construct(Goods $goods, Analysis $analysis, IndexGoodsRepository $indexGoods)
     {
         $this->goods = $goods;
         $this->analysis = $analysis;
+        $this->indexGoods = $indexGoods;
     }
 
     /**
@@ -39,10 +50,15 @@ class GoodsRepository
 
     public function addGoods($data)
     {
+
         $res = $this->goods::create($data);
 
-        $tmp = $this->analysis->toUnicode('获取商品列表目止蠷暗无天日是');
-        
-        dd($tmp);
+        $body = $this->analysis->QuickCut($data['goods_title']);
+
+        $arr['goods_id'] = $res->id;
+        $arr['cargo_id'] = 1;
+        $arr['body'] = implode(' ', $body);
+
+        return $this->indexGoods->add($arr);
     }
 }

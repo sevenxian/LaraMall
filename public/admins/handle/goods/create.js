@@ -1,5 +1,7 @@
+
 new Vue({
     el: ".wrapper",
+
     methods: {
         addGoods(e){
             var fd = new FormData(e.target);

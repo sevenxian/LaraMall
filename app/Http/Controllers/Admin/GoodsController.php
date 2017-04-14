@@ -65,13 +65,15 @@ class GoodsController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $data['category_id'] = 1;
+        $data['category_id'] = 21;
         $data['goods_label'] = json_encode([]);
         $data['goods_original'] = json_encode([]);
         $data['goods_thumbnail'] = json_encode([]);
         $data['goods_info'] = '商品详情';
 
         $res = $this->goods->addGoods($data);
+
+        return responseMsg($res);
     }
 
     /**

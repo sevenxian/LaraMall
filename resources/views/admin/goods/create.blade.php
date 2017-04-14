@@ -40,6 +40,13 @@
                                     </div>
                                 </div>
                                 {{--<div class="form-group">--}}
+                                    {{--<label for="inputGoodsTitle" class="col-md-1 control-label">商品名称</label>--}}
+                                    {{--<div class="col-md-11">--}}
+                                        {{--<input name="tagsinput" id="tagsinput" class="tagsinput"--}}
+                                               {{--value="Flat,Design,Lab,Clean"/>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                                {{--<div class="form-group">--}}
                                     {{--<label for="inputPassword1" class="col-md-1 control-label">Password</label>--}}
                                     {{--<div class="col-md-11">--}}
                                         {{--<input type="password" class="form-control" id="inputPassword1"--}}
