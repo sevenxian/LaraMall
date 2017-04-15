@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Tools;
 
 
@@ -43,30 +44,48 @@ class Common
     }
 
     /**
-     * 组装操作日志信息
+     * 处于登录状态下的操作日志信息拼装
      *
-     * @param $operator_id 操作人ID
-     * @param $username    操作人用户名
-     * @param $ip          操作人客户端IP
-     * @param $url         操作的路由
-     * @param $param       操作的参数
-     * @param $substance   操作的内容
+     * @param int $operator_id
+     * @param string $username
+     * @param string $ip
+     * @param string $url
+     * @param array $param
+     * @param string $substance
      * @return array
      * @author zhangyuchao
      */
-    public static function getLogMessage($operator_id,$username,$ip,$url,$param,$substance)
+    public static function logMessageForInside($operator_id = 0, $username = '', $ip = '', $url = '', array $param, $substance = '')
     {
-         return [
+        return [
             'operator_id' => $operator_id,
-            'username'    => $username,
-            'time'        => date('Y-m-d,H:i:s',time()),
-            'login_ip'    => $ip,
-            'url'         => $url,
-            'param'       => $param,
-            'substance'   => $substance
+            'username' => $username,
+            'time' => date('Y-m-d,H:i:s', time()),
+            'login_ip' => $ip,
+            'url' => $url,
+            'param' => $param,
+            'content' => $substance
         ];
     }
 
-
-
+    /**
+     * 处于未登录状态下的操作日志信息拼装
+     *
+     * @param string $ip
+     * @param string $url
+     * @param array $param
+     * @param string $substance
+     * @return array
+     * @author zhangyuchao
+     */
+    public static function logMessageForOutside($ip = '', $url = '', array $param, $substance = '')
+    {
+        return [
+            'time' => date('Y-m-d,H:i:s', time()),
+            'login_ip' => $ip,
+            'url' => $url,
+            'param' => $param,
+            'content' => $substance
+        ];
+    }
 }

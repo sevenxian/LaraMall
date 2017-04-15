@@ -36,7 +36,9 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     // 商城首页
     Route::get('index', 'IndexController@index')->name('home.index');
     // 用户注册
-    Route::get('register', 'UserController@register')->name('home.register');
+    Route::get('register', 'RegisterController@register')->name('home.register');
+    Route::post('register/sendMobileCode', 'RegisterController@sendMobileCode');
+    Route::post('register/createUser', 'RegisterController@createUser');
     // 用户登录
     Route::get('login', 'UserController@login')->name('home.login');
     // 商品列表页

@@ -15,9 +15,10 @@ class CreateDataUsersRegisterTable extends Migration
     {
         Schema::create('data_users_register', function (Blueprint $table) {
             $table->increments('id')->comment('用户注册原始表');
-            $table->string('register_name',32)->unique()->comment('注册名');
+            $table->string('email',32)->nullable()->index()->comment('邮箱');
+            $table->string('tel',32)->nullable()->index()->comment('手机号码');
             $table->string('password',255)->comment('密码');
-            $table->string('third_party_id',32)->comment('第三方 ID');
+            $table->string('third_party_id',32)->nullable()->comment('第三方 ID');
             $table->ipAddress('register_ip')->comment('注册ip');
             $table->timestamps();
         });
