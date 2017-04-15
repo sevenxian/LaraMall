@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('content')
-    <section id="main-content">
+    <section id="main-content" class="has-js">
         <section class="wrapper">
             <button class="btn btn-success btn-xs"
                     data-toggle="modal" data-target="#bindModal"
@@ -19,17 +19,17 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="addName" class="control-label">分类名称:</label>
-                                    <span class="form-control"></span>
+                                    <span class="form-control">@{{ (datas[labelBind.index] != null ? datas[labelBind.index].name :'') }}</span>
                                 </div>
                                 <div class="form-group">
                                     <label for="addName" class="control-label">标签:</label>
                                     <div class="checkboxes">
-                                        <div class="row">
+                                        <div class="row" id="labelsC">
                                             <div class="col-md-6" v-for="(label, index) in labelBind.labels">
-                                                <label class="label_check" :for="'checkbox-'+label.id">
-                                                    <input :id="'checkbox-'+label.id"
-                                                           :value="label.id"
-                                                           type="checkbox"/> @{{ label.category_label_name }}
+                                                <label class="label_check" :class="{'c_on':label.checked}">
+                                                    <input
+                                                            :value="label.id"
+                                                            type="checkbox"/> @{{ label.category_label_name }}
                                                 </label>
                                             </div>
                                         </div>
@@ -191,6 +191,7 @@
                                 </td>
                                 <td v-else-if="currentLevel == 3 && data.deleted_at == null">
                                     <button class="btn btn-primary btn-xs"
+                                            @click="fetchCategoryForLabel(index, data.id)"
                                             data-toggle="modal" data-target="#bindModal"
                                             data-whatever="@getbootstrap">查看标签
                                     </button>
@@ -210,19 +211,9 @@
     </section>
 @stop
 
-@section('externalJs')
-    <!--custom switch-->
-    <script src="/admins/js/bootstrap-switch.js"></script>
-    <!--custom tagsinput-->
-    <script src="/admins/js/jquery.tagsinput.js"></script>
-    <script type="text/javascript" src="/admins/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="/admins/assets/bootstrap-daterangepicker/date.js"></script>
-    <script type="text/javascript" src="/admins/assets/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <script type="text/javascript" src="/admins/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
-@stop
-
 @section('customJs')
-    <script src="/admins/js/form-component.js"></script>
+    <!-- 引入公共 js -->
+    <script src="{{ asset('admins/handle/common/common.js') }}"></script>
     <!-- 当前页面 js -->
     <script src="{{ asset('admins/handle/classification/index.js') }}"></script>
     <!-- 当前页面表单验证 js -->

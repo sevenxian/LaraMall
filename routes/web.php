@@ -77,6 +77,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
         // 后台首页
         Route::get('index', 'IndexController@index')->name('admin.index');
+        Route::get('/', 'IndexController@index');
         // 用户退出登陆
         Route::any('logout', 'UserController@logout')->name('admin.logout');
 

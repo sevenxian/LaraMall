@@ -107,10 +107,8 @@ class ClassificationController extends Controller
      */
     public function show($id)
     {
-        // 查询分类数据
-        $category = $this->category->findById($id);
-        // 查询是否成功
-        if ($category) {
+        // 查询分类数据，并且判断查询是否成功
+        if ($category = $this->category->findByIdWithParent($id)) {
             $category->doma = env('QINIU_DOMAIN');
         }
 
@@ -134,7 +132,7 @@ class ClassificationController extends Controller
         // 修改分类数据, 判断返回结果
         if ($this->category->updateById($id, $data)) {
             // 查询更新后的值
-            $data = $this->category->findById($id);
+            $data = $this->category->findByIdWithParent($id);
 
             // 成功返回修改数据
             return responseMsg($data, 200);
@@ -197,6 +195,7 @@ class ClassificationController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        // 恢复一条数据，并判断结果
         if ($request->get('boolean') && $this->category->softRstore($id)) {
             return responseMsg('启用成功!');
         }
