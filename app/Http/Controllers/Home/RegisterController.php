@@ -199,6 +199,8 @@ class RegisterController extends Controller
         $request['password'] = bcrypt($password);
         // 记录IP  登录日志表的登录IP   登录索引表的最后一次登录IP     户注册原始表的注册IP
         $request['login_ip'] = $request['last_login_ip'] = $request['register_ip'] = $request->getClientIp();
+        // 初始化昵称
+        $request['nickname'] = 'nickname';
         try {
             // 开始事物
             \DB::beginTransaction();

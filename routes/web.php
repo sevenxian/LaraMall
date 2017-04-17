@@ -91,6 +91,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('usersUpdate', 'AdminUserController@update');
         // 后台用户管理
         Route::resource('subscribers','SubscribersController');
+        // 后台用户列表
+        Route::any('subscriberList', 'SubscribersController@subscriberList');
+        // 重置密码
+        Route::post('subscriberUpdate', 'SubscribersController@update');
 
         // 分类块
         Route::resource('classification', 'ClassificationController');

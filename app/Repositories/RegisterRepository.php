@@ -49,4 +49,18 @@ class RegisterRepository
         return $this->userRegister->where($where)->first();
     }
 
+    /**
+     * 获取用户列表
+     *
+     * @param array $where
+     * @param int $perPage
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function getUserList(array $where, $perPage = 20)
+    {
+       return $this->userRegister->where($where)->orderBy('created_at', 'desc')->with('message')->paginate($perPage);
+
+    }
+
 }

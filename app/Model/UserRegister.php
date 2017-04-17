@@ -26,4 +26,16 @@ class UserRegister extends Model
      * @var array
      */
     protected $hidden = ['password'];
+
+    /**
+     * 用户基本信息
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @author zhangyuchao
+     */
+    public function message()
+    {
+        return $this->hasOne('App\Model\UserInfo','user_id');
+    }
+
 }

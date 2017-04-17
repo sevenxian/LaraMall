@@ -79,9 +79,9 @@ class AdminUserController extends Controller
         $data['last_login_at'] = $data['created_at'];
 
         // 组装操作日志内容
-        $message = Common::logMessageForInside(1, 'zhangyuchao', $request->getClientIp(), $request->url(), $request->all(), config('log.adminLog')[2]);
+        //$message = Common::logMessageForInside(1, 'zhangyuchao', $request->getClientIp(), $request->url(), $request->all(), config('log.adminLog')[2]);
         // 填写操作日志
-        $this->log->writeAdminLog($message);
+       // $this->log->writeAdminLog($message);
         return responseMsg($data);
     }
 
