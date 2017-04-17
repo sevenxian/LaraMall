@@ -60,6 +60,7 @@ class AdminUserController extends Controller
      */
     public function store(Request $request)
     {
+
         // 密码判断
         if ($request['password'] != $request['rel_password']) return responseMsg('两次密码输入不一致', 400);
         // 判断手机号码是否存在
@@ -77,11 +78,18 @@ class AdminUserController extends Controller
         $data = $result->toArray();
         $data['address'] = '从未登录';
         $data['last_login_at'] = $data['created_at'];
-
         // 组装操作日志内容
-        //$message = Common::logMessageForInside(1, 'zhangyuchao', $request->getClientIp(), $request->url(), $request->all(), config('log.adminLog')[2]);
+        $message = Common::logMessageForInside
+        (
+            auth('admin')->user()->id,  // 管理员ID
+            auth('admin')->user()->nickname, // 管理员昵称
+            $request->getClientIp(),
+            $request->url(),
+            $request->all(),
+            config('log.adminLog')[2]
+        );
         // 填写操作日志
-       // $this->log->writeAdminLog($message);
+        $this->log->writeAdminLog($message);
         return responseMsg($data);
     }
 

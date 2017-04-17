@@ -43,8 +43,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::post('register/sendEmailCode', 'RegisterController@sendEmailCode');
     // 用户注册
     Route::post('register/createUser', 'RegisterController@createUser');
-    // 用户登录
+    // 用户返回视图
     Route::get('login', 'UserController@login')->name('home.login');
+    // 用户登录处理
+    Route::post('doLogin', 'UserController@doLogin');
     // 商品列表页
     Route::get('goodsList', 'GoodsController@goodsList')->name('home.goodsList');
     // 商品详情页
@@ -109,7 +111,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::resource('goods', 'GoodsController');
         // 获取商品列表数据
         Route::any('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
-
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
 

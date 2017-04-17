@@ -59,7 +59,7 @@
                                 <td><font><font>@{{ data.register_ip }}</font></font></td>
                                 <td><font><font>@{{ data.created_at }}</font></font></td>
                                 <td>
-                                    <a href="{{ url('/admin/subscribers') }}"><button  class="btn btn-success btn-xs">详细信息</button></a>
+                                    <button  class="btn btn-success btn-xs" @click="showDetails(data.id)">详细信息</button>
                                     <button  class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updatePassword" data-whatever="@getbootstrap" @click="getUserId(data.id)" >重置密码</button>
 
                                 </td>

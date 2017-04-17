@@ -18,7 +18,7 @@ var userListVue = new Vue({
             offset: 4, // 页码偏移量
             datas: [], // 页码内容
             search: {'type':0,'value':''}, // 搜索条件
-            per_page: 3, // 一页显示的数据
+            per_page: 20, // 一页显示的数据
         }
     },
     // 第一次执行
@@ -100,6 +100,9 @@ var userListVue = new Vue({
         // 获取管理员ID
         getUserId(id) {
            this.userId = id;
+        },
+        showDetails(id) {
+            window.location.href = "/admin/subscribers/"+id;
         },
     }
 });

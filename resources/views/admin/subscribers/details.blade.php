@@ -27,49 +27,49 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">用户昵称</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+                                        <input class="form-control" id="disabledInput" type="text" value="{{ $data->nickname or '未填写' }}" readonly="readonly">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">电话号码</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+                                        <input class="form-control" id="disabledInput" type="text" value="{{ $data->tel or '未绑定' }}" readonly="readonly">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">电子邮箱</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+                                        <input class="form-control" id="disabledInput" type="text" value="{{ $data->email or '未绑定' }}" readonly="readonly">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">真实姓名</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+                                        <input class="form-control" id="disabledInput" type="text" value="{{ $data->realname or '未填写' }}" readonly="readonly">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">身份证号</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+                                        <input class="form-control" id="disabledInput" type="text" value="{{ $data->id_number or '未填写' }}" readonly="readonly">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+                                        <input class="form-control" id="disabledInput" type="text" value="@if($data->sex ==1)男@elseif($data->sex==2)女@else未填写@endif" readonly="readonly">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">生&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+                                        <input class="form-control" id="disabledInput" type="text" value="{{ $data->birthday or  '未填写'}}" readonly="readonly">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;保</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled="">
+                                        <input class="form-control" id="disabledInput" type="text" value="@if(!empty($data->answer_1) || !empty($data->answer_2)) 已填写 @else 未填写 @endif" readonly="readonly">
                                     </div>
                                 </div>
                             </form>
