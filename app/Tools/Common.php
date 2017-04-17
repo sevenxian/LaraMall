@@ -3,6 +3,8 @@
 namespace App\Tools;
 
 
+use Naux\Mail\SendCloudTemplate;
+
 class Common
 {
     /**
@@ -87,5 +89,26 @@ class Common
             'param' => $param,
             'content' => $substance
         ];
+    }
+
+    /**
+     * 邮件发送
+     *
+     * @param $templateName
+     * @param $title
+     * @param $recipients
+     * @param array $data
+     * @return bool
+     * @author zhangyuchao
+     */
+    public static function sendEmail($templateName, $title, $recipients, array $data)
+    {
+        // 邮件发送
+        $flag = \Mail::send('email.' . $templateName, $data, function ($message) use ($recipients, $title) {
+
+             $message->to($recipients)->subject($title);
+        });
+        // 判断发送结果
+        return true;
     }
 }

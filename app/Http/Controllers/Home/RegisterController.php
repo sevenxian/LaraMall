@@ -137,6 +137,41 @@ class RegisterController extends Controller
     }
 
     /**
+     * 发送有邮箱验证码
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhangyuchao
+     */
+    public function sendEmailCode(Request $request)
+    {
+        $result = $this->indexUserLogin->findOneUserManner(['login_name' => $request['email']]);
+        if ($result) return responseMsg('邮箱已注册!', 400);
+        // 判断邮箱是否重复发送
+        $exists = \Redis::exists(STRING_USER_VERIFY_CODE_ . $request['email']);
+        if (!empty($exists)) return responseMsg('重复发送', 400);
+        // 生成验证码
+        $num = rand(100000, 999999);
+        // 调用发送邮件函数
+        $emailResult = Common::sendEmail(config('email.templateName')[1], config('email.title')[1], $request['email'], ['code' => $num]);
+        // 判断是否发送成功
+        if (!$emailResult) {
+            // 未成功 记录日志
+            $message = Common::logMessageForOutside($request->getClientIp(), $request->url(), $request->all(), config('log.systemLog')[2]);
+            $this->log->writeSystemLog($message);
+
+            // 返回错误信息
+            return responseMsg('发送失败', 400);
+        } else {
+            // 成功存入redis
+            \Redis::sEtex(STRING_USER_VERIFY_CODE_ . $request['email'], 600, $num);
+
+            return responseMsg('发送成功');
+        }
+    }
+
+
+    /**
      * 用户注册
      *
      * @param Request $request
@@ -157,9 +192,9 @@ class RegisterController extends Controller
             $request['login_name'] = $request['email'] = trim($request['email']);
         }
         // 验证码失败判断
-        if (empty($code)) return responseMsg('验证码已失效');
+        if (empty($code)) return responseMsg('验证码已失效', 400);
         // 验证码是否正确判断
-        if ($code != $request['code']) return responseMsg('验证码错误');
+        if ($code != $request['code']) return responseMsg('验证码错误', 400);
         // 密码加密
         $request['password'] = bcrypt($password);
         // 记录IP  登录日志表的登录IP   登录索引表的最后一次登录IP     户注册原始表的注册IP

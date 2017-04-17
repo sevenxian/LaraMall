@@ -180,7 +180,8 @@ return [
         Mews\Captcha\CaptchaServiceProvider::class,
         MercurySeries\Flashy\FlashyServiceProvider::class,
         Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class, // 七牛云存储
-        iscms\Alisms\AlidayuServiceProvider::class,// 阿里大鱼 短信验证
+        iscms\Alisms\AlidayuServiceProvider::class, // 阿里大鱼 短信验证
+        Naux\Mail\SendCloudServiceProvider::class,  // sendCloud邮箱服务
     ],
 
     /*

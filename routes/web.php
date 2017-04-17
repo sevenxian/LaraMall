@@ -35,9 +35,13 @@ Route::group(['prefix' => 'common', 'namespace' => 'Common'], function () {
 Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     // 商城首页
     Route::get('index', 'IndexController@index')->name('home.index');
-    // 用户注册
+    // 返回注册视图
     Route::get('register', 'RegisterController@register')->name('home.register');
+    // 发送手机验证码
     Route::post('register/sendMobileCode', 'RegisterController@sendMobileCode');
+    // 发送邮箱验证码
+    Route::post('register/sendEmailCode', 'RegisterController@sendEmailCode');
+    // 用户注册
     Route::post('register/createUser', 'RegisterController@createUser');
     // 用户登录
     Route::get('login', 'UserController@login')->name('home.login');
