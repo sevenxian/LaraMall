@@ -35,22 +35,21 @@
                             <form id="goods" class="form-horizontal" role="form" @submit.prevent="addGoods">
                                 <div class="form-group">
                                     <label for="inputGoodsTitle" class="col-md-1 control-label">商品分类</label>
-                                    <div class="col-md-11">
+                                    <div class="col-md-11" id="app">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <select class="form-control" @change="selected">
-                                                    <option value="-1">请选择...</option>
-                                                    <option :value="category.id" value="category.id" v-for="category in categorys">@{{ category.name }}</option>
+                                                <select class="form-control" v-model="level1" @change="lv1">
+                                                <option :value="level.id" v-for="level in lv1s">@{{ level.name }}</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
-                                                <select class="form-control">
-                                                    <option value="-1">请选择...</option>
+                                                <select class="form-control" v-model="level2" @change="lv2">
+                                                <option :value="level.id" v-for="level in lv2s">@{{ level.name }}</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
-                                                <select class="form-control">
-                                                    <option value="-1">请选择...</option>
+                                                <select class="form-control" v-model="level3">
+                                                    <option :value="level.id" v-for="level in lv3s">@{{ level.name }}</option>
                                                 </select>
                                             </div>
                                         </div>
