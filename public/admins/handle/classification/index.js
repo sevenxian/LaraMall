@@ -8,6 +8,7 @@ new Vue({
     // 响应式参数
     data() {
         return {
+            // 分页变量数据
             pagination: {
                 total: 0, // 总条数
                 from: 1, // 当前页码第一个栏数据是数据库第几条
@@ -21,6 +22,17 @@ new Vue({
             per_page: 10, // 一页显示的数据
             currentLevel: 1, // 当前分类层级
             category: [], // 修改时显示的单个分类数据
+            // 标签绑定变量
+            labelBind: {
+                // 当前分类 id
+                id: '',
+                // 标签列表中得索引, 通过这个索引找到当前需要绑定的是哪一条标签数据
+                index: '',
+                // 添加标签时双向绑定的变量
+                labelName: '',
+                // 所有标签
+                labels: []
+            }
         }
     },
     // 第一次执行
@@ -244,22 +256,81 @@ new Vue({
                 // layer 加载层关闭
                 sweetAlert("请求失败!", "操作失败!", "error");
             });
+        },
+        // 新增一个标签
+        addNewLabel() {
+            // 判断分类绑定提交表单值是否为空
+            if (this.labelBind.labelName == '') return;
+            // layer 加载层
+            layer.load(2);
+            // 执行标签新增操作
+            axios.post('/admin/categoryLabel', {category_label_name: this.labelBind.labelName}).then(response => {
+                // layer 加载层关闭
+                layer.closeAll();
+                // 判断修改是否成功
+                if (response.data.ServerNo != 200) {
+                    return sweetAlert("失败!", "新增标签失败!", "error");
+                }
+                // 添加到标签列表之中，并且页面自动生成新元素
+                this.labelBind.labels.push(response.data.ResultData);
+                // 清空输入的值
+                this.labelBind.labelName = '';
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("请求失败!", "用户列表请求失败!", "error");
+            });
+        },
+        // 完成标签绑定
+        doneBind() {
+            // layer 加载层
+            layer.load(2);
+            // 获取选中标签的 id
+            var labels = [];
+            $('.c_on > input[type="checkbox"]').each(function (i, e) {
+                labels[i] = $(e).val();
+            });
+            // 发送一次分类绑定标签请求
+            axios.patch('/admin/categoryLabel/' + this.labelBind.id, labels).then(response => {
+                // layer 加载层关闭
+                layer.closeAll();
+                // 隐藏模态框
+                $('#bindModal').modal('hide');
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("失败!", "请求失败!", "error");
+            });
+        },
+        // 获取分类下得标签
+        fetchCategoryForLabel(index, id) {
+            // layer 加载层
+            layer.load(2);
+            // 得到需要标签列表中准确那一条数据的索引
+            this.labelBind.index = index;
+            // 分类 id
+            this.labelBind.id = id;
+            // 清空标签列表数据
+            this.labelBind.labels = [];
+            // 获取当前分类已有的标签
+            axios.get('/admin/categoryLabel', {
+                params: {id}
+            }).then(response => {
+                // layer 加载层关闭
+                layer.closeAll();
+                // 判断修改是否成功
+                if (response.data.ServerNo != 200) {
+                    return sweetAlert("失败!", "获取标签失败!", "error");
+                }
+                // 添加到标签列表之中，并且页面自动生成新元素
+                this.labelBind.labels = response.data.ResultData;
+                // 清空输入的值
+                this.labelBind.labelName = '';
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("失败!", "请求失败!", "error");
+            });
         }
     }
 });
-
-// 获取图标编码
-function getObjectURL(file) {
-    var url = null;
-    if (window.createObjectURL != undefined) {
-        url = window.createObjectURL(file);
-    } else if (window.URL != undefined) {
-        url = window.URL.createObjectURL(file);
-    } else if (window.webkitURL != undefined) {
-        url = window.webkitURL.createObjectURL(file);
-    }
-    return url;
-}
 
 // 表单立即显示图标
 $('.img').on('change', function () {
@@ -271,4 +342,16 @@ $('.img').on('change', function () {
     var url = getObjectURL(files);
     // 立即显示图片
     $('.' + id + '_img').attr({'src': url});
+});
+
+// 复选框样式切换
+$('#bindModal').on('click', '.label_check', function (e) {
+    // 阻止事件冒泡
+    e.preventDefault();
+    // 样式切换
+    if ($(this).hasClass('c_on')) {
+        $(this).removeClass('c_on').addClass('c_off');
+    } else {
+        $(this).removeClass('c_off').addClass('c_on');
+    }
 });

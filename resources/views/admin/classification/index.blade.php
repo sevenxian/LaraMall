@@ -1,79 +1,56 @@
 @extends('admin.layouts.master')
 @section('content')
-    <section id="main-content">
+    <section id="main-content" class="has-js">
         <section class="wrapper">
+            <button class="btn btn-success btn-xs"
+                    data-toggle="modal" data-target="#bindModal"
+                    data-whatever="@getbootstrap"> GG
+            </button>
             <!-- 绑定属性模态框 Start -->
             <div class="modal fade" id="bindModal" tabindex="-1" role="dialog" aria-labelledby="bindModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                        aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="exampleModalLabel">分类绑定标签</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="addName" class="control-label">分类名称:</label>
-                                <span class="form-control"></span>
+                        <form action="/admin/aaaa" method="post">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="exampleModalLabel">分类下的标签</h4>
                             </div>
-                            <div class="form-group">
-                                <label for="addName" class="control-label">标签:</label>
-                                <div class="checkboxes">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="addName" class="control-label">分类名称:</label>
+                                    <span class="form-control">@{{ (datas[labelBind.index] != null ? datas[labelBind.index].name :'') }}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addName" class="control-label">标签:</label>
+                                    <div class="checkboxes">
+                                        <div class="row" id="labelsC">
+                                            <div class="col-md-6" v-for="(label, index) in labelBind.labels">
+                                                <label class="label_check" :class="{'c_on':label.checked}">
+                                                    <input
+                                                            :value="label.id"
+                                                            type="checkbox"/> @{{ label.category_label_name }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label class="label_check" for="checkbox-01">
-                                                <input name="sample-checkbox-01" id="checkbox-01" value="1"
-                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
-                                            </label>
+                                            <input type="text" v-model.trim="labelBind.labelName" class="form-control"
+                                                   placeholder="标签名称">
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="label_check" for="checkbox-02">
-                                                <input name="sample-checkbox-01" id="checkbox-02" value="1"
-                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
-                                            </label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="label_check" for="checkbox-03">
-                                                <input name="sample-checkbox-01" id="checkbox-03" value="1"
-                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
-                                            </label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="label_check" for="checkbox-04">
-                                                <input name="sample-checkbox-01" id="checkbox-04" value="1"
-                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
-                                            </label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="label_check" for="checkbox-05">
-                                                <input name="sample-checkbox-01" id="checkbox-05" value="1"
-                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
-                                            </label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="label_check" for="checkbox-06">
-                                                <input name="sample-checkbox-01" id="checkbox-06" value="1"
-                                                       type="checkbox" checked/> I agree to the terms &#38; conditions.
-                                            </label>
-                                        </div>
+                                        <div class="tagsinput-add" @click="addNewLabel()"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" placeholder="标签名称">
-                                    </div>
-                                    <div class="tagsinput-add"></div>
-                                </div>
+                            <div class="modal-footer">
+                                <button type="button" @click="doneBind()" class="btn btn-primary">
+                                    完成
+                                </button>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
-                            关闭
-                            </button>
-                            <button type="submit" class="btn btn-primary submit">提交</button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -113,7 +90,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
-                                关闭
+                                    关闭
                                 </button>
                                 <button type="submit" class="btn btn-primary submit">提交</button>
                             </div>
@@ -157,7 +134,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" @click="emptyForm()" class="btn btn-default" data-dismiss="modal">
-                                关闭
+                                    关闭
                                 </button>
                                 <button type="submit" class="btn btn-primary">提交</button>
                             </div>
@@ -173,7 +150,7 @@
                         <header class="panel-heading">
                             分类列表：@{{ getLevel(currentLevel) }}
                             <button class="btn btn-primary  pull-right col-lg-1" @click="backTo()"
-                            v-if="currentLevel != 1">上一级分类
+                                    v-if="currentLevel != 1">上一级分类
                             </button>
                         </header>
                         <table class="table table-striped table-advance table-hover">
@@ -193,29 +170,30 @@
                                 <td>@{{ (data.parent_category != null)?data.parent_category.name:'顶级分类' }}</td>
                                 <td>
                                     <button @click="fetchCategoryById(data.id, index)" class="btn btn-info btn-xs"
-                                    data-toggle="modal" data-target="#exampleModal"
-                                    data-whatever="@getbootstrap">修改
+                                            data-toggle="modal" data-target="#exampleModal"
+                                            data-whatever="@getbootstrap">修改
                                     </button>
                                     <button class="btn btn-danger btn-xs" @click="toggleEnabledBy(data.id, index, 0)"
-                                    v-if="data.deleted_at == null">
-                                    禁用
+                                            v-if="data.deleted_at == null">
+                                        禁用
                                     </button>
                                     <button class="btn btn-success btn-xs" @click="toggleEnabledBy(data.id, index, 1)"
-                                    v-else>
-                                    启用
+                                            v-else>
+                                        启用
                                     </button>
                                 </td>
                                 <td v-if="currentLevel != 3 && data.deleted_at == null">
                                     <button class="btn btn-primary btn-xs" @click="catChild(data)"><i
-                                            class="icon-eye-open"></i></button>
+                                                class="icon-eye-open"></i></button>
                                     <button class="btn btn-success btn-xs" @click="childSet(data.id, data.level)"
-                                    data-toggle="modal" data-target="#addModal"
-                                    data-whatever="@getbootstrap"><i class="icon-plus"></i></button>
+                                            data-toggle="modal" data-target="#addModal"
+                                            data-whatever="@getbootstrap"><i class="icon-plus"></i></button>
                                 </td>
                                 <td v-else-if="currentLevel == 3 && data.deleted_at == null">
                                     <button class="btn btn-primary btn-xs"
+                                            @click="fetchCategoryForLabel(index, data.id)"
                                             data-toggle="modal" data-target="#bindModal"
-                                            data-whatever="@getbootstrap">绑定标签
+                                            data-whatever="@getbootstrap">查看标签
                                     </button>
                                 </td>
                                 <td v-else="data.deleted_at != null">
@@ -234,7 +212,8 @@
 @stop
 
 @section('customJs')
-    <script src="/admins/js/form-component.js"></script>
+    <!-- 引入公共 js -->
+    <script src="{{ asset('admins/handle/common/common.js') }}"></script>
     <!-- 当前页面 js -->
     <script src="{{ asset('admins/handle/classification/index.js') }}"></script>
     <!-- 当前页面表单验证 js -->
