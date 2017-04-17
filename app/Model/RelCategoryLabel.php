@@ -17,4 +17,6 @@ class RelCategoryLabel extends Model
      * @author Luoyan
      */
     protected $table = 'rel_category_labels';
+    
+    
 }

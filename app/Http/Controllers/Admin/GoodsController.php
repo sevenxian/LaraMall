@@ -3,31 +3,59 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Model\RelCategoryLabel;
+use App\Repositories\CategoryLabelRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsRepository;
+use App\Repositories\RelCategoryLabelRepository;
 use Illuminate\Http\Request;
 
 class GoodsController extends Controller
 {
     /**
-     * @var
+     * @var GoodsRepository
+     * @author zhulinjie
      */
     protected $goods;
 
     /**
-     * @var
+     * @var CategoryRepository
+     * @author zhulinjie
      */
     protected $category;
+
+    /**
+     * @var CategoryLabelRepository
+     * @author zhulinjie
+     */
+    protected $categoryLabel;
+
+    /**
+     * @var
+     * @author zhulinjie
+     */
+    protected $relCL;
 
     /**
      * GoodsController constructor.
      * @param GoodsRepository $goods
      * @param CategoryRepository $category
+     * @param CategoryLabelRepository $categoryLabel
+     * @param RelCategoryLabelRepository $relCL
      */
-    public function __construct(GoodsRepository $goods, CategoryRepository $category)
+    public function __construct
+    (
+        GoodsRepository $goods,
+        CategoryRepository $category,
+        CategoryLabelRepository $categoryLabel,
+        RelCategoryLabelRepository $relCL
+    )
     {
         $this->goods = $goods;
         $this->category = $category;
+        $this->categoryLabel = $categoryLabel;
+        $this->relCL = $relCL;
+
     }
 
     /**
@@ -81,7 +109,7 @@ class GoodsController extends Controller
         $data['goods_info'] = '商品详情';
 
         $res = $this->goods->addGoods($data);
-
+        
         return responseMsg($res);
     }
 
@@ -95,8 +123,19 @@ class GoodsController extends Controller
     public function getCategory(Request $request)
     {
         $param = $request->all();
-        $res = $this->category->getCategory($param);
+        $res = $this->category->select($param);
         return responseMsg($res);
+    }
+
+    public function getCategoryLabel(Request $request)
+    {
+        $param = $request->all();
+        // 获取分类下的标签
+        $ids = $this->relCL->fetchListsFor($param);
+        foreach($ids as $id){
+            $this->categoryLabel->findById($id);
+        }
+
     }
 
     /**

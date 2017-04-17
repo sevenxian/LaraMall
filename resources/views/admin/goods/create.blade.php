@@ -35,7 +35,7 @@
                             <form id="goods" class="form-horizontal" role="form" @submit.prevent="addGoods">
                                 <div class="form-group">
                                     <label for="inputGoodsTitle" class="col-md-1 control-label">商品分类</label>
-                                    <div class="col-md-11" id="app">
+                                    <div class="col-md-11" id="category">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <select class="form-control" v-model="level1" @change="lv1">
@@ -48,7 +48,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4">
-                                                <select class="form-control" v-model="level3">
+                                                <select class="form-control" v-model="level3" @change="lv3">
                                                     <option :value="level.id" v-for="level in lv3s">@{{ level.name }}</option>
                                                 </select>
                                             </div>

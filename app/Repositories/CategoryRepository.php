@@ -119,7 +119,7 @@ class CategoryRepository
      * @param $param
      * @author zhulinjie
      */
-    public function getCategory($where)
+    public function select($where)
     {
         return $this->category->where($where)->get();
     }

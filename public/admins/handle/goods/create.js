@@ -1,10 +1,10 @@
 /**
- * 商品分类 Vue
+ * 添加商品-获取分类 Vue
  * @author zhulinjie
  */
 new Vue({
     // 绑定元素
-    el: "#app",
+    el: "#category",
     // 响应式参数
     data(){
         return {
@@ -18,7 +18,7 @@ new Vue({
     },
     // 第一次执行
     mounted(){
-        // 第一次网页加载默认获取一级分类
+        // 获取一级分类
         axios.post('/admin/getCategory', {level: 1}).then(response => {
             layer.closeAll();
             this.lv1s = response.data.ResultData;
@@ -56,6 +56,16 @@ new Vue({
                     layer.closeAll();
                     sweetAlert("请求失败!", "分类获取失败!", "error");
                 });
+            }
+        },
+        lv3(){
+            if(this.level3){
+                // 获取分类下的标签
+                axios.post('/admin/getCategoryLabel', {category_id: this.level3}).then(response => {
+                    console.log(response);
+                }).catch(error => {
+
+                });       
             }
         }
     }
