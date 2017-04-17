@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
+
     /**
      * 后台首页
      *
@@ -18,4 +19,6 @@ class IndexController extends Controller
     {
         return view('admin.index');
     }
+
+    
 }

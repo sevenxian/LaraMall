@@ -33,27 +33,30 @@
                 </ul>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag([]) }}">
+            <li class="sub-menu {{ $aside->openTag(['admin/categoryLabel']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-th"></i>
                     <span>标签管理</span>
-                    <span class="arrow {{ $aside->openTag([]) }}"></span>
+                    <span class="arrow {{ $aside->openTag(['admin/categoryLabel']) }}"></span>
                 </a>
-                <ul class="sub" {{ $aside->displayBlock([]) }}>
-                    <li><a class="icon-align-center" href=""> 分类标签列表</a></li>
-                    <li><a class=" icon-indent-left" href="}"> 添加分类</a></li>
+                <ul class="sub" {{ $aside->displayBlock(['admin/categoryLabel']) }}>
+                    <li><a class="icon-align-center" href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>
+                    <li><a class=" icon-indent-left" href=""> 添加分类</a></li>
                 </ul>
             </li>
 
             <li class="sub-menu">
                 <a href="javascript:;" class="">
-                    <i class="icon-tasks"></i>
+                    <i class="icon-glass"></i>
                     <span>商品管理</span>
-                    <span class="arrow"></span>
+                    <span class="arrow {{ $aside->openTag(['admin/goods', 'admin/goods/create']) }}"></span>
                 </a>
-                <ul class="sub">
-                    <li><a class="" href="form_wizard.html">商品列表</a></li>
-                    <li><a class="" href="form_component.html">商品标签</a></li>
+                <ul class="sub" {{ $aside->displayBlock(['admin/goods', 'admin/goods/create']) }}>
+                    <li><a href="/admin/goods">商品列表</a></li>
+                    <li><a href="/admin/goods/create">添加商品</a></li>
+                    <li><a href="invoice.html">Invoice</a></li>
+                    <li><a href="404.html">404 Error</a></li>
+                    <li><a href="500.html">500 Error</a></li>
                 </ul>
             </li>
             <li>
@@ -86,7 +89,6 @@
                     <span class="arrow"></span>
                 </a>
             </li>
-
             <li>
                 <a class="" href="login.html">
                     <i class="icon-user"></i>

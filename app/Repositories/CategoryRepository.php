@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-
 use App\Model\Category;
 
 /**
@@ -60,9 +59,21 @@ class CategoryRepository
      * @return mixed
      * @author: Luoyan
      */
-    public function findById($id)
+    public function findByIdWithParent($id)
     {
         return $this->category->with('parentCategory')->find($id);
+    }
+
+    /**
+     * 根据 id 查找数据
+     *
+     * @param $id
+     * @return mixed
+     * @author: Luoyan
+     */
+    public function findById($id)
+    {
+        return $this->category->find($id);
     }
 
     /**
@@ -91,7 +102,7 @@ class CategoryRepository
     }
 
     /**
-     * 回复软删除的数据
+     * 恢复软删除的数据
      *
      * @param $id
      * @return mixed
@@ -99,8 +110,6 @@ class CategoryRepository
      */
     public function softRstore($id)
     {
-        return $this->category->withTrashed()
-            ->where('id', $id)
-            ->restore();
+        return $this->category->withTrashed()->where('id', $id)->restore();
     }
 }

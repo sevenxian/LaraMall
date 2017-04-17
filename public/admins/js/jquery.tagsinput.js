@@ -244,7 +244,7 @@
 				$(data.holder).bind('click',data,function(event) {
 					$(event.data.fake_input).focus();
 				});
-			
+				
 				$(data.fake_input).bind('focus',data,function(event) {
 					if ($(event.data.fake_input).val()==$(event.data.fake_input).attr('data-default')) { 
 						$(event.data.fake_input).val('');

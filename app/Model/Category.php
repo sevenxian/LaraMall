@@ -40,4 +40,15 @@ class Category extends Model
     {
         return $this->belongsTo(static::class, 'pid', 'id');
     }
+
+    /**
+     * 多对多关联关系 / 一个分类下面有多个标签
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @author: Luoyan
+     */
+    public function labels()
+    {
+        return $this->belongsToMany(CategoryLabel::class, 'rel_category_labels', 'category_id', 'category_label_id')->withTimestamps();
+    }
 }

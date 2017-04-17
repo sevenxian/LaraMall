@@ -1,8 +1,61 @@
 @extends('admin.layouts.master')
-
 @section('content')
-    <section id="main-content">
+    <section id="main-content" class="has-js">
         <section class="wrapper">
+            <button class="btn btn-success btn-xs"
+                    data-toggle="modal" data-target="#bindModal"
+                    data-whatever="@getbootstrap"> GG
+            </button>
+            <!-- 绑定属性模态框 Start -->
+            <div class="modal fade" id="bindModal" tabindex="-1" role="dialog" aria-labelledby="bindModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="/admin/aaaa" method="post">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="exampleModalLabel">分类下的标签</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="addName" class="control-label">分类名称:</label>
+                                    <span class="form-control">@{{ (datas[labelBind.index] != null ? datas[labelBind.index].name :'') }}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addName" class="control-label">标签:</label>
+                                    <div class="checkboxes">
+                                        <div class="row" id="labelsC">
+                                            <div class="col-md-6" v-for="(label, index) in labelBind.labels">
+                                                <label class="label_check" :class="{'c_on':label.checked}">
+                                                    <input
+                                                            :value="label.id"
+                                                            type="checkbox"/> @{{ label.category_label_name }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="text" v-model.trim="labelBind.labelName" class="form-control"
+                                                   placeholder="标签名称">
+                                        </div>
+                                        <div class="tagsinput-add" @click="addNewLabel()"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" @click="doneBind()" class="btn btn-primary">
+                                    完成
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- 绑定属性模态框 End -->
+
             <!-- 添加子分类模态框 Start -->
             <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
                 <div class="modal-dialog" role="document">
@@ -137,7 +190,11 @@
                                             data-whatever="@getbootstrap"><i class="icon-plus"></i></button>
                                 </td>
                                 <td v-else-if="currentLevel == 3 && data.deleted_at == null">
-                                    <button class="btn btn-primary btn-xs">绑定标签</button>
+                                    <button class="btn btn-primary btn-xs"
+                                            @click="fetchCategoryForLabel(index, data.id)"
+                                            data-toggle="modal" data-target="#bindModal"
+                                            data-whatever="@getbootstrap">查看标签
+                                    </button>
                                 </td>
                                 <td v-else="data.deleted_at != null">
 
@@ -155,6 +212,8 @@
 @stop
 
 @section('customJs')
+    <!-- 引入公共 js -->
+    <script src="{{ asset('admins/handle/common/common.js') }}"></script>
     <!-- 当前页面 js -->
     <script src="{{ asset('admins/handle/classification/index.js') }}"></script>
     <!-- 当前页面表单验证 js -->
