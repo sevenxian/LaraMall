@@ -6,10 +6,12 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "intervention/image": "^2.3",
         "laravel/framework": "5.3.*",
         "mercuryseries/flashy": "^1.0",
         "mews/captcha": "^2.1",
-        "overtrue/laravel-filesystem-qiniu": "^0.0.2"
+        "overtrue/laravel-filesystem-qiniu": "^0.0.2",
+        "overtrue/laravel-ueditor": "~1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.3",

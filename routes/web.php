@@ -101,11 +101,15 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('goodsList', 'GoodsController@goodsList');
         // 获取分类列表
         Route::post('getCategory', 'GoodsController@getCategory');
-        // 获取分类标签
-        Route::post('getCategoryLabel', 'GoodsController@getCategoryLabel');
+        // 获取分类下的商品标签
+        Route::post('getGoodsLabel', 'GoodsController@getGoodsLabel');
+        // 添加商品标签
+        Route::post('addGoodsLabel', 'GoodsController@addGoodsLabel');
+        // 上传商品图片
+        Route::post('goodsImgUpload', 'GoodsController@goodsImgUpload');
 
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
-
+        
     });
 });

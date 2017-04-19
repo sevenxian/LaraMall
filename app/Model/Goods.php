@@ -20,5 +20,5 @@ class Goods extends Model
      * @var array
      * @author zhulinjie
      */
-    protected $fillable = ['category_id', 'goods_label', 'goods_title', 'goods_original', 'goods_thumbnail', 'goods_info'];
+    protected $fillable = ['category_id', 'goods_title', 'goods_label', 'goods_original', 'goods_info'];
 }
