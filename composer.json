@@ -10,6 +10,7 @@
         "laravel/framework": "5.3.*",
         "mercuryseries/flashy": "^1.0",
         "mews/captcha": "^2.1",
+        "santigarcor/laratrust": "3.2.*",
         "naux/sendcloud": "^1.1",
         "overtrue/laravel-filesystem-qiniu": "^0.0.2",
         "predis/predis": "^1.1"

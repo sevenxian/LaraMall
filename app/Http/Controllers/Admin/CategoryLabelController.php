@@ -67,8 +67,8 @@ class CategoryLabelController extends Controller
         $labels = $this->categoryLabel->fetchLabels();
         // 判断获取结果, 因为 ORM 获取一个空数据，返回的集合会被判断为 true 所有得转换成数组判断
         if (!$labels->toArray()) {
-            // 返回结果
-            return responseMsg('暂无标签!', 404);
+            // 暂无标签
+            return responseMsg([], 200);
         }
         // 查询当前分类下面已有的标签
         $existLabels = $this->relCL->fetchListsFor(['category_id' => $request->get('id')], 'category_label_id');
