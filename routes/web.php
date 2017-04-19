@@ -80,6 +80,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('usersUpdate', 'AdminUserController@update');
         // 后台管理员列表
         Route::any('usersList', 'AdminUserController@userList');
+        // 用户角色同步
+        Route::patch('syncRoles/{id}', 'AdminUserController@syncRoles');
         // 后台用户管理
         Route::resource('users', 'AdminUserController');
 

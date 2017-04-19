@@ -15,13 +15,13 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="addName" class="control-label">角色名称:</label>
-                                    <span class="form-control">xxx</span>
+                                    <span class="form-control">@{{ role.display_name }}</span>
                                 </div>
                                 <div class="form-group">
                                     <label for="addName" class="control-label">权限:</label>
                                     <div class="checkboxes">
-                                        <div class="row" id="labelsC" v-for="permission in permissions">
-                                            <div class="col-md-6">
+                                        <div class="row" id="labelsC">
+                                            <div class="col-md-6" v-for="permission in permissions">
                                                 <label class="label_check" :class="{'c_on':permission.checked}">
                                                     <input
                                                             :value="permission.id"
