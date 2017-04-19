@@ -90,4 +90,15 @@ class RoleRepository
     {
         return $this->role->where('id', $id)->first()->permissions()->pluck('id');
     }
+
+    /**
+     * 获取角色
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @author: Luoyan
+     */
+    public function fetchRoles()
+    {
+        return $this->role->all();
+    }
 }
