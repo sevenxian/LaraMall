@@ -13,7 +13,9 @@ class AsidePresenter
      */
     public function openTag(array $path)
     {
-        if (in_array(\Request::path(), $path)) {
+
+        $data = explode('/',\Request::path());
+        if (in_array($data[1], $path)) {
             return 'open active';
         }
     }
@@ -27,7 +29,8 @@ class AsidePresenter
      */
     public function displayBlock(array $path)
     {
-        if (in_array(\Request::path(), $path)) {
+        $data = explode('/',\Request::path());
+        if (in_array($data[1], $path)) {
             return 'style=display:block;overflow:hidden;';
         }
     }
