@@ -4,9 +4,14 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class AdminUser extends Authenticatable
 {
+    /**
+     *  权限控制
+     */
+    use LaratrustUserTrait;
     /**
      *  软删除
      */

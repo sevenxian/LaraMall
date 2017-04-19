@@ -84,7 +84,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 管理员重置密码
         Route::post('usersUpdate', 'AdminUserController@update');
         // 后台用户管理
-        Route::resource('subscribers','SubscribersController');
+        Route::resource('subscribers', 'SubscribersController');
 
         // 分类块
         Route::resource('classification', 'ClassificationController');
@@ -94,14 +94,24 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::any('classificationList', 'ClassificationController@categoryList');
         // 添加子分类
         Route::post('classificationCreate', 'ClassificationController@categoryCreate');
+        // 分类标签
+        Route::resource('categoryLabel', 'CategoryLabelController');
 
         // 商品管理
         Route::resource('goods', 'GoodsController');
         // 获取商品列表数据
         Route::any('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
 
-        // 分类标签块
-        Route::resource('categoryLabel', 'CategoryLabelController');
-
+        // 权限块
+        Route::resource('acl', 'AclController');
+        // 角色列表
+        Route::any('aclList', 'AclController@aclList');
+        // 修改权限信息
+        Route::post('aclUpdate/{id}', 'AclController@update');
+        // 添加权限
+        Route::get('permission', 'AclController@permissionForm')->name('permission.create');
+        Route::post('permission', 'AclController@permission')->name('permission.store');
+        // 更新权限
+        Route::patch('syncPermission/{id}', 'AclController@syncPermissions');
     });
 });

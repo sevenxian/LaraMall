@@ -1,3 +1,4 @@
+s
 <aside>
     <div id="sidebar" class="nav-collapse ">
         <!-- sidebar menu start-->
@@ -21,6 +22,7 @@
                     <li><a class="" href="{{ url('admin/users') }}">后台用户</a></li>
                 </ul>
             </li>
+
             <li class="sub-menu {{ $aside->openTag(['admin/classification', 'admin/classification/create']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-th"></i>
@@ -33,19 +35,7 @@
                 </ul>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag(['admin/categoryLabel']) }}">
-                <a href="javascript:;" class="">
-                    <i class="icon-th"></i>
-                    <span>标签管理</span>
-                    <span class="arrow {{ $aside->openTag(['admin/categoryLabel']) }}"></span>
-                </a>
-                <ul class="sub" {{ $aside->displayBlock(['admin/categoryLabel']) }}>
-                    <li><a class="icon-align-center" href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>
-                    <li><a class=" icon-indent-left" href=""> 添加分类</a></li>
-                </ul>
-            </li>
-
-            <li class="sub-menu">
+            <li class="sub-menu {{ $aside->openTag(['admin/goods', 'admin/goods/create']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
                     <span>商品管理</span>
@@ -82,13 +72,20 @@
                     </ul>
                 </a>
             </li>
-            <li class="sub-menu">
+
+            <li class="sub-menu {{ $aside->openTag(['admin/acl', 'admin/acl/create', 'admin/permission']) }}">
                 <a href="javascript:;" class="">
-                    <i class="icon-th"></i>
+                    <i class="icon-user-md"></i>
                     <span>权限管理</span>
-                    <span class="arrow"></span>
+                    <span class="arrow {{ $aside->openTag(['admin/acl', 'admin/acl/create', 'admin/permission']) }}"></span>
                 </a>
+                <ul class="sub" {{ $aside->displayBlock(['admin/acl', 'admin/acl/create', 'admin/permission']) }}>
+                    <li><a class="icon-male" href="{{ route('acl.index') }}"> 角色列表</a></li>
+                    <li><a class="icon-plus-sign" href="{{ route('acl.create') }}"> 添加角色</a></li>
+                    <li><a class="icon-plus-sign" href="{{ route('permission.create') }}"> 添加权限</a></li>
+                </ul>
             </li>
+
             <li>
                 <a class="" href="login.html">
                     <i class="icon-user"></i>
