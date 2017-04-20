@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Model\Role;
 use App\Repositories\AdminUserRepository;
+use App\Repositories\RoleRepository;
 use App\Tools\Common;
 use App\Tools\LogOperation;
 use Illuminate\Http\Request;
@@ -10,23 +12,45 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
 
+/**
+ * Class AdminUserController
+ * @package App\Http\Controllers\Admin
+ */
 class AdminUserController extends Controller
 {
     /**
      * @var AdminUserRepository
      */
     protected $adminUser;
+    /**
+     * @var LogOperation
+     * @author zhangyuchao
+     */
     protected $log;
+
+    /**
+     * @var Role
+     * @author Luoyan
+     */
+    protected $role;
 
     /**
      * AdminUserController constructor.
      * @param AdminUserRepository $adminUser
+     * @param LogOperation $logOperation
+     * @param RoleRepository $roleRepository
      * @author zhangyuchao
      */
-    public function __construct(AdminUserRepository $adminUser, LogOperation $logOperation)
+    public function __construct
+    (
+        AdminUserRepository $adminUser,
+        LogOperation $logOperation,
+        RoleRepository $roleRepository
+    )
     {
         $this->adminUser = $adminUser;
         $this->log = $logOperation;
+        $this->role = $roleRepository;
     }
 
     /**
@@ -49,6 +73,21 @@ class AdminUserController extends Controller
     public function create()
     {
         return view('admin.users.create');
+    }
+
+    /**
+     * 同步用户角色
+     *
+     * @param Request $request
+     * @param $id
+     * @author: Luoyan
+     */
+    public function syncRoles(Request $request, $id)
+    {
+        // 查询当前角色
+        $user = $this->adminUser->getOneData(['id' => $id]);
+        // 同步角色权限
+        $user->syncRoles($request->all());
     }
 
     /**
@@ -90,18 +129,43 @@ class AdminUserController extends Controller
         );
         // 填写操作日志
         $this->log->writeAdminLog($message);
+
         return responseMsg($data);
     }
 
     /**
-     * Display the specified resource.
+     * 获取用户角色列表
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @author: Luoyan
      */
     public function show($id)
     {
-        //
+        // 获取所有权限
+        $roles = $this->role->fetchRoles();
+        // 判断是否有权限数据
+        if (!$roles->toArray()) {
+            // 暂无权限
+            return responseMsg([]);
+        }
+        // 查询角色已有权限
+        $ids = $this->adminUser->fetchRolesTheIds($id)->toArray();
+        // 判断该角色是否有权限
+        if (!$ids) {
+            // 返回所有权限
+            return responseMsg($roles);
+        }
+
+        // 给已有的权限打个标记
+        foreach ($roles as $v) {
+            if (in_array($v->id, $ids)) {
+                $v->checked = true;
+            }
+        }
+
+        // 返回权限列表数据
+        return responseMsg($roles);
     }
 
     /**
