@@ -99,8 +99,10 @@ class GoodsController extends Controller
     public function goodsList(Request $request)
     {
         $data = $request->all();
-        $result = $this->goods->goodsList($data['perPage'], $data['where']);
-        return responseMsg($result);
+        // 获取商品列表
+        $res = $this->goods->goodsList($data['perPage'], $data['where']);
+        
+        return responseMsg($res);
     }
 
     /**

@@ -67,4 +67,9 @@ class GoodsRepository
 
 //        return $this->indexGoods->add($arr);
     }
+
+    public function findById($id)
+    {
+        return $this->goods->find($id);        
+    }
 }

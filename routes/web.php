@@ -108,6 +108,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 上传商品图片
         Route::post('goodsImgUpload', 'GoodsController@goodsImgUpload');
 
+        // 货品管理
+        Route::resource('cargo', 'CargoController');
+
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
         
