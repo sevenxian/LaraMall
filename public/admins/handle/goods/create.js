@@ -25,7 +25,6 @@ new Vue({
     mounted(){
         // 获取一级分类
         axios.post('/admin/getCategory', {level: 1}).then(response => {
-            layer.closeAll();
             this.lv1s = response.data.ResultData;
         }).catch(error => {
             sweetAlert("请求失败!", "分类获取失败!", "error");
@@ -117,7 +116,7 @@ new Vue({
             // 添加请求
             axios.post('/admin/addGoodsLabel', data).then(response => {
                 // 添加失败的情况
-                if(response.status != 200){
+                if(response.data.ServerNo != 200){
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
                 }
@@ -158,7 +157,7 @@ new Vue({
             axios.post('/admin/goods', fd).then(response => {
                 console.log(response);
                 // 添加商品失败的情况
-                if (response.status != 200) {
+                if (response.data.ServerNo != 200) {
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
                 }
@@ -208,7 +207,7 @@ new Vue({
                 fd.append('image', file);
                 // 图片上传请求
                 axios.post('/admin/goodsImgUpload', fd).then(response => {
-                    if (response.status != 200) {
+                    if (response.data.ServerNo != 200) {
                         sweetAlert("操作失败!", response.data.ResultData, "error");
                         return;
                     }

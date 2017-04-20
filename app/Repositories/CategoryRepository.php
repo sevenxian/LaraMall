@@ -123,4 +123,10 @@ class CategoryRepository
     {
         return $this->category->where($where)->get();
     }
+    
+    
+    public function labels()
+    {
+        return $this->category->labels;
+    }
 }

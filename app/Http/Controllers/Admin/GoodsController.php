@@ -135,6 +135,7 @@ class GoodsController extends Controller
             \DB::beginTransaction();
             // 向商品表中新增记录
             $goods = $this->goods->addGoods($param);
+
             // 向商品标签关联表中新增记录
             foreach($data['goods_label'] as $val){
                 $arr['goods_id'] = $goods->id;
