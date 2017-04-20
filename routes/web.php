@@ -112,7 +112,18 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 商品管理
         Route::resource('goods', 'GoodsController');
         // 获取商品列表数据
-        Route::any('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
+        Route::post('goodsList', 'GoodsController@goodsList');
+        // 获取分类列表
+        Route::post('getCategory', 'GoodsController@getCategory');
+        // 获取分类下的商品标签
+        Route::post('getGoodsLabel', 'GoodsController@getGoodsLabel');
+        // 添加商品标签
+        Route::post('addGoodsLabel', 'GoodsController@addGoodsLabel');
+        // 上传商品图片
+        Route::post('goodsImgUpload', 'GoodsController@goodsImgUpload');
+
+        // 货品管理
+        Route::resource('cargo', 'CargoController');
 
         // 权限块
         Route::resource('acl', 'AclController');
@@ -127,6 +138,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::patch('syncPermission/{id}', 'AclController@syncPermissions');
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
-
+        
     });
 });

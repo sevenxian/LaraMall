@@ -162,6 +162,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Overtrue\LaravelUEditor\UEditorServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -235,6 +237,7 @@ return [
         'Flashy'       => MercurySeries\Flashy\Flashy::class,
         'Debugbar'     => Barryvdh\Debugbar\Facade::class,
         'Laratrust'    => Laratrust\LaratrustFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

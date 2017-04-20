@@ -45,7 +45,7 @@ s
                 </ul>
             </li>
 
-            <li class="sub-menu">
+            <li class="sub-menu {{ $aside->openTag(['goods']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
                     <span>商品管理</span>
@@ -83,13 +83,13 @@ s
                 </a>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag(['admin/acl', 'admin/acl/create', 'admin/permission']) }}">
+            <li class="sub-menu {{ $aside->openTag(['acl', 'permission']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-user-md"></i>
                     <span>权限管理</span>
-                    <span class="arrow {{ $aside->openTag(['admin/acl', 'admin/acl/create', 'admin/permission']) }}"></span>
+                    <span class="arrow {{ $aside->openTag(['acl', 'permission']) }}"></span>
                 </a>
-                <ul class="sub" {{ $aside->displayBlock(['admin/acl', 'admin/acl/create', 'admin/permission']) }}>
+                <ul class="sub" {{ $aside->displayBlock(['acl', 'permission']) }}>
                     <li><a class="icon-male" href="{{ route('acl.index') }}"> 角色列表</a></li>
                     <li><a class="icon-plus-sign" href="{{ route('acl.create') }}"> 添加角色</a></li>
                     <li><a class="icon-plus-sign" href="{{ route('permission.create') }}"> 添加权限</a></li>

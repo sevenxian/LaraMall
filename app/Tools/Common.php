@@ -49,24 +49,19 @@ class Common
      * 处于登录状态下的操作日志信息拼装
      *
      * @param int $operator_id
-     * @param string $username
-     * @param string $ip
-     * @param string $url
-     * @param array $param
      * @param string $substance
      * @return array
      * @author zhangyuchao
      */
-    public static function logMessageForInside($operator_id = 0, $username = '', $ip = '', $url = '', array $param, $substance = '')
+    public static function logMessageForInside($operator_id = 0, $substance = '')
     {
         return [
             'operator_id' => $operator_id,
-            'username' => $username,
-            'time' => date('Y-m-d,H:i:s', time()),
-            'login_ip' => $ip,
-            'url' => $url,
-            'param' => $param,
-            'content' => $substance
+            'time'        => date('Y-m-d,H:i:s', time()),
+            'login_ip'    => request()->ip(),
+            'url'         => request()->url(),
+            'param'       => request()->all(),
+            'content'     => $substance
         ];
     }
 
@@ -83,11 +78,11 @@ class Common
     public static function logMessageForOutside($ip = '', $url = '', array $param, $substance = '')
     {
         return [
-            'time' => date('Y-m-d,H:i:s', time()),
+            'time'     => date('Y-m-d,H:i:s', time()),
             'login_ip' => $ip,
-            'url' => $url,
-            'param' => $param,
-            'content' => $substance
+            'url'      => $url,
+            'param'    => $param,
+            'content'  => $substance
         ];
     }
 
@@ -106,8 +101,9 @@ class Common
         // 邮件发送
         $flag = \Mail::send('email.' . $templateName, $data, function ($message) use ($recipients, $title) {
 
-             $message->to($recipients)->subject($title);
+            $message->to($recipients)->subject($title);
         });
+
         // 判断发送结果
         return true;
     }

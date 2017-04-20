@@ -106,7 +106,7 @@ var userListVue = new Vue({
             axios.post('/admin/users/'+id,{'_method':'delete'}).then(response => {
                 if(response.data.ServerNo == 200){
                     // 删除成功 页面数据移除
-                    this.datas.splice(index,1)
+                    this.datas.splice(index,1);
                     layer.closeAll();
                     sweetAlert("删除成功!", "", "success");
                 }else{
@@ -119,6 +119,5 @@ var userListVue = new Vue({
                 sweetAlert("请求数据失败!", "", "error");
             });
         }
-
     }
 });

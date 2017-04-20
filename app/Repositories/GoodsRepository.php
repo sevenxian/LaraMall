@@ -48,17 +48,28 @@ class GoodsRepository
         return $this->goods->where($where)->paginate($perPage);
     }
 
+    /**
+     * 添加商品操作
+     *
+     * @param $data
+     * @return static
+     * @author zhulinjie
+     */
     public function addGoods($data)
     {
+        return $this->goods::create($data);
+        
+//        $body = $this->analysis->QuickCut($data['goods_title']);
+//
+//        $arr['goods_id'] = $res->id;
+//        $arr['cargo_id'] = 1;
+//        $arr['body'] = implode(' ', $body);
 
-        $res = $this->goods::create($data);
+//        return $this->indexGoods->add($arr);
+    }
 
-        $body = $this->analysis->QuickCut($data['goods_title']);
-
-        $arr['goods_id'] = $res->id;
-        $arr['cargo_id'] = 1;
-        $arr['body'] = implode(' ', $body);
-
-        return $this->indexGoods->add($arr);
+    public function findById($id)
+    {
+        return $this->goods->find($id);        
     }
 }

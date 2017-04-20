@@ -8,15 +8,15 @@ new Vue({
     data(){
         return {
             pagination: {
-                total: 0, // 总条数
-                from: 1, // 当前页码第一个栏数据是数据库第几条
-                to: 0, // 当前页码最后一栏数据是数据库第几条
-                current_page: 1 // 当前页
+                total: 0,                   // 总条数
+                from: 1,                    // 当前页码第一个栏数据是数据库第几条
+                to: 0,                      // 当前页码最后一栏数据是数据库第几条
+                current_page: 1             // 当前页
             },
-            offset: 4, // 页码偏移量
-            datas: [], // 页码内容
-            per_page: 10, // 一页显示的数据
-            search: {}, // 搜索条件
+            offset: 4,                      // 页码偏移量
+            goods: [],                      // 商品列表
+            per_page: 10,                   // 一页显示的数据
+            search: {}                      // 搜索条件
         }
     },
     // 第一次执行
@@ -57,7 +57,7 @@ new Vue({
         },
         // 判断是存在数据
         isData(){
-            return this.datas.length;
+            return this.goods.length;
         }
     },
     methods: {
@@ -65,16 +65,17 @@ new Vue({
         fetchDatas(page) {
             // 请求数据
             var data = {
-                page: page, // 当前页
-                perPage: this.per_page, // 页面展示的数据
-                where: this.search // 搜索条件
+                page: page,                 // 当前页
+                perPage: this.per_page,     // 页面展示的数据
+                where: this.search          // 搜索条件
             };
             // 请求数据
             axios.post('/admin/goodsList', data).then(response => {
+                console.log(response);
                 // layer 加载层关闭
                 layer.closeAll();
                 // 响应式更新数据
-                this.datas = response.data.ResultData.data;
+                this.goods = response.data.ResultData.data;
                 this.pagination = response.data.ResultData;
             }).catch(error => {
                 // layer 加载层关闭

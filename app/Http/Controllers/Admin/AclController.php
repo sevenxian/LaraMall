@@ -6,6 +6,8 @@ use App\Http\Requests\CreatePermissionRequest;
 use App\Http\Requests\CreateRoleRequest;
 use App\Repositories\PermissionRepository;
 use App\Repositories\RoleRepository;
+use App\Tools\Common;
+use App\Tools\LogOperation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -27,22 +29,32 @@ class AclController extends Controller
      */
     protected $permission;
 
+    protected $log;
+
+    protected $common;
+
     /**
      * 注入
      *
      * AclController constructor.
      * @param RoleRepository $role
      * @param PermissionRepository $permissionRepository
+     * @param LogOperation $logOperation
+     * @param Common $common
      * @author Luoyan
      */
     public function __construct
     (
         RoleRepository $role,
-        PermissionRepository $permissionRepository
+        PermissionRepository $permissionRepository,
+        LogOperation $logOperation,
+        Common $common
     )
     {
         $this->role = $role;
         $this->permission = $permissionRepository;
+        $this->log = $logOperation;
+        $this->common = $common;
     }
 
     /**
@@ -108,6 +120,10 @@ class AclController extends Controller
     {
         // 添加角色并且判读是否成功
         if ($this->role->createRole($request->all())) {
+            // 写入日志
+            $logMsg = $this->common->logMessageForInside(\Auth::guard('admin')->id(), config('log.adminLog')[11]);
+            $this->log->writeAdminLog($logMsg);
+
             // 成功跳转角色列表
             return redirect()->route('acl.index');
         }

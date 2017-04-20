@@ -176,7 +176,7 @@ class LogOperation
      */
     private function prompt(array $message)
     {
-        return 'ID为' . $message['operator_id'] . ',用户名为' . $message['username'] . '的用户,在' . $message['time'] . '进行' . $message['content'] . ',IP地址为' . $message['login_ip'] . ':';
+        return 'ID为' . $message['operator_id'] . '的用户,在' . $message['time'] . '进行' . $message['content'] . ',IP地址为' . $message['login_ip'] . ':';
     }
 
     /**

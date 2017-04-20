@@ -28,7 +28,6 @@ class RelCategoryLabelRepository
         $this->relCategoryLabel = $relCategoryLabel;
     }
 
-
     /**
      * 根据传入字符串获取一列字段
      *
