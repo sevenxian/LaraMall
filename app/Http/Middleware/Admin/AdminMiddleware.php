@@ -20,7 +20,6 @@ class AdminMiddleware
             // 用户未认证返回登陆页面
 //            return redirect()->route('admin.login');
         }
-
         return $next($request);
     }
 }

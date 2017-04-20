@@ -2,10 +2,6 @@
 @section('content')
     <section id="main-content" class="has-js">
         <section class="wrapper">
-            <button class="btn btn-success btn-xs"
-                    data-toggle="modal" data-target="#bindModal"
-                    data-whatever="@getbootstrap"> GG
-            </button>
             <!-- 绑定属性模态框 Start -->
             <div class="modal fade" id="bindModal" tabindex="-1" role="dialog" aria-labelledby="bindModalLabel">
                 <div class="modal-dialog" role="document">
