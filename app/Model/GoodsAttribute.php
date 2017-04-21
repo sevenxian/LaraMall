@@ -4,23 +4,21 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CategoryAttribute extends Model
+class GoodsAttribute extends Model
 {
     /**
-     * 分类标签值表
+     * 商品标签值表
      *
      * @var string
      * @author zhulinjie
      */
-    protected $table = 'data_category_attributes';
+    protected $table = 'data_goods_attributes';
 
     /**
      * 允许批量赋值的字段
-     *
+     * 
      * @var array
      * @author zhulinjie
      */
-    protected $fillable = ['category_label_id', 'attribute_name'];
-
-    
+    protected $fillable = ['goods_label_id', 'goods_label_name'];
 }

@@ -57,7 +57,7 @@ class GoodsRepository
      */
     public function addGoods($data)
     {
-        return $this->goods::create($data);
+        return $this->goods->create($data);
         
 //        $body = $this->analysis->QuickCut($data['goods_title']);
 //

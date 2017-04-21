@@ -42,6 +42,6 @@ class GoodsLabelRepository
      */
     public function addGoodsLable($data)
     {
-        return $this->goodsLabel::create($data);
+        return $this->goodsLabel->create($data);
     }
 }

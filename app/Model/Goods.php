@@ -21,4 +21,15 @@ class Goods extends Model
      * @author zhulinjie
      */
     protected $fillable = ['category_id', 'goods_title', 'goods_label', 'goods_original', 'goods_info'];
+    
+    /**
+     * 多对多关联关系 / 一个商品下面有多个标签
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @author zhulinjie
+     */
+    public function labels()
+    {
+        return $this->belongsToMany(GoodsLabel::class, 'rel_goods_label', 'goods_id', 'goods_label_id')->withTimestamps();
+    }
 }

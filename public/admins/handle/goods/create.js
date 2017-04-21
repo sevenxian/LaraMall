@@ -88,11 +88,11 @@ new Vue({
             // 样式切换
             if ($(e.target).hasClass('c_on')) {
                 $(e.target).removeClass('c_on').addClass('c_off');
-                // 取消选中单选按钮
+                // 取消选中复选框
                 $(e.target).find('input').attr('checked', false);
             } else {
                 $(e.target).removeClass('c_off').addClass('c_on');
-                // 选中单选按钮
+                // 选中当前复选框
                 $(e.target).find('input').attr('checked', true);
             }
         },

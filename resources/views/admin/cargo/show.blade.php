@@ -36,24 +36,77 @@
                                         <p class="form-control-static">@{{ goods.goods_title }}</p>
                                     </div>
                                 </div>
-                                <div class="form-group" v-for="categoryLabel in categoryLabels">
+                                <div class="form-group">
+                                    <label for="goods_title" class="col-md-1 control-label">货品原价</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="cargo_price" v-model="cargo_price" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="goods_title" class="col-md-1 control-label">货品折扣价</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="cargo_discount" v-model="cargo_discount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group" v-for="(categoryLabel, index) in categoryLabels">
                                     <label for="category_label" class="col-md-1 control-label">@{{ categoryLabel.category_label_name }}</label>
                                     <div class="col-md-11">
-                                        <div class="checkboxes">
+                                        <div class="radios" style="padding-top: 8px;">
                                             <div class="row">
                                                 <div class="col-md-3" v-for="attribute in categoryLabel.labels">
-                                                    <label class="label_check">
-                                                        <input name="attribute_name[]" value="" type="checkbox" />@{{ attribute.attribute_name }}
+                                                    <label class="label_radio" @click="selectLabel">
+                                                        <input :name="'categoryAttr'+(index+1)" :value="attribute.id" type="radio" />@{{ attribute.attribute_name }}
                                                     </label>
                                                 </div>
                                             </div>
+                                            <div class="row add">
+                                                <div class="col-md-3">
+                                                    <input type="text" class="form-control" placeholder="分类标签值">
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <input type="button" class="btn btn-success btn-sm" :data-category_label_id="categoryLabel.id" :data-index="index" value="添加分类标签值" @click="addCategoryAttr">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" v-for="(goodsLabel, index) in goodsLabels">
+                                    <label for="goods_label" class="col-md-1 control-label">@{{ goodsLabel.goods_label_name }}</label>
+                                    <div class="col-md-11">
+                                        <div class="radios" style="padding-top: 8px;">
                                             <div class="row">
+                                                <div class="col-md-3" v-for="attribute in goodsLabel.labels">
+                                                    <label class="label_radio" @click="selectLabel">
+                                                    <input :name="'goodsAttr'+(index+1)" :value="attribute.id" type="radio" />@{{ attribute.goods_label_name }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row add">
                                                 <div class="col-md-3">
                                                     <input type="text" class="form-control" placeholder="商品标签值">
                                                 </div>
                                                 <div class="col-md-1">
-                                                    <input type="button" class="btn btn-success" value="添加标签值">
+                                                    <input type="button" class="btn btn-success btn-sm" :data-goods_label_id="goodsLabel.id" :data-index="index" value="添加商品标签值" @click="addGoodsAttr">
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="goods_original" class="col-md-1 control-label">货品图片</label>
+                                    <div class="col-md-11">
+                                        <div class="row">
+                                            <div class="col-xs-2 col-md-2" v-for="val in goodsImgs">
+                                                <div class="thumbnail" style="cursor: pointer;">
+                                                    <img src="/admins/img/goods_default.gif" @click="uploadGoodsImg">
+                                                    <input type="file" style="display: none;">
+                                                    <input type="hidden" name="goods_original[]" class="goods_original">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <button class="btn btn-success" style="margin-top: 15px;" @click="addGoodsImg">添加商品图片</button>
                                             </div>
                                         </div>
                                     </div>
