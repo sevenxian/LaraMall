@@ -18,7 +18,6 @@ new Vue({
             goodsLabels: [],            // 存储商品标签
             goodsLabel: '',             // 商品标签
             goodsImgs: [1],             // 商品图片个数
-            // successMsg: ''              // 成功提示消息
         }
     },
     // 第一次执行
@@ -88,11 +87,11 @@ new Vue({
             // 样式切换
             if ($(e.target).hasClass('c_on')) {
                 $(e.target).removeClass('c_on').addClass('c_off');
-                // 取消选中复选框
+                // 取消选中复先
                 $(e.target).find('input').attr('checked', false);
             } else {
                 $(e.target).removeClass('c_off').addClass('c_on');
-                // 选中当前复选框
+                // 选中单选按钮
                 $(e.target).find('input').attr('checked', true);
             }
         },
@@ -161,7 +160,6 @@ new Vue({
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
                 }
-                // this.successMsg = response.data.ResultData;
                 // 添加商品成功的情况
                 swal({
                     title: '操作成功',

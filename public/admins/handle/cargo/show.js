@@ -12,8 +12,12 @@ new Vue({
             lv2s: {},                // 二级分类
             lv3s: {},                // 三级分类
             goods: {},               // 商品信息
+            cargo_price: '',         // 货品原价
+            cargo_discount: '',      // 货品折扣价
+            inventory: '',           // 库存量
             categoryLabels: [],      // 分类标签
             goodsLabels: [],         // 商品标签
+            cargoImgs: [1]           // 商品图片个数
         }
     },
     // 第一次执行
@@ -50,7 +54,6 @@ new Vue({
             if(!$(e.target).hasClass('r_on')){
                 // 取消选中其它的单选按钮
                 $(e.target).parents('.form-group').find('.label_radio').removeClass('r_on');
-                $(e.target).parents('.form-group').find('.label_radio').find('input').attr('checked', false);
                 // 选中当前的单选按钮
                 $(e.target).addClass('r_on');
                 $(e.target).find('input').attr('checked', true);
@@ -65,6 +68,7 @@ new Vue({
             // 分类标签值不能为空
             if(!attribute_name){
                 sweetAlert("操作失败!", "请先填写分类标签值!", "error");
+                return;
             }
 
             // 分类标签值添加请求
@@ -94,6 +98,7 @@ new Vue({
             // 商品标签值不能为空
             if(!goods_label_name){
                 sweetAlert("操作失败!", "请先填写商品标签值!", "error");
+                return;
             }
 
             // 商品标签值添加请求
@@ -111,6 +116,106 @@ new Vue({
                 sweetAlert("操作成功!", '商品标签值添加成功', "success");
                 // 请求失败的情况
             }).catch(error => {
+                sweetAlert("操作失败!", response.request.statusText, "error");
+            });
+        },
+        // 添加货品图片
+        addCargoImg(e){
+            e.preventDefault();
+            this.cargoImgs.push(this.cargoImgs.length + 1);
+        },
+        // 上传货品图片
+        uploadCargoImg(e){
+            // 触发文件上传
+            $(e.target).next().trigger('click');
+            // 上传操作
+            $(e.target).next().on('change', function () {
+                var obj = this;
+                // 创建一个空的FormData对象
+                var fd = new FormData();
+                // 获取表单上传控件
+                var file = this.files[0];
+                // 允许上传的图片格式
+                var allowType = ['image/jpeg', 'image/png', 'image/gif'];
+
+                // 检测上传图片格式是否合法
+                if($.inArray(file.type, allowType) == -1){
+                    sweetAlert("操作失败!", "图片格式有误，请上传jpg、png、gif格式的图片!", "error");
+                    return;
+                }
+                // 将上传表单控件添加到FormData对象中
+                fd.append('image', file);
+                // 图片上传请求
+                axios.post('/admin/cargoImgUpload', fd).then(response => {
+                    if (response.data.ServerNo != 200) {
+                        sweetAlert("操作失败!", response.data.ResultData, "error");
+                        return;
+                    }
+                    // 接收返回的数据，即上传到七牛云后返回的图片路径名
+                    var data = response.data.ResultData;
+                    // 设置图片src属性，用于回显
+                    $(e.target).attr('src', QINIU_DOMAIN + data + '?imageView2/1/w/350/h/350');
+                    // 将返回图片路径名设置到隐藏文本框中，用于提交到数据库
+                    $(e.target).nextAll('.cargo_original').val(data);
+                    // 删除事件，防止事件累加导致一次上传多个文件的问题
+                    $(obj).off('change');
+                    // 请求失败的情况
+                }).catch(error => {
+                    sweetAlert("操作失败!", response.request.statusText, "error");
+                });
+            });
+        },
+        // 添加货品操作
+        addCargo(e){
+            // 前端验证
+            $('#cargo').bootstrapValidator('validate');
+
+            // 货品原价不能为空
+            if (!this.cargo_price) {
+                sweetAlert("操作失败!", "请先填写货品原价!", "error");
+                return;
+            }
+            // 货品折扣价不能为空
+            if (!this.cargo_discount) {
+                sweetAlert("操作失败!", "请先填写货品折扣价!", "error");
+                return;
+            }
+            // 库存量不能为空
+            if (!this.inventory) {
+                sweetAlert("操作失败!", "请先填写库存量!", "error");
+                return;
+            }
+            // 货品详情
+            var cargo_info = $(e.target).parents('form').find('textarea').val();
+            // 判断货品详情是否填写
+            if (!cargo_info) {
+                sweetAlert("操作失败!", "请先填写货品详情!", "error");
+                return;
+            }
+            // 构造一个包含Form表单数据的FormData对象，需要在创建FormData对象时指定表单的元素
+            var fd = new FormData($(e.target).parents('form')[0]);
+            // 添加请求
+            axios.post('/admin/cargo', fd).then(response => {
+                console.log(response);
+                // 添加货品失败的情况
+                if (response.data.ServerNo != 200) {
+                    sweetAlert("操作失败!", response.data.ResultData, "error");
+                    return;
+                }
+                // 添加货品成功的情况
+                swal({
+                    title: '操作成功',
+                    text: response.data.ResultData,
+                    type: 'success'
+                }, function(isConfirm){
+                    if(isConfirm){
+                        // 500毫秒以后跳转到货品列表页
+                        setTimeout(function () {
+                            location.href="/admin/cargo";
+                        }, 500);
+                    }
+                });
+            }).catch(error => {  // 请求失败的情况
                 sweetAlert("操作失败!", response.request.statusText, "error");
             });
         }

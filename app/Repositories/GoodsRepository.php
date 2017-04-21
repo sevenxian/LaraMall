@@ -68,6 +68,13 @@ class GoodsRepository
 //        return $this->indexGoods->add($arr);
     }
 
+    /**
+     * 通过ID获取一条数据
+     * 
+     * @param $id
+     * @return mixed
+     * @author zhulinjie
+     */
     public function findById($id)
     {
         return $this->goods->find($id);        

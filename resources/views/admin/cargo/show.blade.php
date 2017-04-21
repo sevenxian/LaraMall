@@ -12,6 +12,7 @@
 @stop
 
 @section('content')
+    @include('vendor.ueditor.assets')
     <section id="main-content">
         <section class="wrapper">
             <!-- page start-->
@@ -28,24 +29,32 @@
                                     <label for="category" class="col-md-1 control-label">商品分类</label>
                                     <div class="col-md-11">
                                         <p class="form-control-static" v-if="lv1s">@{{ lv1s.name }} &gt; @{{ lv2s.name }} &gt; @{{ lv3s.name }}</p>
+                                        <input type="hidden" name="category_id" :value="lv3s.id">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="goods_title" class="col-md-1 control-label">商品名称</label>
                                     <div class="col-md-11">
                                         <p class="form-control-static">@{{ goods.goods_title }}</p>
+                                        <input type="hidden" name="goods_id" :value="goods.id">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="goods_title" class="col-md-1 control-label">货品原价</label>
+                                    <label for="cargo_price" class="col-md-1 control-label">货品原价</label>
                                     <div class="col-md-6">
                                         <input type="text" name="cargo_price" v-model="cargo_price" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="goods_title" class="col-md-1 control-label">货品折扣价</label>
+                                    <label for="cargo_discount" class="col-md-1 control-label">货品折扣价</label>
                                     <div class="col-md-6">
                                         <input type="text" name="cargo_discount" v-model="cargo_discount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inventory" class="col-md-1 control-label">库存量</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="inventory" v-model="inventory" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group" v-for="(categoryLabel, index) in categoryLabels">
@@ -55,7 +64,7 @@
                                             <div class="row">
                                                 <div class="col-md-3" v-for="attribute in categoryLabel.labels">
                                                     <label class="label_radio" @click="selectLabel">
-                                                        <input :name="'categoryAttr'+(index+1)" :value="attribute.id" type="radio" />@{{ attribute.attribute_name }}
+                                                        <input :name="'categoryLabel'+categoryLabel.id" :value="attribute.id" type="radio" />@{{ attribute.attribute_name }}
                                                     </label>
                                                 </div>
                                             </div>
@@ -77,7 +86,7 @@
                                             <div class="row">
                                                 <div class="col-md-3" v-for="attribute in goodsLabel.labels">
                                                     <label class="label_radio" @click="selectLabel">
-                                                    <input :name="'goodsAttr'+(index+1)" :value="attribute.id" type="radio" />@{{ attribute.goods_label_name }}
+                                                        <input :name="'goodsLabel'+goodsLabel.id" :value="attribute.id" type="radio" />@{{ attribute.goods_label_name }}
                                                     </label>
                                                 </div>
                                             </div>
@@ -96,19 +105,31 @@
                                     <label for="goods_original" class="col-md-1 control-label">货品图片</label>
                                     <div class="col-md-11">
                                         <div class="row">
-                                            <div class="col-xs-2 col-md-2" v-for="val in goodsImgs">
+                                            <div class="col-xs-2 col-md-2" v-for="val in cargoImgs">
                                                 <div class="thumbnail" style="cursor: pointer;">
-                                                    <img src="/admins/img/goods_default.gif" @click="uploadGoodsImg">
+                                                    <img src="/admins/img/goods_default.gif" @click="uploadCargoImg">
                                                     <input type="file" style="display: none;">
-                                                    <input type="hidden" name="goods_original[]" class="goods_original">
+                                                    <input type="hidden" name="cargo_original[]" class="cargo_original">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <button class="btn btn-success" style="margin-top: 15px;" @click="addGoodsImg">添加商品图片</button>
+                                                <button class="btn btn-success" style="margin-top: 15px;" @click="addCargoImg">添加货品图片</button>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cargo_info" class="col-md-1 control-label">货品详情</label>
+                                    <div class="col-md-11">
+                                        <!-- 编辑器容器 -->
+                                        <textarea id="cargo_info" name="cargo_info" style="width: 95%; height: 300px"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-1 col-md-11">
+                                        <button type="button" class="btn btn-danger" id="validateBtn" @click="addCargo">确 定</button>
                                     </div>
                                 </div>
                             </form>
@@ -148,4 +169,11 @@
     <script src="/admins/handle/cargo/show.js"></script>
     <!-- 页面表单验证 js -->
     <script src="/admins/handle/cargo/show_validation.js"></script>
+    <!-- 实例化编辑器 -->
+    <script type="text/javascript">
+        var ue = UE.getEditor('cargo_info');
+        ue.ready(function() {
+            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}'); // 设置 CSRF token.
+        });
+    </script>
 @stop

@@ -18,7 +18,7 @@ class CreateDataCargoTable extends Migration
             $table->integer('category_id')->index()->comment('分类ID');
             $table->integer('goods_id')->index()->comment('商品ID');
             $table->json('cargo_ids')->comment('货品标签');
-            $table->string('cargo_cover',64)->comment('货品封面');
+            $table->string('cargo_cover', 255)->comment('货品封面');
             $table->integer('inventory')->default(0)->comment('库存量');
             $table->decimal('cargo_price',7,2)->comment('货品原价');
             $table->float('cargo_discount')->default(1)->comment('货品折扣');

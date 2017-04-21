@@ -1,30 +1,23 @@
-$('#goods').bootstrapValidator({
+$('#cargo').bootstrapValidator({
     fields: {
-        level1: {
+        cargo_price: {
             validators: {
                 notEmpty: {
-                    message: '一级分类不能为空!'
+                    message: '货品原价不能为空!'
                 }
             }
         },
-        level2: {
+        cargo_discount: {
             validators: {
                 notEmpty: {
-                    message: '二级分类不能为空!'
+                    message: '货品折扣价不能为空!'
                 }
             }
         },
-        level3: {
+        inventory: {
             validators: {
                 notEmpty: {
-                    message: '三级分类不能为空!'
-                }
-            }
-        },
-        goods_title: {
-            validators: {
-                notEmpty: {
-                    message: '商品名称不能为空!'
+                    message: '库存量不能为空!'
                 }
             }
         }

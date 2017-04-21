@@ -132,6 +132,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::resource('addCategoryAttr', 'CargoController@addCategoryAttr');
         // 添加商品标签值
         Route::resource('addGoodsAttr', 'CargoController@addGoodsAttr');
+        // 上传货品图片
+        Route::post('cargoImgUpload', 'CargoController@cargoImgUpload');
 
         // 权限块
         Route::resource('acl', 'AclController');
