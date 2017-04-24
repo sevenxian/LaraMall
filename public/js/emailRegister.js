@@ -25,7 +25,7 @@ $('#relEmailPwd').blur(function () {
 /**
  * 发送邮箱验证码
  */
-function sendEmailCode() {
+$('.sendEmail').click(function(){
     var result = checkEmail($('#email'), $('#emailErrorMessage'))
     if (result != 100) {
         return false;
@@ -40,7 +40,8 @@ function sendEmailCode() {
             $('#message').html(response.ResultData);
         }
     })
-}
+})
+
 /**
  * 点击注册
  */
@@ -70,7 +71,7 @@ function submitParamForEmail() {
     }
     sendAjax(data, registerUrl, function (response) {
         if (response.ServerNo == 200) {
-            window.location.href = '';
+            window.location.href = '/home/personal';
         } else {
             $('#message').html(response.ResultData);
         }

@@ -2,10 +2,16 @@
 <div class="am-container header">
     <ul class="message-l">
         <div class="topMessage">
+            @if(empty(\Session::get('user')))
             <div class="menu-hd">
                 <a href="/home/login" target="_top" class="h">亲，请登录</a>
                 <a href="/home/register" target="_top">免费注册</a>
             </div>
+            @else
+                <div class="menu-hd">
+                   欢迎光临，laraMall！
+                </div>
+            @endif
         </div>
     </ul>
     <ul class="message-r">
@@ -22,7 +28,16 @@
                                                                                                   class="h">0</strong></a></div>
         </div>
         <div class="topMessage favorite">
-            <div class="menu-hd"><a href="#" target="_top"><i class="am-icon-heart am-icon-fw"></i><span>收藏夹</span></a>
+            <div class="menu-hd">
+                <a href="#" target="_top"><i class="am-icon-heart am-icon-fw"></i><span>收藏夹</span></a>
             </div>
+        </div>
+        @if(!empty(\Session::get('user')))
+            <div class="topMessage favorite">
+                <div class="menu-hd">
+                    <a href="{{ url('/home/logout') }}" target="_top"><span>退出</span></a>
+                </div>
+            </div>
+         @endif
     </ul>
 </div>
