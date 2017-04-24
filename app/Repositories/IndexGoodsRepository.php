@@ -20,6 +20,13 @@ class IndexGoodsRepository
         $this->indexGoods = $indexGoods;
     }
 
+    /**
+     * 新增一条记录
+     * 
+     * @param $data
+     * @return static
+     * @author zhulinjie
+     */
     public function add($data)
     {
         return $this->indexGoods->create($data);

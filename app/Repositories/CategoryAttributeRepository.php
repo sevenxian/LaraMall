@@ -38,4 +38,15 @@ class CategoryAttributeRepository
     {
         return $this->categoryAttrbute->create($data);
     }
+
+    /**
+     * 通过一组ID获取多条记录
+     *
+     * @param $id
+     * @author zhulinjie
+     */
+    public function selectByWhereIn($ids)
+    {
+        return $this->categoryAttrbute->whereIn('id', $ids)->get();
+    }
 }

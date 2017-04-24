@@ -25,6 +25,7 @@
                         </header>
                         <div class="panel-body">
                             <form id="cargo" class="form-horizontal" role="form">
+                                {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="category" class="col-md-1 control-label">商品分类</label>
                                     <div class="col-md-11">
@@ -166,9 +167,9 @@
         // 商品ID
         var goods_id = '{{ $id }}';
     </script>
-    <script src="/admins/handle/cargo/show.js"></script>
+    <script src="/admins/handle/cargo/addCargo.js"></script>
     <!-- 页面表单验证 js -->
-    <script src="/admins/handle/cargo/show_validation.js"></script>
+    <script src="/admins/handle/cargo/addCargo_validation.js"></script>
     <!-- 实例化编辑器 -->
     <script type="text/javascript">
         var ue = UE.getEditor('cargo_info');

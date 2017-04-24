@@ -8,7 +8,9 @@ use App\Repositories\CategoryAttributeRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsAttributeRepository;
 use App\Repositories\GoodsRepository;
+use App\Repositories\IndexGoodsRepository;
 use App\Repositories\RelLabelCargoRepository;
+use App\Tools\Analysis;
 use Illuminate\Http\Request;
 
 class CargoController extends Controller
@@ -62,10 +64,28 @@ class CargoController extends Controller
     protected $cargo;
 
     /**
+     * 标签值货品关联操作类
+     * 
      * @var
      * @author zhulinjie
      */
     protected $relLabelCargo;
+
+    /**
+     * 分词类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $analysis;
+
+    /**
+     * 商品索引操作类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $indexGoods;
 
     /**
      * CargoController constructor.
@@ -80,7 +100,9 @@ class CargoController extends Controller
         CategoryAttributeRepository $categoryAttributeRepository,
         GoodsAttributeRepository $goodsAttributeRepository,
         CargoRepository $cargoRepository,
-        RelLabelCargoRepository $relLabelCargoRepository
+        RelLabelCargoRepository $relLabelCargoRepository,
+        Analysis $analysis,
+        IndexGoodsRepository $indexGoodsRepository
     )
     {
         // 注入商品操作类
@@ -95,7 +117,12 @@ class CargoController extends Controller
         $this->cargo = $cargoRepository;
         // 注入七牛服务
         $this->disk = \Storage::disk('qiniu');
+        // 注入标签值货品关联操作类
         $this->relLabelCargo = $relLabelCargoRepository;
+        // 注入分词类
+        $this->analysis = $analysis;
+        // 注入商品索引操作类
+        $this->indexGoods = $indexGoodsRepository;
     }
 
     /**
@@ -116,6 +143,17 @@ class CargoController extends Controller
     public function create()
     {
         //
+    }
+
+    /**
+     * 货品添加
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addCargo($id)
+    {
+        return view('admin.cargo.addCargo', compact('id'));
     }
 
     /**
@@ -188,15 +226,12 @@ class CargoController extends Controller
     public function addCategoryAttr(Request $request)
     {
         $data = $request->all();
-
         // 添加操作
         $res = $this->categoryAttribute->addCategoryAttribute($data);
-
         // 判断操作是否成功
         if(!$res){
             return responseMsg('分类标签值添加失败', 400);
         }
-
         return responseMsg($res);
     }
 
@@ -210,15 +245,12 @@ class CargoController extends Controller
     public function addGoodsAttr(Request $request)
     {
         $data = $request->all();
-
         // 添加操作
         $res = $this->goodsAttribute->addGoodsAttribute($data);
-
         // 判断操作是否成功
         if(!$res){
             return responseMsg('商品标签值添加失败', 400);
         }
-
         return responseMsg($res);
     }
 
@@ -256,8 +288,9 @@ class CargoController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-
+        
         $list = [];
+        $categoryAttrIds = [];
         foreach($data as $key => $val){
             // 获取货品标签
             if(strpos($key, 'goodsLabel') !== false){
@@ -280,24 +313,111 @@ class CargoController extends Controller
         $param['cargo_original'] = json_encode($data['cargo_original']);
         $param['cargo_info'] = $data['cargo_info'];
 
+        // 获取三级分类
+        $lv3s = $this->category->findById($data['category_id']);
+        if (!$lv3s) {
+            return responseMsg('该分类不存在', 404);
+        }
+        // 分词处理 三级分类名称
+        $body[] = $this->analysis->toUnicode($lv3s->name);
+        $body = array_merge($body, $this->analysis->QuickCut($lv3s->name));
+
+        // 获取二级分类
+        $lv2s = $this->category->findById($lv3s['pid']);
+        if (!$lv2s) {
+            return responseMsg('该分类不存在', 404);
+        }
+        // 分词处理 二级分类名称
+        array_push($body, $this->analysis->toUnicode($lv2s->name));
+        $body = array_merge($body, $this->analysis->QuickCut($lv2s->name));
+
+        // 获取一级分类
+        $lv1s = $this->category->findById($lv2s['pid']);
+        if (!$lv1s) {
+            return responseMsg('该分类不存在', 404);
+        }
+        // 分词处理 一级分类名称
+        array_push($body, $this->analysis->toUnicode($lv1s->name));
+        $body = array_merge($body, $this->analysis->QuickCut($lv1s->name));
+
+        // 获取商品信息
+        $goods = $this->goods->findById($data['goods_id']);
+        if (!$goods) {
+            return responseMsg('该商品不存在', 404);
+        }
+        // 分词处理 商品标题
+        array_push($body, $this->analysis->toUnicode($goods->goods_title));
+        $body = array_merge($body, $this->analysis->QuickCut($goods->goods_title));
+
+        // 获取分类标签值
+        if($categoryAttrIds){
+            $categoryAttrs = $this->categoryAttribute->selectByWhereIn($categoryAttrIds);
+            foreach($categoryAttrs as $categoryAttr){
+                // 分词处理 分类标签值
+                array_push($body, $this->analysis->toUnicode($categoryAttr->attribute_name));
+                $body = array_merge($body, $this->analysis->QuickCut($categoryAttr->attribute_name));
+            }
+        }
+
         try{
             \DB::beginTransaction();
             // 向货品表中新增记录
             $cargo = $this->cargo->addCargo($param);
 
             // 分类标签值与货品关联表中新增记录
-            foreach($categoryAttrIds as $id){
-                $arr['category_attr_id'] = $id;
-                $arr['goods_id'] = $data['goods_id'];
-                $arr['cargo_id'] = $cargo->id;
-                $this->relLabelCargo->add($arr);
+            if($categoryAttrIds){
+                foreach($categoryAttrIds as $id){
+                    $arr['category_attr_id'] = $id;
+                    $arr['goods_id'] = $data['goods_id'];
+                    $arr['cargo_id'] = $cargo->id;
+                    $this->relLabelCargo->add($arr);
+                }
             }
+
+            // 向商品索引表中新增记录
+            $indexs['goods_id'] = $data['goods_id'];
+            $indexs['cargo_id'] = $cargo->id;
+            $indexs['body'] = implode(' ', $body);
+            $this->indexGoods->add($indexs);
+            
+            // 将货品信息存储到redis
+            \Redis::hmset(HASH_CARGO_INFO_ . $cargo->id, $cargo->toArray());
+            
             \DB::commit();
             return responseMsg('货品添加成功');
         }catch (\Exception $e){
             \DB::rollback();
+            dd($e->getMessage());
             return responseMsg('货品添加失败', 400);
         }
+    }
+
+    /**
+     * 货品列表界面
+     * 
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author zhulinjie
+     */
+    public function cargoList($id)
+    {
+        return view('admin.cargo.list', compact('id'));
+    }
+
+    /**
+     * 获取货品列表数据
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhulinjie
+     */
+    public function getCargoList(Request $request)
+    {
+        $data = $request->all();
+        // 获取货品列表数据
+        $res = $this->cargo->cargoList($data['perPage'], ['goods_id'=>$data['goods_id']]);
+
+        return responseMsg($res);
     }
 
     /**
@@ -308,7 +428,7 @@ class CargoController extends Controller
      */
     public function show($id)
     {
-        return view('admin.cargo.show', compact('id'));
+        //
     }
 
     /**

@@ -126,14 +126,20 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
         // 货品管理
         Route::resource('cargo', 'CargoController');
+        // 货品添加
+        Route::get('addCargo/{goods_id}', 'CargoController@addCargo');
         // 获取货品的分类信息
-        Route::resource('cargo/detail', 'CargoController@detail');
+        Route::post('cargo/detail', 'CargoController@detail');
         // 添加分类标签值
-        Route::resource('addCategoryAttr', 'CargoController@addCategoryAttr');
+        Route::post('addCategoryAttr', 'CargoController@addCategoryAttr');
         // 添加商品标签值
-        Route::resource('addGoodsAttr', 'CargoController@addGoodsAttr');
+        Route::post('addGoodsAttr', 'CargoController@addGoodsAttr');
         // 上传货品图片
         Route::post('cargoImgUpload', 'CargoController@cargoImgUpload');
+        // 货品列表界面
+        Route::get('/cargoList/{goods_id}', 'CargoController@cargoList');
+        // 获取货品列表数据
+        Route::post('/getCargoList', 'CargoController@getCargoList');
 
         // 权限块
         Route::resource('acl', 'AclController');

@@ -211,7 +211,7 @@ new Vue({
                     if(isConfirm){
                         // 500毫秒以后跳转到货品列表页
                         setTimeout(function () {
-                            location.href="/admin/cargo";
+                            location.href="/admin/cargoList/"+goods_id;
                         }, 500);
                     }
                 });
