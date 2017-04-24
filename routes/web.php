@@ -53,12 +53,49 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::get('goodsDetail', 'GoodsController@goodsDetail')->name('home.goodsDetail');
     // 分类
     Route::get('sort', 'GoodsController@sort')->name('home.sort');
-    // 购物车
-    Route::get('goods/shopCart', 'GoodsController@shopCart')->name('home.goods.shopCart');
-    // 个人中心
-    Route::get('personal', 'PersonalController@index')->name('home.personal');
-    // 个人信息
-    Route::get('personal/information', 'PersonalController@information')->name('home.personal.information');
+    // 验证邮箱路由
+    Route::get('safety/checkEmail', 'SafetyController@checkEmail');
+
+    Route::group(['middleware' => 'member'], function () {
+        // 购物车
+        Route::get('goods/shopCart', 'GoodsController@shopCart')->name('home.goods.shopCart');
+        // 个人中心
+        Route::get('personal', 'PersonalController@index')->name('home.personal');
+        // 个人信息 视图
+        Route::get('userInfo/information', 'UserInfoController@information')->name('home.userInfo.information');
+        // 个人信息 数据更新
+        Route::post('userInfo/updateMessage', 'UserInfoController@updateMessage')->name('home.userInfo.updateMessage');
+        // 个人信息 图片上传
+        Route::post('userInfo/uploadAvatar', 'UserInfoController@uploadAvatar');
+        // 安全设置 首页
+        Route::get('safety', 'SafetyController@index')->name('home.safety.index');
+        // 安全信息 重置密码 视图
+        Route::get('safety/changePassword', 'SafetyController@changePassword')->name('home.safety.changePassword');
+        // 安全信息 重置密码 处理
+        Route::post('safety/modifyChangePassword', 'SafetyController@modifyChangePassword')->name('home.safety.modifyChangePassword');
+        // 安全信息 绑定手机 视图
+        Route::get('safety/changeMobile', 'SafetyController@changeMobile')->name('home.safety.changeMobile');
+        // 安全设置 绑定邮箱 视图
+        Route::get('safety/changeEmail', 'SafetyController@changeEmail');
+        // 安全设置 确认原账号 (手机与邮箱)
+        Route::post('safety/confirmMobileCode', 'SafetyController@confirmMobileCode');
+        // 安全设置 检测验证码 (手机与邮箱)
+        Route::post('safety/checkVerifyCode', 'SafetyController@checkVerifyCode');
+        // 安全设置 改绑账号发送验证码 (手机与邮箱)
+        Route::post('safety/bindSendCode', 'SafetyController@bindSendCode');
+        // 安全设置 绑定账号处理 (手机与邮箱)
+        Route::post('safety/bindLoginUser', 'SafetyController@bindLoginUser');
+        // 安全设置 初次绑定邮箱 跳转绑定
+        Route::post('safety/bingEmail', 'SafetyController@bingEmail');
+        // 安全设置 实名认证 视图
+        Route::get('safety/idCard', 'SafetyController@idCard');
+        // 安全设置 实名认证 处理
+        Route::post('safety/handleIdCard', 'SafetyController@handleIdCard');
+
+        // 退出登录
+        Route::get('logout', 'UserController@logout');
+
+    });
 });
 
 /**

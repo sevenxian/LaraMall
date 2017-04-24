@@ -49,23 +49,19 @@ class Common
      * 处于登录状态下的操作日志信息拼装
      *
      * @param int $operator_id
-     * @param string $username
-     * @param string $ip
-     * @param string $url
-     * @param array $param
      * @param string $substance
+     * @param array $param
      * @return array
      * @author zhangyuchao
      */
-    public static function logMessageForInside($operator_id = 0, $username = '', $ip = '', $url = '', array $param, $substance = '')
+    public static function logMessageForInside($operator_id = 0, $substance = '', $param = [])
     {
         return [
             'operator_id' => $operator_id,
-            'username' => $username,
             'time' => date('Y-m-d,H:i:s', time()),
-            'login_ip' => $ip,
-            'url' => $url,
-            'param' => $param,
+            'login_ip' => request()->ip(),
+            'url' => request()->url(),
+            'param' => empty($param) ? request()->all() : $param,
             'content' => $substance
         ];
     }
@@ -73,42 +69,40 @@ class Common
     /**
      * 处于未登录状态下的操作日志信息拼装
      *
-     * @param string $ip
-     * @param string $url
-     * @param array $param
      * @param string $substance
+     * @param array $param
      * @return array
      * @author zhangyuchao
      */
-    public static function logMessageForOutside($ip = '', $url = '', array $param, $substance = '')
+    public static function logMessageForOutside($substance = '', $param = [])
     {
         return [
             'time' => date('Y-m-d,H:i:s', time()),
-            'login_ip' => $ip,
-            'url' => $url,
-            'param' => $param,
+            'login_ip' => request()->ip(),
+            'url' => request()->url(),
+            'param' => empty($param) ? request()->all() : $param,
             'content' => $substance
         ];
     }
 
+
     /**
      * 邮件发送
      *
-     * @param $templateName
-     * @param $title
-     * @param $recipients
-     * @param array $data
-     * @return bool
+     * @param $callName
+     * @param $data
+     * @param $user
      * @author zhangyuchao
      */
-    public static function sendEmail($templateName, $title, $recipients, array $data)
+    public static function sendEmail($callName, $data, $user)
     {
-        // 邮件发送
-        $flag = \Mail::send('email.' . $templateName, $data, function ($message) use ($recipients, $title) {
 
-             $message->to($recipients)->subject($title);
+        $template = new SendCloudTemplate($callName, $data);
+
+        \Mail::raw($template, function ($message) use ($user) {
+            $message->from(env('SEND_CLOUD_EMAIL_FORM'), env('SEND_CLOUD_EMAIL_FORM_NAME'));
+
+            $message->to($user);
         });
-        // 判断发送结果
-        return true;
     }
 }

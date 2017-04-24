@@ -62,34 +62,37 @@ class AdminUserController extends Controller
     {
 
         // 密码判断
-        if ($request['password'] != $request['rel_password']) return responseMsg('两次密码输入不一致', 400);
+        if ($request['password'] != $request['rel_password']) {
+            // 返回结果
+            return responseMsg('两次密码输入不一致', 400);
+        }
         // 判断手机号码是否存在
         $tel = $this->adminUser->getOneData(['tel' => $request['tel']]);
-        if (!empty($tel)) return responseMsg('手机号码已存在', 400);
-        // 数据处理
+        if (!empty($tel)) {
+            // 返回结果
+            return responseMsg('手机号码已存在', 400);
+        }
+        // 参数拼装
         $param['password'] = bcrypt(trim($request['password']));
         $param['tel'] = trim($request['tel']);
         $param['nickname'] = trim($request['nickname']);
         // 插入数据
         $result = $this->adminUser->createByUser($param);
         // 数据插入失败 返回错误信息
-        if (!$result) return responseMsg('添加失败', 400);
+        if (!$result) {
+            // 返回结果
+            return responseMsg('添加失败', 400);
+        }
         // 成功返回正确信息，组装数据，返回到前台,使用vue 添加到列表里
         $data = $result->toArray();
         $data['address'] = '从未登录';
         $data['last_login_at'] = $data['created_at'];
         // 组装操作日志内容
-        $message = Common::logMessageForInside
-        (
-            auth('admin')->user()->id,  // 管理员ID
-            auth('admin')->user()->nickname, // 管理员昵称
-            $request->getClientIp(),
-            $request->url(),
-            $request->all(),
-            config('log.adminLog')[2]
-        );
+        $logMessage = Common::logMessageForInside(auth('admin')->user()->id, config('log.adminLog')[2]);
         // 填写操作日志
-        $this->log->writeAdminLog($message);
+        $this->log->writeAdminLog($logMessage);
+
+        // 返回正确信息
         return responseMsg($data);
     }
 
@@ -126,9 +129,16 @@ class AdminUserController extends Controller
     {
         // 参数判断
         $password = trim($request['password']);
-        if (empty($request['id'])) return responseMsg('非法操作', 400);
+        // 判断是否存在ID
+        if (empty($request['id'])) {
+            // 返回错误信息
+            return responseMsg('非法操作', 400);
+        }
         // 密码判断
-        if ($password != $request['rel_password']) return responseMsg('两次密码输入不一致', 400);
+        if ($password != $request['rel_password']) {
+            // 返回错误信息
+            return responseMsg('两次密码输入不一致', 400);
+        }
         // 查询单挑数据 判断密码是否更新
         $data = $this->adminUser->getOneData(['id' => $request['id']]);
         // 检测原始密码与新密码
@@ -138,8 +148,17 @@ class AdminUserController extends Controller
         }
         // 数据操作
         $result = $this->adminUser->updateOneData(['id' => $request['id']], ['password' => bcrypt($password)]);
-        if (empty($result)) return responseMsg('更新失败', 400);
+        // 判断是否执行成功
+        if (empty($result)) {
+            // 返回错误信息
+            return responseMsg('更新失败', 400);
+        }
+        // 拼装日志信息
+        $logMessage = Common::logMessageForInside(auth('admin')->user()->id,config('log.adminLog')[3]);
+        // 写入日志
+        $this->log->writeAdminLog($logMessage);
 
+        // 返回正确信息
         return responseMsg('重置密码成功', 200);
     }
 
@@ -153,11 +172,22 @@ class AdminUserController extends Controller
     public function destroy($id)
     {
         // 参数验证
-        if (empty($id)) return responseMsg('非法操作', 400);
+        if (empty($id)) {
+            // 返回错误信息
+            return responseMsg('非法操作', 400);
+        }
         $result = $this->adminUser->deleteOneData($id);
         // 数据判断
-        if (empty($result)) return responseMsg('删除失败', 400);
+        if (empty($result)) {
 
+            return responseMsg('删除失败', 400);
+        }
+        // 拼装日志信息
+        $logMessage = Common::logMessageForInside(auth('admin')->user()->id,config('log.adminLog')[4]);
+        // 写入日志
+        $this->log->writeAdminLog($logMessage);
+
+        // 返回成功信息
         return responseMsg('删除成功');
     }
 
@@ -185,8 +215,12 @@ class AdminUserController extends Controller
         // 获取列表数据
         $result = $this->adminUser->getAllData($where, $request['perPage']);
         // 数据是否获取成功
-        if (empty($result)) return responseMsg('', 400);
+        if (empty($result)) {
+            // 返回错误信息
+            return responseMsg('', 400);
+        }
 
+        // 返回成功数据
         return responseMsg($result);
     }
 }

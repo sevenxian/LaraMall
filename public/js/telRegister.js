@@ -77,7 +77,7 @@ function submitParamForTel() {
 
     sendAjax(data, registerUrl, function (response) {
         if (response.ServerNo == 200) {
-            window.location.href = '';
+            window.location.href = '/home/personal';
         } else {
             $('#message').html(response.ResultData);
         }
