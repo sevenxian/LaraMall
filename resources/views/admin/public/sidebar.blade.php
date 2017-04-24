@@ -96,6 +96,18 @@ s
                 </ul>
             </li>
 
+            <li class="sub-menu {{ $aside->openTag(['recommend']) }}">
+                <a href="javascript:;" class="">
+                    <i class="icon-briefcase"></i>
+                    <span>推荐位管理</span>
+                    <span class="arrow {{ $aside->openTag(['recommend']) }}"></span>
+                </a>
+                <ul class="sub" {{ $aside->displayBlock(['recommend']) }}>
+                    <li><a class="icon-barcode" href="{{ route('recommend.index') }}"> 推荐位列表</a></li>
+                    <li><a class="icon-plus-sign" href="{{ route('recommend.create') }}"> 添加推荐位</a></li>
+                </ul>
+            </li>
+
             <li>
                 <a class="" href="login.html">
                     <i class="icon-user"></i>

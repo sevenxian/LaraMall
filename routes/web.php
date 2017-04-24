@@ -140,6 +140,13 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::patch('syncPermission/{id}', 'AclController@syncPermissions');
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
-        
+
+        // 推荐位列表
+        Route::any('recommend/list', 'RecommendController@recommendList');
+        // 修改推荐位信息
+        Route::post('recommend/update/{id}', 'RecommendController@update');
+        // 推荐位管理
+        Route::resource('recommend', 'RecommendController');
+
     });
 });

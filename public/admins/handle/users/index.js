@@ -192,6 +192,10 @@ var role = new Vue({
 $('#bindModal').on('click', '.label_radio', function (e) {
     // 阻止事件冒泡
     e.preventDefault();
+
+    if ($(this).hasClass('r_on')) {
+        return $(this).removeClass('r_on');
+    }
     // 样式切换
     $('.label_radio').removeClass('r_on');
     $(this).addClass('r_on');
