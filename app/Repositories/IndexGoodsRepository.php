@@ -22,6 +22,6 @@ class IndexGoodsRepository
 
     public function add($data)
     {
-        return $this->indexGoods::create($data);
+        return $this->indexGoods->create($data);
     }
 }

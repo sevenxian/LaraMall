@@ -57,7 +57,7 @@ class GoodsRepository
      */
     public function addGoods($data)
     {
-        return $this->goods::create($data);
+        return $this->goods->create($data);
         
 //        $body = $this->analysis->QuickCut($data['goods_title']);
 //
@@ -68,6 +68,13 @@ class GoodsRepository
 //        return $this->indexGoods->add($arr);
     }
 
+    /**
+     * 通过ID获取一条数据
+     * 
+     * @param $id
+     * @return mixed
+     * @author zhulinjie
+     */
     public function findById($id)
     {
         return $this->goods->find($id);        

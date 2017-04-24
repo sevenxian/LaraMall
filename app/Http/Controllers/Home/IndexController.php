@@ -12,10 +12,15 @@ class IndexController extends Controller
      * 商城首页
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @author zhulinjie
+     * @author: Luoyan
      */
     public function index()
     {
         return view('home.index');
+    }
+
+    public function recommend()
+    {
+
     }
 }

@@ -30,6 +30,6 @@ class RelGoodsLabelRepository
      */
     public function add($data)
     {
-        return $this->relGL::create($data);
+        return $this->relGL->create($data);
     }
 }

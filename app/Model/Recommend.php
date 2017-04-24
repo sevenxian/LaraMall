@@ -30,4 +30,9 @@ class Recommend extends Model
      * @author Luoyan
      */
     protected $dates = ['deleted_at'];
+
+    public function goods()
+    {
+        return $this->belongsToMany();
+    }
 }

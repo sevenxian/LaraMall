@@ -18,14 +18,12 @@ new Vue({
             goodsLabels: [],            // 存储商品标签
             goodsLabel: '',             // 商品标签
             goodsImgs: [1],             // 商品图片个数
-            // successMsg: ''              // 成功提示消息
         }
     },
     // 第一次执行
     mounted(){
         // 获取一级分类
         axios.post('/admin/getCategory', {level: 1}).then(response => {
-            layer.closeAll();
             this.lv1s = response.data.ResultData;
         }).catch(error => {
             sweetAlert("请求失败!", "分类获取失败!", "error");
@@ -89,7 +87,7 @@ new Vue({
             // 样式切换
             if ($(e.target).hasClass('c_on')) {
                 $(e.target).removeClass('c_on').addClass('c_off');
-                // 取消选中单选按钮
+                // 取消选中复先
                 $(e.target).find('input').attr('checked', false);
             } else {
                 $(e.target).removeClass('c_off').addClass('c_on');
@@ -117,7 +115,7 @@ new Vue({
             // 添加请求
             axios.post('/admin/addGoodsLabel', data).then(response => {
                 // 添加失败的情况
-                if(response.status != 200){
+                if(response.data.ServerNo != 200){
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
                 }
@@ -158,11 +156,10 @@ new Vue({
             axios.post('/admin/goods', fd).then(response => {
                 console.log(response);
                 // 添加商品失败的情况
-                if (response.status != 200) {
+                if (response.data.ServerNo != 200) {
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
                 }
-                // this.successMsg = response.data.ResultData;
                 // 添加商品成功的情况
                 swal({
                     title: '操作成功',
@@ -208,7 +205,7 @@ new Vue({
                 fd.append('image', file);
                 // 图片上传请求
                 axios.post('/admin/goodsImgUpload', fd).then(response => {
-                    if (response.status != 200) {
+                    if (response.data.ServerNo != 200) {
                         sweetAlert("操作失败!", response.data.ResultData, "error");
                         return;
                     }

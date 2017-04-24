@@ -28,7 +28,7 @@ class CategoryLabelRepository
      */
     public function __construct(CategoryLabel $categoryLabel)
     {
-        $this->categoryLabel = $categoryLabel;
+        $this->categoryLabel = $categoryLabela;
     }
 
     /**

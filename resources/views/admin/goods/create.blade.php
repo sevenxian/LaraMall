@@ -23,16 +23,6 @@
                             商品添加
                         </header>
                         <div class="panel-body">
-                            {{--<div class="alert alert-success alert-block fade in" v-if="successMsg">--}}
-                                {{--<button data-dismiss="alert" class="close close-sm" type="button">--}}
-                                    {{--<i class="icon-remove"></i>--}}
-                                {{--</button>--}}
-                                {{--<h4>--}}
-                                    {{--<i class="icon-ok-sign"></i>--}}
-                                    {{--@{{ successMsg }}!--}}
-                                {{--</h4>--}}
-                                {{--<p><a href="/admin/goods">查看商品列表</a><a href="/admin/goods/create" style="margin-left: 15px;">继续添加</a></p>--}}
-                            {{--</div>--}}
                             <form id="goods" class="form-horizontal" role="form">
                                 <div class="form-group">
                                     <label for="category" class="col-md-1 control-label">商品分类</label>
@@ -156,7 +146,6 @@
     <script src="/admins/handle/goods/create.js"></script>
     <!-- 页面表单验证 js -->
     <script src="/admins/handle/goods/create_validation.js"></script>
-
     <!-- 实例化编辑器 -->
     <script type="text/javascript">
         var ue = UE.getEditor('goods_info');

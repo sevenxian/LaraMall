@@ -63,7 +63,7 @@ class GoodsController extends Controller
         GoodsRepository $goods,
         GoodsLabelRepository $goodsLabel,
         CategoryRepository $category,
-        RelGoodsLabelRepository $relGL
+        RelGoodsLabelRepository $relGoodsLabelRepository
     )
     {
         // 注入商品操作类
@@ -75,7 +75,7 @@ class GoodsController extends Controller
         // 注入七牛服务
         $this->disk = \Storage::disk('qiniu');
         // 商品标签关联操作类
-        $this->relGL = $relGL;
+        $this->relGL = $relGoodsLabelRepository;
     }
 
     /**
@@ -135,6 +135,7 @@ class GoodsController extends Controller
             \DB::beginTransaction();
             // 向商品表中新增记录
             $goods = $this->goods->addGoods($param);
+
             // 向商品标签关联表中新增记录
             foreach($data['goods_label'] as $val){
                 $arr['goods_id'] = $goods->id;

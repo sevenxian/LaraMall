@@ -163,6 +163,14 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
         // 货品管理
         Route::resource('cargo', 'CargoController');
+        // 获取货品的分类信息
+        Route::resource('cargo/detail', 'CargoController@detail');
+        // 添加分类标签值
+        Route::resource('addCategoryAttr', 'CargoController@addCategoryAttr');
+        // 添加商品标签值
+        Route::resource('addGoodsAttr', 'CargoController@addGoodsAttr');
+        // 上传货品图片
+        Route::post('cargoImgUpload', 'CargoController@cargoImgUpload');
 
         // 权限块
         Route::resource('acl', 'AclController');
