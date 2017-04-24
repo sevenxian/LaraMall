@@ -117,6 +117,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('usersUpdate', 'AdminUserController@update');
         // 后台管理员列表
         Route::any('usersList', 'AdminUserController@userList');
+        // 用户角色同步
+        Route::patch('syncRoles/{id}', 'AdminUserController@syncRoles');
         // 后台用户管理
         Route::resource('users', 'AdminUserController');
 
@@ -129,7 +131,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 管理员重置密码
         Route::post('usersUpdate', 'AdminUserController@update');
         // 后台用户管理
-        Route::resource('subscribers','SubscribersController');
+        Route::resource('subscribers', 'SubscribersController');
         // 后台用户列表
         Route::any('subscriberList', 'SubscribersController@subscriberList');
         // 重置密码
@@ -143,13 +145,38 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::any('classificationList', 'ClassificationController@categoryList');
         // 添加子分类
         Route::post('classificationCreate', 'ClassificationController@categoryCreate');
+        // 分类标签
+        Route::resource('categoryLabel', 'CategoryLabelController');
 
         // 商品管理
         Route::resource('goods', 'GoodsController');
         // 获取商品列表数据
-        Route::any('goodsList', 'GoodsController@goodsList')->name('admin.goodsList');
+        Route::post('goodsList', 'GoodsController@goodsList');
+        // 获取分类列表
+        Route::post('getCategory', 'GoodsController@getCategory');
+        // 获取分类下的商品标签
+        Route::post('getGoodsLabel', 'GoodsController@getGoodsLabel');
+        // 添加商品标签
+        Route::post('addGoodsLabel', 'GoodsController@addGoodsLabel');
+        // 上传商品图片
+        Route::post('goodsImgUpload', 'GoodsController@goodsImgUpload');
+
+        // 货品管理
+        Route::resource('cargo', 'CargoController');
+
+        // 权限块
+        Route::resource('acl', 'AclController');
+        // 角色列表
+        Route::any('aclList', 'AclController@aclList');
+        // 修改权限信息
+        Route::post('aclUpdate/{id}', 'AclController@update');
+        // 添加权限
+        Route::get('permission', 'AclController@permissionForm')->name('permission.create');
+        Route::post('permission', 'AclController@permission')->name('permission.store');
+        // 更新权限
+        Route::patch('syncPermission/{id}', 'AclController@syncPermissions');
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
-
+        
     });
 });

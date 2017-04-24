@@ -26,21 +26,23 @@
                         <table class="table table-striped table-advance table-hover">
                             <thead>
                                 <tr>
-                                    <th><i class="icon-bullhorn"></i> 商品名称</th>
-                                    <th class="hidden-phone"><i class="icon-question-sign"></i> Descrition</th>
-                                    <th><i class="icon-bookmark"></i> Profit</th>
-                                    <th><i class=" icon-edit"></i> Status</th>
-                                    <th></th>
+                                    <th>ID编号</th>
+                                    <th>商品名称</th>
+                                    <th>商品状态</th>
+                                    <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="data in datas">
-                                    <td><a href="#">@{{ data.goods_title }}</a></td>
-                                    <td class="hidden-phone">Lorem Ipsum dorolo imit</td>
-                                    <td>12120.00$</td>
-                                    <td><span class="label label-info label-mini">Due</span></td>
+                                <tr v-for="good in goods">
+                                    <td>@{{ good.id }}</td>
+                                    <td><a href="#">@{{ good.goods_title }}</a></td>
                                     <td>
-                                        <button class="btn btn-success btn-xs"><i class="icon-ok"></i></button>
+                                        <button class="btn btn-primary btn-xs" v-if="good.goods_status == 1" title="待售"><i class="icon-truck"></i></button>
+                                        <button class="btn btn-success btn-xs" v-if="good.goods_status == 2" title="上架"><i class="icon-ok"></i></button>
+                                        <button class="btn btn-danger btn-xs" v-if="good.goods_status == 3" title="下架"><i class="icon-remove"></i></button>
+                                    </td>
+                                    <td>
+                                        <a :href="'/admin/cargo/'+good.id" class="btn btn-success btn-xs"><i class="icon-plus"></i></a>
                                         <button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button>
                                         <button class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
                                     </td>

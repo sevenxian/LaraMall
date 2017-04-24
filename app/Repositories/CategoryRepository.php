@@ -112,4 +112,15 @@ class CategoryRepository
     {
         return $this->category->withTrashed()->where('id', $id)->restore();
     }
+
+    /**
+     * 获取分类
+     *
+     * @param $param
+     * @author zhulinjie
+     */
+    public function select($where)
+    {
+        return $this->category->where($where)->get();
+    }
 }

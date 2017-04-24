@@ -16,7 +16,8 @@ class CreateDataRecommendTable extends Migration
         Schema::create('data_recommend', function (Blueprint $table) {
             $table->increments('id')->comment('推荐位表');
             $table->string('recommend_name')->comment('推荐位名称');
-            $table->string('recommend_type')->comment('推荐位置:1首页，2列表页');
+            $table->tinyInteger('recommend_location')->comment('推荐位位置 1 首页');
+            $table->tinyInteger('recommend_type')->comment('推荐位类型');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
         });

@@ -53,4 +53,16 @@ class CategoryLabelRepository
     {
         return $this->categoryLabel->all();
     }
+
+    /**
+     * 根据ID查找数据
+     *
+     * @param $id
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function findById($id)
+    {
+        return $this->categoryLabel->find($id);
+    }
 }

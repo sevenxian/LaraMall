@@ -54,6 +54,7 @@ class Common
      * @return array
      * @author zhangyuchao
      */
+
     public static function logMessageForInside($operator_id = 0, $substance = '', $param = [])
     {
         return [
@@ -87,11 +88,12 @@ class Common
 
 
     /**
-     * 邮件发送
+     * 邮件发送函数
      *
      * @param $callName
      * @param $data
      * @param $user
+     * @return bool
      * @author zhangyuchao
      */
     public static function sendEmail($callName, $data, $user)
@@ -104,5 +106,7 @@ class Common
 
             $message->to($user);
         });
+
+        return true;
     }
 }

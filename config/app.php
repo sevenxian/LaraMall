@@ -162,6 +162,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Overtrue\LaravelUEditor\UEditorServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -179,6 +181,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,
         MercurySeries\Flashy\FlashyServiceProvider::class,
+        Laratrust\LaratrustServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
         Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class, // 七牛云存储
         iscms\Alisms\AlidayuServiceProvider::class, // 阿里大鱼 短信验证
         Naux\Mail\SendCloudServiceProvider::class,  // sendCloud邮箱服务
@@ -231,6 +235,9 @@ return [
         'View'         => Illuminate\Support\Facades\View::class,
         'Captcha'      => Mews\Captcha\Facades\Captcha::class,
         'Flashy'       => MercurySeries\Flashy\Flashy::class,
+        'Debugbar'     => Barryvdh\Debugbar\Facade::class,
+        'Laratrust'    => Laratrust\LaratrustFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
