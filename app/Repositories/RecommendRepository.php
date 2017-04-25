@@ -93,4 +93,15 @@ class RecommendRepository
     {
         return $this->recommend->all();
     }
+
+    /**
+     * 获取所有推荐位 / 包括推荐位下面得商品
+     *
+     * @return mixed
+     * @author: Luoyan
+     */
+    public function recommendWithGoods()
+    {
+        return $this->recommend->with('goods')->get();
+    }
 }
