@@ -12,6 +12,7 @@ new Vue({
             lv2s: {},                // 二级分类
             lv3s: {},                // 三级分类
             goods: {},               // 商品信息
+            cargo_name: '',          // 货品名称
             cargo_price: '',         // 货品原价
             cargo_discount: '',      // 货品折扣价
             inventory: '',           // 库存量
@@ -170,6 +171,11 @@ new Vue({
             // 前端验证
             $('#cargo').bootstrapValidator('validate');
 
+            // 货品名称不能为空
+            if (!this.cargo_name) {
+                sweetAlert("操作失败!", "请先填写货品名称!", "error");
+                return;
+            }
             // 货品原价不能为空
             if (!this.cargo_price) {
                 sweetAlert("操作失败!", "请先填写货品原价!", "error");

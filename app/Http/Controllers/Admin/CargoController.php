@@ -333,6 +333,7 @@ class CargoController extends Controller
         $param['cargo_cover'] = $data['cargo_original'][0];
         $param['inventory'] = $data['inventory'];
         $param['cargo_price'] = $data['cargo_price'];
+        $param['cargo_name'] = $data['cargo_name'];
         $param['cargo_discount'] = $data['cargo_discount'];
         $param['cargo_original'] = json_encode($data['cargo_original']);
         $param['cargo_info'] = $data['cargo_info'];

@@ -130,7 +130,7 @@
                                 <li>
                                     <div class="i-pic limit">
                                         <a href="/home/goodsDetail"><img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/430/h/430"/></a>
-                                        <p class="title fl">{{ $cargo->goods->goods_title }}</p>
+                                        <p class="title fl">{{ $cargo->cargo_name }}</p>
                                         <p class="price fl">
                                             <b>¥</b>
                                             <strong>{{ $cargo->cargo_price }}</strong>

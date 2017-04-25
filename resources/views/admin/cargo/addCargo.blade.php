@@ -41,6 +41,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="cargo_name" class="col-md-1 control-label">货品名称</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="cargo_name" v-model="cargo_name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="cargo_price" class="col-md-1 control-label">货品原价</label>
                                     <div class="col-md-6">
                                         <input type="text" name="cargo_price" v-model="cargo_price" class="form-control">
