@@ -3,10 +3,25 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\CargoRepository;
 use Illuminate\Http\Request;
 
 class GoodsController extends Controller
 {
+    /**
+     * 货品操作类
+     *
+     * @var CargoRepository
+     * @author zhulinjie
+     */
+    protected $cargo;
+
+    public function __construct(CargoRepository $cargoRepository)
+    {
+        // 注入货品操作类
+        $this->cargo = $cargoRepository;
+    }
+
     /**
      * 商品列表页
      * 
@@ -15,7 +30,8 @@ class GoodsController extends Controller
      */
     public function goodsList()
     {
-        return view('home.goods.list');    
+        $cargos = $this->cargo->cargoList(2, ['category_id' => 9]);
+        return view('home.goods.list', compact('cargos'));
     }
 
     /**

@@ -441,7 +441,7 @@ class CargoController extends Controller
 
         // 获取货品列表数据
         $cargos = $this->cargo->cargoList($data['perPage'], ['goods_id' => $data['goods_id']]);
-
+        
         // 获取货品推荐位
         foreach($cargos as $cargo){
             $recommends = $this->relRG->fetchRecommend($cargo->id);

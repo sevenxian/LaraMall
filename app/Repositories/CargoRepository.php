@@ -28,12 +28,6 @@ class CargoRepository
      * @var
      * @author zhulinjie
      */
-    protected $analysis;
-
-    /**
-     * @var
-     * @author zhulinjie
-     */
     protected $indexGoods;
 
     /**
@@ -43,7 +37,6 @@ class CargoRepository
     public function __construct(Cargo $cargo, Analysis $analysis, IndexGoods $indexGoods)
     {
         $this->cargo = $cargo;
-        $this->analysis = $analysis;
         $this->indexGoods = $indexGoods;
     }
 
