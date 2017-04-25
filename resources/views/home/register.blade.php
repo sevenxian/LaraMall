@@ -38,8 +38,8 @@
                                 <div class="verification">
                                     <label for="code"><i class="am-icon-code-fork"></i></label>
                                     <input type="text" name="code" id="emailCode" placeholder="请输入验证码">
-                                    <a class="btn" href="javascript:void(0);" onclick="sendEmailCode();">
-                                        <span id="dyMobileButton">获取</span>
+                                    <a class="btn" href="javascript:void(0);">
+                                        <span id="dyMobileButton" class="sendEmail">获取</span>
                                     </a>
                                 </div>
                                 <div id="emailCodeErrorMessage" style="color:red;font-size:12px;margin:2px 30px"></div>

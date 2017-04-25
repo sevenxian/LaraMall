@@ -9,4 +9,4 @@ Homestead.yaml
 _ide_helper.php
 public/uploads
 /storage/debugbar
-/storage/logs/laravel.log
+/storage/*

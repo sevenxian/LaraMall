@@ -49,8 +49,15 @@ class UserInfoRepository
         return $this->userInfo->where($where)->first();
     }
 
-    public function updateOneUser(array $where)
+    /**
+     * 更新个人信息
+     *
+     * @param array $where
+     * @param $param
+     * @return mixed
+     */
+    public function updateOneUser(array $where,$param)
     {
-
+        return $this->userInfo->where($where)->update($param);
     }
 }
