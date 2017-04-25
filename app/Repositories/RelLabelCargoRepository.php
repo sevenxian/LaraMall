@@ -10,6 +10,10 @@ namespace App\Repositories;
 
 use App\Model\RelLabelCargo;
 
+/**
+ * Class RelLabelCargoRepository
+ * @package App\Repositories
+ */
 class RelLabelCargoRepository
 {
     /**

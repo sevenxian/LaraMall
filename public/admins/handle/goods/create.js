@@ -126,7 +126,7 @@ new Vue({
                 sweetAlert("操作成功!", "添加商品标签成功!", "success");
             // 请求失败的情况
             }).catch(error => {
-                sweetAlert("操作失败!", response.request.statusText, "error");
+                sweetAlert("请求失败!", response.request.statusText, "error");
             });
         },
         // 添加商品操作

@@ -137,9 +137,13 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 上传货品图片
         Route::post('cargoImgUpload', 'CargoController@cargoImgUpload');
         // 货品列表界面
-        Route::get('/cargoList/{goods_id}', 'CargoController@cargoList');
+        Route::get('cargoList/{goods_id}', 'CargoController@cargoList');
         // 获取货品列表数据
-        Route::post('/getCargoList', 'CargoController@getCargoList');
+        Route::post('getCargoList', 'CargoController@getCargoList');
+        // 获取推荐位相关数据
+        Route::post('getRecommend', 'CargoController@getRecommend');
+        // 选择推荐位
+        Route::post('selectRecommend', 'CargoController@selectRecommend');
 
         // 权限块
         Route::resource('acl', 'AclController');

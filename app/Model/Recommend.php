@@ -30,4 +30,15 @@ class Recommend extends Model
      * @author Luoyan
      */
     protected $dates = ['deleted_at'];
+
+    /**
+     * 多对多关联关系 / 一个推荐位对应多个货品
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @author zhulinjie
+     */
+    public function cargos()
+    {
+        return $this->belongsToMany(Cargo::class, 'rel_recommend_goods', 'recommend_id', 'cargo_id')->withTimestamps();
+    }
 }

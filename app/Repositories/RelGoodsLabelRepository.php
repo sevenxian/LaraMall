@@ -4,6 +4,10 @@ namespace App\Repositories;
 
 use App\Model\RelGoodsLabel;
 
+/**
+ * Class RelGoodsLabelRepository
+ * @package App\Repositories
+ */
 class RelGoodsLabelRepository
 {
     /**

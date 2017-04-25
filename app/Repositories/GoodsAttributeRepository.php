@@ -10,6 +10,10 @@ namespace App\Repositories;
 
 use App\Model\GoodsAttribute;
 
+/**
+ * Class GoodsAttributeRepository
+ * @package App\Repositories
+ */
 class GoodsAttributeRepository
 {
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Model\RelRecommendGood;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsLabelRepository;
 use App\Repositories\GoodsRepository;
@@ -99,8 +100,14 @@ class GoodsController extends Controller
     public function goodsList(Request $request)
     {
         $data = $request->all();
+
         // 获取商品列表
         $res = $this->goods->goodsList($data['perPage'], $data['where']);
+
+        // 判断商品是否存在
+        if(empty($res)){
+            return responseMsg('暂无数据', 404);
+        }
         
         return responseMsg($res);
     }

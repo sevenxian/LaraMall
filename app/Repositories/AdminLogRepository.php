@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
-
 use App\Model\AdminOperationLog;
 
+/**
+ * Class AdminLogRepository
+ * @package App\Repositories
+ */
 class AdminLogRepository
 {
     /**

@@ -40,7 +40,7 @@
                                     </td>
                                     <td>@{{ item.inventory }}</td>
                                     <td>
-                                        <a href="#myModal-1" data-toggle="modal" class="btn btn-success btn-xs" title="添加推荐位"><i class="icon-plus"></i></a>
+                                        <a href="#myModal-1" data-toggle="modal" :data-cid="item.id" class="btn btn-success btn-xs" title="选择推荐位" @click="getRecommend"><i class="icon-plus" :data-cid="item.id"></i></a>
                                         <button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button>
                                         <button class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
                                     </td>
@@ -58,45 +58,41 @@
                                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
                                             ×
                                         </button>
-                                        <h4 class="modal-title">添加到推荐位</h4>
+                                        <h4 class="modal-title">选择推荐位</h4>
                                     </div>
                                     <div class="modal-body">
-
-                                        <form class="form-horizontal" role="form">
+                                        <form id="recommend" class="form-horizontal" role="form">
                                             <div class="form-group">
-                                                <label for="inputEmail1"
-                                                       class="col-lg-2 control-label">Email</label>
+                                                <label for="select-position"
+                                                       class="col-lg-2 control-label">选择位置</label>
                                                 <div class="col-lg-10">
-                                                    <input type="email" class="form-control" id="inputEmail4"
-                                                           placeholder="Email">
+                                                    <select class="form-control" id="select-position">
+                                                        <option value="1">首页</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="inputPassword1"
-                                                       class="col-lg-2 control-label">Password</label>
+                                                <label for="select-name"
+                                                       class="col-lg-2 control-label">选择名称</label>
                                                 <div class="col-lg-10">
-                                                    <input type="password" class="form-control" id="inputPassword4"
-                                                           placeholder="Password">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-lg-offset-2 col-lg-10">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox"> Remember me
-                                                        </label>
+                                                    <div class="row">
+                                                        <div class="col-lg-3" v-for="item in recommends">
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input :checked="inArray(item.id)" type="checkbox" name="recommend_id[]" :value="item.id"> @{{ item.recommend_name }}
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-lg-offset-2 col-lg-10">
-                                                    <button type="submit" class="btn btn-default">Sign in</button>
+                                                    <button type="button" class="btn btn-default" @click="selectRecommend">确 定</button>
                                                 </div>
                                             </div>
                                         </form>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -106,6 +102,10 @@
             <!-- page end-->
         </section>
     </section>
+@stop
+
+@section('externalJs')
+    <script src="{{ asset('admins/assets/jquery-knob/js/jquery.knob.js') }}"></script>
 @stop
 
 @section('customJs')

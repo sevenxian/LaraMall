@@ -82,4 +82,15 @@ class RecommendRepository
     {
         return $this->recommend->find($id);
     }
+
+    /**
+     * 获取所有的推荐位
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @author zhulinjie
+     */
+    public function fetchAll()
+    {
+        return $this->recommend->all();
+    }
 }

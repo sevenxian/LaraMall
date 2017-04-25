@@ -74,13 +74,18 @@ new Vue({
                 console.log(response);
                 // layer 加载层关闭
                 layer.closeAll();
+                // 判断请求结果
+                if(response.data.ServerNo != 200){
+                    sweetAlert("请求失败!", response.data.ResultData, "error");
+                    return;
+                }
                 // 响应式更新数据
                 this.goods = response.data.ResultData.data;
                 this.pagination = response.data.ResultData;
             }).catch(error => {
                 // layer 加载层关闭
                 layer.closeAll();
-                sweetAlert("请求失败!", "用户列表请求失败!", "error");
+                sweetAlert("请求失败!", response.request.statusText, "error");
             });
         },
         // 改变页码

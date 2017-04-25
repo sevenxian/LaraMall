@@ -8,11 +8,14 @@
 
 namespace App\Repositories;
 
-
 use App\Model\Cargo;
 use App\Model\IndexGoods;
 use App\Tools\Analysis;
 
+/**
+ * Class CargoRepository
+ * @package App\Repositories
+ */
 class CargoRepository
 {
     /**

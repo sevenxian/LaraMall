@@ -8,9 +8,12 @@
 
 namespace App\Repositories;
 
-
 use App\Model\CategoryAttribute;
 
+/**
+ * Class CategoryAttributeRepository
+ * @package App\Repositories
+ */
 class CategoryAttributeRepository
 {
     /**

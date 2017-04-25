@@ -45,13 +45,13 @@ s
                 </ul>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag(['goods']) }}">
+            <li class="sub-menu {{ $aside->openTag(['goods', 'cargoList']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
                     <span>商品管理</span>
-                    <span class="arrow {{ $aside->openTag(['goods']) }}"></span>
+                    <span class="arrow {{ $aside->openTag(['goods', 'cargoList']) }}"></span>
                 </a>
-                <ul class="sub" {{ $aside->displayBlock(['goods']) }}>
+                <ul class="sub" {{ $aside->displayBlock(['goods', 'cargoList']) }}>
                     <li><a href="/admin/goods">商品列表</a></li>
                     <li><a href="/admin/goods/create">添加商品</a></li>
                     <li><a href="invoice.html">Invoice</a></li>

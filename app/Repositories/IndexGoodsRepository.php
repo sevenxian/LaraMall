@@ -4,6 +4,10 @@ namespace App\Repositories;
 
 use App\Model\IndexGoods;
 
+/**
+ * Class IndexGoodsRepository
+ * @package App\Repositories
+ */
 class IndexGoodsRepository
 {
     /**

@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
-
 use App\Model\UserInfo;
 
+/**
+ * Class UserInfoRepository
+ * @package App\Repositories
+ */
 class UserInfoRepository
 {
     /**

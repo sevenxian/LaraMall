@@ -9,7 +9,9 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsAttributeRepository;
 use App\Repositories\GoodsRepository;
 use App\Repositories\IndexGoodsRepository;
+use App\Repositories\RecommendRepository;
 use App\Repositories\RelLabelCargoRepository;
+use App\Repositories\RelRecommendGoodRepository;
 use App\Tools\Analysis;
 use Illuminate\Http\Request;
 
@@ -65,7 +67,7 @@ class CargoController extends Controller
 
     /**
      * 标签值货品关联操作类
-     * 
+     *
      * @var
      * @author zhulinjie
      */
@@ -88,6 +90,22 @@ class CargoController extends Controller
     protected $indexGoods;
 
     /**
+     * 推荐位操作类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $recommend;
+
+    /**
+     * 推荐位与货品关联操作类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $relRG;
+
+    /**
      * CargoController constructor.
      * @param GoodsRepository $goodsRepository
      * @param CategoryRepository $categoryRepository
@@ -102,7 +120,9 @@ class CargoController extends Controller
         CargoRepository $cargoRepository,
         RelLabelCargoRepository $relLabelCargoRepository,
         Analysis $analysis,
-        IndexGoodsRepository $indexGoodsRepository
+        IndexGoodsRepository $indexGoodsRepository,
+        RecommendRepository $recommendRepository,
+        RelRecommendGoodRepository $relRecommendGoodRepository
     )
     {
         // 注入商品操作类
@@ -123,6 +143,10 @@ class CargoController extends Controller
         $this->analysis = $analysis;
         // 注入商品索引操作类
         $this->indexGoods = $indexGoodsRepository;
+        // 注入推荐位操作类
+        $this->recommend = $recommendRepository;
+        // 注入推荐位货品关联操作类
+        $this->relRG = $relRecommendGoodRepository;
     }
 
     /**
@@ -177,7 +201,7 @@ class CargoController extends Controller
         $goodsLabels = $goods->labels;
 
         // 获取商品标签值
-        foreach($goodsLabels as $label){
+        foreach ($goodsLabels as $label) {
             $label = $label->labels;
         }
 
@@ -229,7 +253,7 @@ class CargoController extends Controller
         // 添加操作
         $res = $this->categoryAttribute->addCategoryAttribute($data);
         // 判断操作是否成功
-        if(!$res){
+        if (!$res) {
             return responseMsg('分类标签值添加失败', 400);
         }
         return responseMsg($res);
@@ -248,7 +272,7 @@ class CargoController extends Controller
         // 添加操作
         $res = $this->goodsAttribute->addGoodsAttribute($data);
         // 判断操作是否成功
-        if(!$res){
+        if (!$res) {
             return responseMsg('商品标签值添加失败', 400);
         }
         return responseMsg($res);
@@ -267,11 +291,11 @@ class CargoController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             // 检测图片是否合法
-            if(checkImage($file)){
+            if (checkImage($file)) {
                 // 上传图片到七牛云 返回图片路径名
                 $filename = $this->disk->put(IMAGE_PATH, $file);
                 return responseMsg($filename);
-            }else{
+            } else {
                 return responseMsg('图片格式不合法', 400);
             }
         }
@@ -288,16 +312,16 @@ class CargoController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        
+
         $list = [];
         $categoryAttrIds = [];
-        foreach($data as $key => $val){
+        foreach ($data as $key => $val) {
             // 获取货品标签
-            if(strpos($key, 'goodsLabel') !== false){
+            if (strpos($key, 'goodsLabel') !== false) {
                 $list[str_replace('goodsLabel', '', $key)] = $val;
             }
             // 获取分类标签值
-            if(strpos($key, 'categoryLabel') !== false){
+            if (strpos($key, 'categoryLabel') !== false) {
                 $categoryAttrIds[] = $val;
             }
         }
@@ -350,23 +374,23 @@ class CargoController extends Controller
         $body = array_merge($body, $this->analysis->QuickCut($goods->goods_title));
 
         // 获取分类标签值
-        if($categoryAttrIds){
+        if ($categoryAttrIds) {
             $categoryAttrs = $this->categoryAttribute->selectByWhereIn($categoryAttrIds);
-            foreach($categoryAttrs as $categoryAttr){
+            foreach ($categoryAttrs as $categoryAttr) {
                 // 分词处理 分类标签值
                 array_push($body, $this->analysis->toUnicode($categoryAttr->attribute_name));
                 $body = array_merge($body, $this->analysis->QuickCut($categoryAttr->attribute_name));
             }
         }
 
-        try{
+        try {
             \DB::beginTransaction();
             // 向货品表中新增记录
             $cargo = $this->cargo->addCargo($param);
 
             // 分类标签值与货品关联表中新增记录
-            if($categoryAttrIds){
-                foreach($categoryAttrIds as $id){
+            if ($categoryAttrIds) {
+                foreach ($categoryAttrIds as $id) {
                     $arr['category_attr_id'] = $id;
                     $arr['goods_id'] = $data['goods_id'];
                     $arr['cargo_id'] = $cargo->id;
@@ -379,13 +403,13 @@ class CargoController extends Controller
             $indexs['cargo_id'] = $cargo->id;
             $indexs['body'] = implode(' ', $body);
             $this->indexGoods->add($indexs);
-            
+
             // 将货品信息存储到redis
             \Redis::hmset(HASH_CARGO_INFO_ . $cargo->id, $cargo->toArray());
-            
+
             \DB::commit();
             return responseMsg('货品添加成功');
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             \DB::rollback();
             dd($e->getMessage());
             return responseMsg('货品添加失败', 400);
@@ -394,7 +418,7 @@ class CargoController extends Controller
 
     /**
      * 货品列表界面
-     * 
+     *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author zhulinjie
@@ -414,10 +438,77 @@ class CargoController extends Controller
     public function getCargoList(Request $request)
     {
         $data = $request->all();
+
         // 获取货品列表数据
-        $res = $this->cargo->cargoList($data['perPage'], ['goods_id'=>$data['goods_id']]);
+        $res = $this->cargo->cargoList($data['perPage'], ['goods_id' => $data['goods_id']]);
+
+        // 判断是否存在货品
+        if (empty($res)) {
+            return responseMsg($res, 404);
+        }
 
         return responseMsg($res);
+    }
+
+
+    public function getRecommend(Request $request)
+    {
+        // 接收前台数据
+        $reqs = $request->all();
+
+        // 获取一个货品对应的推荐位的所有ID
+        $recommendIds = $this->relRG->fetchRecommendIds($reqs['cargo_id']);
+
+        // 获取所有的推荐位
+        $recommends = $this->recommend->fetchAll();
+
+        if (empty($recommends)) {
+            return responseMsg('暂无数据', 404);
+        }
+
+        return responseMsg(['recommendIds' => $recommendIds, 'recommends' => $recommends]);
+    }
+
+    /**
+     * 选择推荐位
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhulinjie
+     */
+    public function selectRecommend(Request $request)
+    {
+        // 获取前台数据
+        $data = $request->all();
+
+        // 取消所有推荐位的情况或者是第一次设置推荐位且没有选择任何一个推荐位的情况
+        if(!isset($data['recommend_id'])){
+            $data['recommend_id'] = [];
+        }
+
+        // 获取货品对应的推荐位的所有ID
+        $recommendCargoIds = $this->relRG->fetchRecommendIds($data['cargo_id'])->toArray();
+
+        // 求出现在选择的推荐位与已有的推荐位的交集
+        $intersect = array_intersect($data['recommend_id'], $recommendCargoIds);
+        // 求出现在选择的推荐位与已有的推荐位的差集
+        $diff = array_diff($data['recommend_id'], $recommendCargoIds);
+
+        // 新增操作
+        try {
+            \DB::beginTransaction();
+            // 删除非交集的部分
+            $this->relRG->whereNotInDelete(['cargo_id' => $data['cargo_id']], $intersect);
+            // 新增差集的部分
+            foreach ($diff as $rid) {
+                $this->relRG->addRelRecommendGood(['recommend_id' => $rid, 'cargo_id' => $data['cargo_id']]);
+            }
+            \DB::commit();
+            return responseMsg('选择推荐位成功');
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return responseMsg('选择推荐位失败', 400);
+        }
     }
 
     /**
