@@ -91,7 +91,8 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::get('safety/idCard', 'SafetyController@idCard');
         // 安全设置 实名认证 处理
         Route::post('safety/handleIdCard', 'SafetyController@handleIdCard');
-
+        // 收货地址管理
+        Route::resource('address', 'AddressController');
         // 退出登录
         Route::get('logout', 'UserController@logout');
 

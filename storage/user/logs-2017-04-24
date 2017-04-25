@@ -1,1 +1,2 @@
 [2017-04-24 10:12:39] signin.INFO: ID为2的用户,在2017-04-24,10:12:39进行退出登录操作,IP地址为192.168.33.1: {"url":"http://www.laramall.com/home/logout"} 
+[2017-04-24 11:37:19] signin.INFO: ID为3的用户,在2017-04-24,11:37:19进行更新个人信息操作,IP地址为192.168.33.1: {"_token":"ECvmiRbdZetg07KQLHOnMJfshZwt84mQhBZJnB6i","nickname":"nickname","realname":"","sex":"2","year":"2006","month":"9","day":"12","url":"http://www.laramall.com/home/userInfo/updateMessage"} 
