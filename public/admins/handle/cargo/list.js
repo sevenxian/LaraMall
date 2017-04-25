@@ -1,6 +1,5 @@
 /**
- * 商品列表
- *
+ * 货品列表
  * @author zhulinjie
  */
 new Vue({
@@ -14,9 +13,11 @@ new Vue({
                 current_page: 1             // 当前页
             },
             offset: 4,                      // 页码偏移量
-            goods: [],                      // 商品列表
-            per_page: 10,                   // 一页显示的数据
-            search: {}                      // 搜索条件
+            cargo: [],                      // 货品列表
+            per_page: 10,                   // 一页显示多少条的数据
+            recommends: [],                 // 存储所有的推荐位
+            recommendIds: [],               // 存储一个货品对应的推荐位的所有ID
+            cargo_id: '',                   // 货品ID
         }
     },
     // 第一次执行
@@ -57,7 +58,7 @@ new Vue({
         },
         // 判断是存在数据
         isData(){
-            return this.goods.length;
+            return this.cargo.length;
         }
     },
     methods: {
@@ -66,21 +67,20 @@ new Vue({
             // 请求数据
             var data = {
                 page: page,                 // 当前页
-                perPage: this.per_page,     // 页面展示的数据
-                where: this.search          // 搜索条件
+                perPage: this.per_page,     // 一页显示多少条的数据
+                goods_id: goods_id          // 商品ID
             };
             // 请求数据
-            axios.post('/admin/goodsList', data).then(response => {
+            axios.post('/admin/getCargoList', data).then(response => {
                 console.log(response);
                 // layer 加载层关闭
                 layer.closeAll();
                 // 判断请求结果
                 if(response.data.ServerNo != 200){
                     sweetAlert("请求失败!", response.data.ResultData, "error");
-                    return;
                 }
                 // 响应式更新数据
-                this.goods = response.data.ResultData.data;
+                this.cargo = response.data.ResultData.data;
                 this.pagination = response.data.ResultData;
             }).catch(error => {
                 // layer 加载层关闭
@@ -99,15 +99,58 @@ new Vue({
             // 执行修改
             this.fetchDatas(page);
         },
-        // 搜索
-        searchList(e) {
-            var goods_title = e.target.goods_title.value;
-            if(!goods_title){
-                this.search = [];
-            }else{
-                this.search = {goods_title: goods_title};
+        // 选择推荐位界面，获取相关数据
+        getRecommend(e){
+            this.cargo_id = $(e.target).data('cid');
+            axios.post('/admin/getRecommend', {cargo_id: this.cargo_id}).then(response => {
+                console.log(response);
+                // 判断请求结果
+                if(response.data.ServerNo != 200){
+                    sweetAlert("请求失败!", response.data.ResultData, "error");
+                }
+                this.recommends = response.data.ResultData.recommends;
+                this.recommendIds = response.data.ResultData.recommendIds;
+            }).catch(error => {
+                sweetAlert("请求失败!", response.request.statusText, "error");
+            });
+        },
+        // 选择推荐位操作
+        selectRecommend(e){
+            // 构造一个包含Form表单数据的FormData对象，需要在创建FormData对象时指定表单的元素
+            var fd = new FormData($('#recommend')[0]);
+            fd.append('cargo_id', this.cargo_id);
+
+            axios.post('/admin/selectRecommend', fd).then(response => {
+                if(response.data.ServerNo != 200){
+                    sweetAlert("操作失败!", response.request.ResultData, "error");
+                }
+                sweetAlert("操作成功!", response.request.ResultData, "success");
+                setTimeout(function () {
+                    location.href = '/admin/cargoList/'+goods_id;
+                }, 500);
+            }).catch(error => {
+                sweetAlert("请求失败!", response.request.ResultData, "error");
+            });
+        },
+        // 货品推荐位 字符串形式
+        recommendStr(recommends){
+            if(!recommends.length){
+                return '无';
             }
-            this.fetchDatas(this.pagination.current_page);
+            var str = '';
+            for(var i in recommends){
+                str += recommends[i].recommend_name + ' ';
+            }
+            return $.trim(str);
+        },
+        // 判断数组中是否存在某个值
+        inArray(recommendId){
+            for(var i in this.recommendIds){
+                if(this.recommendIds[i] == recommendId){
+                    return true;
+                }
+            }
+            return false;
         }
     }
 });

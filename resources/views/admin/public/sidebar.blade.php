@@ -45,18 +45,15 @@ s
                 </ul>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag(['goods']) }}">
+            <li class="sub-menu {{ $aside->openTag(['goods', 'cargoList']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
                     <span>商品管理</span>
-                    <span class="arrow {{ $aside->openTag(['goods']) }}"></span>
+                    <span class="arrow {{ $aside->openTag(['goods', 'cargoList']) }}"></span>
                 </a>
-                <ul class="sub" {{ $aside->displayBlock(['goods']) }}>
+                <ul class="sub" {{ $aside->displayBlock(['goods', 'cargoList']) }}>
                     <li><a href="/admin/goods">商品列表</a></li>
                     <li><a href="/admin/goods/create">添加商品</a></li>
-                    <li><a href="invoice.html">Invoice</a></li>
-                    <li><a href="404.html">404 Error</a></li>
-                    <li><a href="500.html">500 Error</a></li>
                 </ul>
             </li>
             <li>
@@ -93,6 +90,18 @@ s
                     <li><a class="icon-male" href="{{ route('acl.index') }}"> 角色列表</a></li>
                     <li><a class="icon-plus-sign" href="{{ route('acl.create') }}"> 添加角色</a></li>
                     <li><a class="icon-plus-sign" href="{{ route('permission.create') }}"> 添加权限</a></li>
+                </ul>
+            </li>
+
+            <li class="sub-menu {{ $aside->openTag(['recommend']) }}">
+                <a href="javascript:;" class="">
+                    <i class="icon-briefcase"></i>
+                    <span>推荐位管理</span>
+                    <span class="arrow {{ $aside->openTag(['recommend']) }}"></span>
+                </a>
+                <ul class="sub" {{ $aside->displayBlock(['recommend']) }}>
+                    <li><a class="icon-barcode" href="{{ route('recommend.index') }}"> 推荐位列表</a></li>
+                    <li><a class="icon-plus-sign" href="{{ route('recommend.create') }}"> 添加推荐位</a></li>
                 </ul>
             </li>
 

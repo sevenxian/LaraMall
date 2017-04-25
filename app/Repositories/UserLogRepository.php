@@ -4,6 +4,10 @@ namespace App\Repositories;
 
 use App\Model\UserOperationLog;
 
+/**
+ * Class UserLogRepository
+ * @package App\Repositories
+ */
 class UserLogRepository
 {
     /**

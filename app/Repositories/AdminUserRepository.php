@@ -4,6 +4,10 @@ namespace App\Repositories;
 
 use App\Model\AdminUser;
 
+/**
+ * Class AdminUserRepository
+ * @package App\Repositories
+ */
 class AdminUserRepository
 {
     /**

@@ -164,6 +164,24 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
         // 货品管理
         Route::resource('cargo', 'CargoController');
+        // 货品添加
+        Route::get('addCargo/{goods_id}', 'CargoController@addCargo');
+        // 获取货品的分类信息
+        Route::post('cargo/detail', 'CargoController@detail');
+        // 添加分类标签值
+        Route::post('addCategoryAttr', 'CargoController@addCategoryAttr');
+        // 添加商品标签值
+        Route::post('addGoodsAttr', 'CargoController@addGoodsAttr');
+        // 上传货品图片
+        Route::post('cargoImgUpload', 'CargoController@cargoImgUpload');
+        // 货品列表界面
+        Route::get('cargoList/{goods_id}', 'CargoController@cargoList');
+        // 获取货品列表数据
+        Route::post('getCargoList', 'CargoController@getCargoList');
+        // 获取推荐位相关数据
+        Route::post('getRecommend', 'CargoController@getRecommend');
+        // 选择推荐位
+        Route::post('selectRecommend', 'CargoController@selectRecommend');
 
         // 权限块
         Route::resource('acl', 'AclController');
@@ -178,6 +196,13 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::patch('syncPermission/{id}', 'AclController@syncPermissions');
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
-        
+
+        // 推荐位列表
+        Route::any('recommend/list', 'RecommendController@recommendList');
+        // 修改推荐位信息
+        Route::post('recommend/update/{id}', 'RecommendController@update');
+        // 推荐位管理
+        Route::resource('recommend', 'RecommendController');
+
     });
 });

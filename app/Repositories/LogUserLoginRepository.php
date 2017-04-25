@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
-
 use App\Model\LogUserLogin;
 
+/**
+ * Class LogUserLoginRepository
+ * @package App\Repositories
+ */
 class LogUserLoginRepository
 {
     /**

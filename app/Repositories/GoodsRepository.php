@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Tools\Analysis;
 use App\Model\Goods;
 
+/**
+ * Class GoodsRepository
+ * @package App\Repositories
+ */
 class GoodsRepository
 {
     /**
@@ -13,26 +16,12 @@ class GoodsRepository
     protected $goods;
 
     /**
-     * @var Analysis
-     */
-    protected $analysis;
-
-    /**
-     * @var
-     */
-    protected $indexGoods;
-
-    /**
      * GoodsRepository constructor.
      * @param Goods $goods
-     * @param Analysis $analysis
-     * @param IndexGoodsRepository $indexGoods
      */
-    public function __construct(Goods $goods, Analysis $analysis, IndexGoodsRepository $indexGoods)
+    public function __construct(Goods $goods)
     {
         $this->goods = $goods;
-        $this->analysis = $analysis;
-        $this->indexGoods = $indexGoods;
     }
 
     /**
@@ -57,17 +46,16 @@ class GoodsRepository
      */
     public function addGoods($data)
     {
-        return $this->goods::create($data);
-        
-//        $body = $this->analysis->QuickCut($data['goods_title']);
-//
-//        $arr['goods_id'] = $res->id;
-//        $arr['cargo_id'] = 1;
-//        $arr['body'] = implode(' ', $body);
-
-//        return $this->indexGoods->add($arr);
+        return $this->goods->create($data);
     }
 
+    /**
+     * 通过ID获取一条数据
+     * 
+     * @param $id
+     * @return mixed
+     * @author zhulinjie
+     */
     public function findById($id)
     {
         return $this->goods->find($id);        

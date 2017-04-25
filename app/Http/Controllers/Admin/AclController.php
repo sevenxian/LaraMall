@@ -29,8 +29,16 @@ class AclController extends Controller
      */
     protected $permission;
 
+    /**
+     * @var LogOperation
+     * @author Luoyan
+     */
     protected $log;
 
+    /**
+     * @var Common
+     * @author Luoyan
+     */
     protected $common;
 
     /**

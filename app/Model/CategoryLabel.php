@@ -25,8 +25,7 @@ class CategoryLabel extends Model
      * @author Luoyan
      */
     protected $fillable = ['category_label_name', 'status'];
-
-
+    
     /**
      * 多对多关联关系 / 一个分类标签属于多个分类
      *
@@ -36,5 +35,16 @@ class CategoryLabel extends Model
     public function categorys()
     {
         return $this->belongsToMany(Category::class, 'rel_category_labels', 'category_label_id', 'category_id')->withTimestamps();
+    }
+
+    /**
+     * 一对多关联 / 一个标签拥有多个标签值
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author zhulinjie
+     */
+    public function labels()
+    {
+        return $this->hasMany(CategoryAttribute::class);
     }
 }

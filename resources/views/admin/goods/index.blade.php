@@ -27,22 +27,24 @@
                             <thead>
                                 <tr>
                                     <th>ID编号</th>
+                                    <th>缩略图</th>
                                     <th>商品名称</th>
                                     <th>商品状态</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="good in goods">
-                                    <td>@{{ good.id }}</td>
-                                    <td><a href="#">@{{ good.goods_title }}</a></td>
+                                <tr v-for="item in goods">
+                                    <td>@{{ item.id }}</td>
+                                    <td><img :src="'{{ env('QINIU_DOMAIN') }}'+JSON.parse(item.goods_original)[0]+'?imageView2/1/w/60/h/60'" alt="" width="60px"></td>
+                                    <td><a :href="'/admin/cargoList/'+item.id">@{{ item.goods_title }}</a></td>
                                     <td>
-                                        <button class="btn btn-primary btn-xs" v-if="good.goods_status == 1" title="待售"><i class="icon-truck"></i></button>
-                                        <button class="btn btn-success btn-xs" v-if="good.goods_status == 2" title="上架"><i class="icon-ok"></i></button>
-                                        <button class="btn btn-danger btn-xs" v-if="good.goods_status == 3" title="下架"><i class="icon-remove"></i></button>
+                                        <button class="btn btn-primary btn-xs" v-if="item.goods_status == 1" title="待售"><i class="icon-truck"></i></button>
+                                        <button class="btn btn-success btn-xs" v-if="item.goods_status == 2" title="上架"><i class="icon-ok"></i></button>
+                                        <button class="btn btn-danger btn-xs" v-if="item.goods_status == 3" title="下架"><i class="icon-remove"></i></button>
                                     </td>
                                     <td>
-                                        <a :href="'/admin/cargo/'+good.id" class="btn btn-success btn-xs"><i class="icon-plus"></i></a>
+                                        <a :href="'/admin/addCargo/'+item.id" class="btn btn-success btn-xs"><i class="icon-plus"></i></a>
                                         <button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button>
                                         <button class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
                                     </td>

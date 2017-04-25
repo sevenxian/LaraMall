@@ -4,6 +4,10 @@ namespace App\Repositories;
 
 use App\Model\RelGoodsLabel;
 
+/**
+ * Class RelGoodsLabelRepository
+ * @package App\Repositories
+ */
 class RelGoodsLabelRepository
 {
     /**
@@ -30,6 +34,6 @@ class RelGoodsLabelRepository
      */
     public function add($data)
     {
-        return $this->relGL::create($data);
+        return $this->relGL->create($data);
     }
 }

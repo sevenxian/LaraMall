@@ -21,4 +21,15 @@ class GoodsLabel extends Model
      * @author zhulinjie
      */
     protected $fillable = ['category_id', 'goods_label_name'];
+
+    /**
+     * 一对多关联 / 一个标签拥有多个标签值
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author zhulinjie
+     */
+    public function labels()
+    {
+        return $this->hasMany(GoodsAttribute::class);
+    }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
-
 use App\Model\UserRegister;
 
+/**
+ * Class RegisterRepository
+ * @package App\Repositories
+ */
 class RegisterRepository
 {
 

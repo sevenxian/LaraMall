@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Model\RelRecommendGood;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsLabelRepository;
 use App\Repositories\GoodsRepository;
@@ -63,7 +64,7 @@ class GoodsController extends Controller
         GoodsRepository $goods,
         GoodsLabelRepository $goodsLabel,
         CategoryRepository $category,
-        RelGoodsLabelRepository $relGL
+        RelGoodsLabelRepository $relGoodsLabelRepository
     )
     {
         // 注入商品操作类
@@ -75,7 +76,7 @@ class GoodsController extends Controller
         // 注入七牛服务
         $this->disk = \Storage::disk('qiniu');
         // 商品标签关联操作类
-        $this->relGL = $relGL;
+        $this->relGL = $relGoodsLabelRepository;
     }
 
     /**
@@ -99,8 +100,14 @@ class GoodsController extends Controller
     public function goodsList(Request $request)
     {
         $data = $request->all();
+
         // 获取商品列表
         $res = $this->goods->goodsList($data['perPage'], $data['where']);
+
+        // 判断商品是否存在
+        if(empty($res)){
+            return responseMsg('暂无数据', 404);
+        }
         
         return responseMsg($res);
     }
@@ -135,6 +142,7 @@ class GoodsController extends Controller
             \DB::beginTransaction();
             // 向商品表中新增记录
             $goods = $this->goods->addGoods($param);
+
             // 向商品标签关联表中新增记录
             foreach($data['goods_label'] as $val){
                 $arr['goods_id'] = $goods->id;

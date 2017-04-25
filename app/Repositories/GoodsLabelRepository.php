@@ -4,6 +4,10 @@ namespace App\Repositories;
 
 use App\Model\GoodsLabel;
 
+/**
+ * Class GoodsLabelRepository
+ * @package App\Repositories
+ */
 class GoodsLabelRepository
 {
     /**
@@ -42,6 +46,6 @@ class GoodsLabelRepository
      */
     public function addGoodsLable($data)
     {
-        return $this->goodsLabel::create($data);
+        return $this->goodsLabel->create($data);
     }
 }
