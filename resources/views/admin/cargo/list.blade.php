@@ -24,6 +24,7 @@
                                     <th>货品折扣价</th>
                                     <th>货品状态</th>
                                     <th>库存</th>
+                                    <th>推荐位</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
@@ -39,6 +40,7 @@
                                         <button class="btn btn-danger btn-xs" v-if="item.cargo_status == 3" title="下架"><i class="icon-remove"></i></button>
                                     </td>
                                     <td>@{{ item.inventory }}</td>
+                                    <td>@{{ recommendStr(item.recommends) }}</td>
                                     <td>
                                         <a href="#myModal-1" data-toggle="modal" :data-cid="item.id" class="btn btn-success btn-xs" title="选择推荐位" @click="getRecommend"><i class="icon-plus" :data-cid="item.id"></i></a>
                                         <button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button>

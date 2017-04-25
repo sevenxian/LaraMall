@@ -24,7 +24,7 @@ class RelRecommendGoodRepository
      * @return static
      * @author zhulinjie
      */
-    public function addRelRecommendGood($data)
+    public function addRelRecommendGoods($data)
     {
         return $this->relRG->create($data);
     }
@@ -41,8 +41,28 @@ class RelRecommendGoodRepository
         return $this->relRG->where(['cargo_id' => $cargo_id])->pluck('recommend_id');
     }
 
-    public function whereNotInDelete($where, $data)
+    /**
+     * 删除指定货品并且recommend_id不等于指定范围的数据
+     * 
+     * @param $cargo_id
+     * @param array $data
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function whereNotInRecommendIds($cargo_id, array $data)
     {
-        return $this->relRG->where($where)->whereNotIn('recommend_id', $data)->delete();
+        return $this->relRG->where('cargo_id', $cargo_id)->whereNotIn('recommend_id', $data)->delete();
+    }
+
+    /**
+     * 获取货品推荐位
+     *
+     * @param $cargo_id
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function fetchRecommend($cargo_id)
+    {
+        return $this->relRG->where(['cargo_id' => $cargo_id])->get();
     }
 }

@@ -54,9 +54,6 @@ s
                 <ul class="sub" {{ $aside->displayBlock(['goods', 'cargoList']) }}>
                     <li><a href="/admin/goods">商品列表</a></li>
                     <li><a href="/admin/goods/create">添加商品</a></li>
-                    <li><a href="invoice.html">Invoice</a></li>
-                    <li><a href="404.html">404 Error</a></li>
-                    <li><a href="500.html">500 Error</a></li>
                 </ul>
             </li>
             <li>

@@ -126,11 +126,22 @@ new Vue({
                 }
                 sweetAlert("操作成功!", response.request.ResultData, "success");
                 setTimeout(function () {
-                    // location.href = '/admin/cargoList/'+goods_id;
+                    location.href = '/admin/cargoList/'+goods_id;
                 }, 500);
             }).catch(error => {
                 sweetAlert("请求失败!", response.request.ResultData, "error");
             });
+        },
+        // 货品推荐位 字符串形式
+        recommendStr(recommends){
+            if(!recommends.length){
+                return '无';
+            }
+            var str = '';
+            for(var i in recommends){
+                str += recommends[i].recommend_name + ' ';
+            }
+            return $.trim(str);
         },
         // 判断数组中是否存在某个值
         inArray(recommendId){

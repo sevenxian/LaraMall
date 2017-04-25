@@ -31,15 +31,4 @@ class Cargo extends Model
         'cargo_original',
         'cargo_info'
     ];
-
-    /**
-     * 多对多关联关系 / 一个货品对应多个推荐位
-     * 
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     * @author zhulinjie
-     */
-    public function recommends()
-    {
-        return $this->belongsToMany(Recommend::class, 'rel_recommend_goods', 'recommend_id', 'cargo_id')->withTimestamps();
-    }
 }

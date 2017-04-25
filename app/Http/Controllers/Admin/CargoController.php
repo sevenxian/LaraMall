@@ -440,17 +440,35 @@ class CargoController extends Controller
         $data = $request->all();
 
         // 获取货品列表数据
-        $res = $this->cargo->cargoList($data['perPage'], ['goods_id' => $data['goods_id']]);
+        $cargos = $this->cargo->cargoList($data['perPage'], ['goods_id' => $data['goods_id']]);
 
-        // 判断是否存在货品
-        if (empty($res)) {
-            return responseMsg($res, 404);
+        // 获取货品推荐位
+        foreach($cargos as $cargo){
+            $recommends = $this->relRG->fetchRecommend($cargo->id);
+            $tmp = [];
+            if(!empty($recommends)){
+                foreach($recommends as $recommend){
+                    $tmp[] = $this->recommend->findById($recommend->recommend_id);
+                }
+            }
+            $cargo->recommends = $tmp;
         }
 
-        return responseMsg($res);
+        // 判断是否存在货品
+        if (empty($cargos)) {
+            return responseMsg($cargos, 404);
+        }
+
+        return responseMsg($cargos);
     }
 
-
+    /**
+     * 获取货品推荐位信息
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhulinjie
+     */
     public function getRecommend(Request $request)
     {
         // 接收前台数据
@@ -498,10 +516,10 @@ class CargoController extends Controller
         try {
             \DB::beginTransaction();
             // 删除非交集的部分
-            $this->relRG->whereNotInDelete(['cargo_id' => $data['cargo_id']], $intersect);
+            $this->relRG->whereNotInRecommendIds($data['cargo_id'], $intersect);
             // 新增差集的部分
             foreach ($diff as $rid) {
-                $this->relRG->addRelRecommendGood(['recommend_id' => $rid, 'cargo_id' => $data['cargo_id']]);
+                $this->relRG->addRelRecommendGoods(['recommend_id' => $rid, 'cargo_id' => $data['cargo_id']]);
             }
             \DB::commit();
             return responseMsg('选择推荐位成功');
