@@ -21,14 +21,6 @@ class Cargo extends Model
      * @author zhulinjie
      */
     protected $fillable = [
-        'category_id',
-        'goods_id',
-        'cargo_ids',
-        'cargo_cover',
-        'inventory',
-        'cargo_price',
-        'cargo_discount',
-        'cargo_original',
-        'cargo_info'
+        'category_id', 'goods_id', 'cargo_ids', 'cargo_cover', 'inventory', 'cargo_price', 'cargo_discount', 'cargo_original', 'cargo_info'
     ];
 }
