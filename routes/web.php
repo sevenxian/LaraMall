@@ -93,6 +93,9 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::post('safety/handleIdCard', 'SafetyController@handleIdCard');
         // 收货地址管理
         Route::resource('address', 'AddressController');
+        // 商品收藏
+        Route::resource('GoodsCollection', 'GoodsCollectionController');
+
         // 退出登录
         Route::get('logout', 'UserController@logout');
 

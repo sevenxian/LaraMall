@@ -1,2 +1,0 @@
-[2017-04-14 17:41:21] signin.INFO: adminID为1,用户名为zhangyuchao的用户,在2017-04-14,17:41:21进行管理员添加操作,IP地址为172.18.0.1: {"_token":"0dsDcX54D3wduU1VJkwmyC68KNH1WqJQ1cmJZTq9","nickname":"luoyan","tel":"15911187401","password":"123123","rel_password":"123123","url":"http://laramall.dev/admin/users"} 
-[2017-04-14 17:57:44] signin.INFO: adminID为1,用户名为zhangyuchao的用户,在2017-04-14,17:57:44进行管理员添加操作,IP地址为172.18.0.1: {"_token":"0dsDcX54D3wduU1VJkwmyC68KNH1WqJQ1cmJZTq9","nickname":"luoyan","tel":"15911187401","password":"123123","rel_password":"123123","url":"http://laramall.dev/admin/users"} 

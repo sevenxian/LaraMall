@@ -30,18 +30,42 @@ class GoodsCollectionRepository
      */
     public function addOneGoodsCollection(array $param)
     {
-        return $this->goodsCollection->create();
+        return $this->goodsCollection->create($param);
     }
 
     /**
-     * 删除商品收藏
+     * 移除收藏记录
      *
-     * @param $id
-     * @return int
+     * @param array $where
+     * @return mixed
      * @author zhangyuchao
      */
     public function delOneGoodsCollection($id)
     {
         return $this->goodsCollection->destroy($id);
+    }
+
+    /**
+     * 计算货品收藏数量
+     *
+     * @param array $where
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function countGoodsCollection(array $where)
+    {
+        return $this->goodsCollection->where($where)->count();
+    }
+
+    /**
+     * 查询用户是否收藏该货品
+     *
+     * @param array $where
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function findUserForGoodsCollection(array $where)
+    {
+        return $this->goodsCollection->where($where)->first();
     }
 }

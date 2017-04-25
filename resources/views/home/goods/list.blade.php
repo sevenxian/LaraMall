@@ -136,7 +136,7 @@
                                             <strong>{{ $cargo->cargo_price }}</strong>
                                         </p>
                                         <p class="number fl">
-                                            销量<span>1110</span>
+                                            <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">收藏</a><span class="count">1231</span>
                                         </p>
                                     </div>
                                 </li>
@@ -238,4 +238,22 @@
         window.jQuery || document.write('<script src="basic/js/jquery-1.9.min.js"><\/script>');
     </script>
     <script type="text/javascript" src="/basic/js/quick_links.js"></script>
+    <script type="text/javascript" src="/js/check.js"></script>
+    <script>
+        $('.collection').click(function () {
+
+            var obj = $(this);
+            var data={
+             'cargo_id':$(this).attr('data-cargo-id'),
+                '_token':"{{ csrf_token() }}",
+             'user_id':''
+            }
+            sendAjax(data,'/home/GoodsCollection',function(response){
+                if(response.ServerNo == 200){
+                    obj.next().html(response.ResultData);
+                    obj.html('已关注');
+                }
+            })
+        })
+    </script>
 @stop

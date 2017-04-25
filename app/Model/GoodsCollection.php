@@ -21,15 +21,6 @@ class GoodsCollection extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'goods_id'];
+    protected $fillable = ['user_id', 'cargo_id'];
 
-    /**
-     * 设置user_id
-     *
-     * @author zhangyuchao
-     */
-    protected function setUserIdAttribute()
-    {
-        $this->attributes['user_id'] = \Session::get('user')->user_id;//
-    }
 }
