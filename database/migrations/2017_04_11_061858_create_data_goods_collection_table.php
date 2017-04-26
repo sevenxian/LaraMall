@@ -16,7 +16,7 @@ class CreateDataGoodsCollectionTable extends Migration
         Schema::create('data_goods_collection', function (Blueprint $table) {
             $table->increments('id')->comment('商品收藏表');
             $table->integer('user_id')->index()->comment('用户ID');
-            $table->integer('goods_id')->index()->comment('商品ID');
+            $table->integer('cargo_id')->index()->comment('货品ID');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
         });

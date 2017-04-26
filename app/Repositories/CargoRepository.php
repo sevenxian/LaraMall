@@ -64,4 +64,16 @@ class CargoRepository
     {
         return $this->cargo->where($where)->paginate($perPage);
     }
+
+    /**
+     * 查询单条货品
+     *
+     * @param array $where
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function findOneCargo(array $where)
+    {
+        return $this->cargo->where($where)->first();
+    }
 }

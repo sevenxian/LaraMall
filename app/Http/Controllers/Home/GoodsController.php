@@ -30,7 +30,7 @@ class GoodsController extends Controller
      */
     public function goodsList()
     {
-        $cargos = $this->cargo->cargoList(2, ['category_id' => 10]);
+        $cargos = $this->cargo->cargoList(2, ['category_id' => 3]);
         return view('home.goods.list', compact('cargos'));
     }
 

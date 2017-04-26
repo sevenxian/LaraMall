@@ -34,10 +34,10 @@ class GoodsCollectionRepository
     }
 
     /**
-     * 移除收藏记录
+     * 
      *
-     * @param array $where
-     * @return mixed
+     * @param $id
+     * @return int
      * @author zhangyuchao
      */
     public function delOneGoodsCollection($id)
@@ -67,5 +67,18 @@ class GoodsCollectionRepository
     public function findUserForGoodsCollection(array $where)
     {
         return $this->goodsCollection->where($where)->first();
+    }
+
+    /**
+     * 分页获取收藏列表数据
+     *
+     * @param array $where
+     * @param int $perPage
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function getGoodsCollectionList(array $where,$perPage = 10)
+    {
+       return  $this->goodsCollection->where($where)->paginate($perPage);
     }
 }

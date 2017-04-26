@@ -17,3 +17,21 @@ define('STRING_USER_VERIFY_CODE_', 'STRING:USER:VERIFY:CODE:');
  * @author zhulinjie
  */
 define('HASH_CARGO_INFO_', 'HASH:CARGO:INFO:');
+
+/**
+ * 存储购物车单条货品数据
+ *
+ * KEY = HASH:SHOPPING:CART:INFO:用户ID:货品ID
+ * VALUE = 购物车里的货品信息
+ * @author zhangyuchao
+ */
+define('HASH_SHOPPING_CART_INFO_','HASH:SHOPPING:CART:INFO:');
+
+/**
+ * 存储单个用户购物车信息
+ *
+ * KEY = LIST:SHOPPING:CART:INFO:用户ID
+ * VALUE = 用户购物车单挑数据的KEY
+ * @author zhangyuchao
+ */
+define('LIST_SHOPPING_CART_INFO_','LIST:SHOPPING:CART:INFO:');

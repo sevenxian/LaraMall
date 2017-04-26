@@ -95,6 +95,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::resource('address', 'AddressController');
         // 商品收藏
         Route::resource('GoodsCollection', 'GoodsCollectionController');
+        // 购物车 加入购物车
+        Route::post('addToShoppingCart', 'ShoppingCartController@store');
+        // 购物车 购物车列表
+        //Route::get('GoodsCollection', 'GoodsCollectionController');
 
         // 退出登录
         Route::get('logout', 'UserController@logout');

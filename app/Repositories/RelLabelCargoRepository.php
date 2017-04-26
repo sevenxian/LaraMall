@@ -42,4 +42,16 @@ class RelLabelCargoRepository
     {
         return $this->relLabelCargo->create($data);
     }
+
+    /**
+     * 根据条件获取数据
+     *
+     * @param array $where
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function getData(array $where)
+    {
+        return $this->relLabelCargo->where($where)->get();
+    }
 }
