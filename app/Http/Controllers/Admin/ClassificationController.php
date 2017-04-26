@@ -76,7 +76,7 @@ class ClassificationController extends Controller
         $this->fileDo($request);
 
         // 录入分类信息，并且判断录入结果
-        if ($this->category->createByCategory($request->all())) {
+        if ($this->ceatgory->createByCategory($request->all())) {
             // 录入成功跳转分类列表
             return redirect()->route('classification.index');
         }

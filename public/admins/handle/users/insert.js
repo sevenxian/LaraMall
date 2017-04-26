@@ -12,7 +12,6 @@ new Vue({
              var formData = new FormData(event.target);
             // 发送参数
              axios.post('/admin/users', formData).then(response => {
-                 console.log(response.data.ServerNo);
                      // 判断返回结果
                      if(response.data.ServerNo == 200){
                          // 把返回参数添加到头部
@@ -32,5 +31,6 @@ new Vue({
                  sweetAlert("网络请求失败!", '', "error");
              });
         }
+
     }
 });

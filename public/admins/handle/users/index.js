@@ -1,6 +1,6 @@
 /**
- * 分页 Vue
- * @author Luoyan
+ * 分页获取管理员列表
+ * @author zhangyuchao
  */
 var userListVue = new Vue({
     // 绑定元素
@@ -18,8 +18,7 @@ var userListVue = new Vue({
             offset: 4, // 页码偏移量
             datas: [], // 页码内容
             search: {'type':0,'value':''}, // 搜索条件
-            per_page: 8, // 一页显示的数据
-            currentLevel: 0, // 当前分类层级
+            per_page: 20, // 一页显示的数据
         }
     },
     // 第一次执行
@@ -28,6 +27,7 @@ var userListVue = new Vue({
         this.fetchDatas(this.pagination.current_page);
     },
     // 计算属性
+
     computed: {
         // 选中页
         isActived() {
@@ -94,15 +94,19 @@ var userListVue = new Vue({
             // 执行修改
             this.fetchDatas(page);
         },
+        // 搜索
         searchLists() {
             this.fetchDatas(this.pagination.current_page);
         },
+        // 获取管理员ID
         getAdminId(id) {
            this.adminId = id;
         },
+        // 删除管理员操作
         deleteAdmin(id,index) {
             axios.post('/admin/users/'+id,{'_method':'delete'}).then(response => {
                 if(response.data.ServerNo == 200){
+                    // 删除成功 页面数据移除
                     this.datas.splice(index,1)
                     layer.closeAll();
                     sweetAlert("删除成功!", "", "success");

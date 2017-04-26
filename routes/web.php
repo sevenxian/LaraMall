@@ -70,6 +70,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     ]]);
     // 友情链接管理
     Route::resource('friendLink','FriendLinkController');
+    //友情链接管理列表
+    Route::any('linkList','FriendLinkController@linkList');
+    //修改友情链接
+    Route::post('linkUpdate','FriendLinkController@update');
     // 后台用户管理
     Route::resource('users','AdminUserController');
     // 后台管理员列表

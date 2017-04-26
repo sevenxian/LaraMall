@@ -16,5 +16,10 @@ class FriendLink extends Model
     /**
      * @var array
      */
+    protected $dates = ['created_at', 'updated_at', 'delete_at'];
+
+    /**
+     * @var array
+     */
     protected $fillable = ['name', 'type', 'url', 'image'];
 }

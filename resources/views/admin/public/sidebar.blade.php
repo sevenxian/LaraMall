@@ -14,9 +14,9 @@
                 <a href="javascript:;" class="">
                     <i class="icon-book"></i>
                     <span>用户管理</span>
-                    <span class="arrow"></span>
+                    <span class="arrow {{ $aside->openTag(['admin/users']) }}"></span>
                 </a>
-                <ul class="sub">
+                <ul class="sub" {{ $aside->displayBlock(['admin/users']) }}>
                     <li><a class="" href="">前台用户</a></li>
                     <li><a class="" href="{{ url('admin/users') }}">后台用户</a></li>
                 </ul>

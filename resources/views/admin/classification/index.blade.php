@@ -1,9 +1,5 @@
 @extends('admin.layouts.master')
 
-@section('title')
-    FlatLab - Flat & Responsive Bootstrap Admin Template
-@stop
-
 @section('content')
     <section id="main-content">
         <section class="wrapper">
