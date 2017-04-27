@@ -89,12 +89,16 @@ class CargoRepository
         return $this->cargo->where($where)->first();
     }
 
-    public function select(array $where)
+    /**
+     * 获取货品规格
+     *
+     * @param array $where
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function getCargoIds(array $where)
     {
-//        'cargo_ids', ['1'=>'2', '2'=>'4']
-//        return $this->cargo->where(['cargo_ids->1' => '2', 'cargo_ids->2' => '4'])->get();
         return $this->cargo->where($where)->pluck('cargo_ids');
-
     }
 
 }
