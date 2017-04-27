@@ -48,4 +48,16 @@ class GoodsLabelRepository
     {
         return $this->goodsLabel->create($data);
     }
+
+    /**
+     * 根据ID查找商品 标签
+     *
+     * @param $where
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function getOneLabel($where)
+    {
+        return $this->goodsLabel->where($where)->first();
+    }
 }

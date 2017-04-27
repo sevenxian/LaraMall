@@ -112,7 +112,8 @@
 
             sendAjax(data,'/home/addToShoppingCart',function(response){
                 if(response.ServerNo == 200){
-
+                    var number=parseInt($('#J_MiniCartNum').html())+parseInt(response.ResultData);
+                    $('#J_MiniCartNum').html(number)
                 }
             })
         })

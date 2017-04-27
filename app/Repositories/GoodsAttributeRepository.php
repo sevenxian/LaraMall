@@ -31,8 +31,8 @@ class GoodsAttributeRepository
     }
 
     /**
-     * 添加分类标签值
-     * 
+     * 添加商品标签值
+     *
      * @param $data
      * @return static
      * @author zhulinjie
@@ -40,5 +40,17 @@ class GoodsAttributeRepository
     public function addGoodsAttribute($data)
     {
         return $this->goodsAttrbute->create($data);
+    }
+
+    /**
+     * 根据ID获取标签值名称
+     *
+     * @param $where
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function getOneGoodsAttr($where)
+    {
+        return $this->goodsAttrbute->where($where)->first();
     }
 }
