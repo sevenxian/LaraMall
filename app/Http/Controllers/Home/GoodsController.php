@@ -86,8 +86,11 @@ class GoodsController extends Controller
 
         $cids = [];
         foreach($cargo_ids as $k => $v){
-            $cids = array_unique(array_merge($cids, $this->cargo->select(['cargo_ids->'.$k => $v])->toArray()));
+//            $test[] = $this->cargo->getCargoIds(['cargo_ids->'.$k => $v])->toArray();
+            $cids = array_unique(array_merge($cids, $this->cargo->getCargoIds(['cargo_ids->'.$k => $v])->toArray()));
         }
+
+//        dd($test);
 
         /**
          * array:3 [▼
@@ -97,6 +100,8 @@ class GoodsController extends Controller
          * ]
          */
         $cids = collect($cids)->toArray();
+
+//        dd($cids);
 
         // 转换格式
         foreach ($cids as $val){
@@ -114,6 +119,8 @@ class GoodsController extends Controller
          * ]
          */
         $cids = array_unique($tmp);
+
+//        dd($cids);
 
         // 查找家谱树
         $tree = array_reverse($this->tree($category->toArray(), $cargo->category_id));
@@ -140,7 +147,7 @@ class GoodsController extends Controller
         if(\Redis::get(STRING_CARGO_STANDARD_ . $cargo_ids)){
             return responseMsg(\Redis::get(STRING_CARGO_STANDARD_ . $cargo_ids));
         }
-
+        
         // 组合查询条件
         $where = [];
         foreach ($data as $k => $v){
