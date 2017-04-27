@@ -84,6 +84,17 @@ class RecommendRepository
     }
 
     /**
+     * 获取所有的推荐位
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @author zhulinjie
+     */
+    public function fetchAll()
+    {
+        return $this->recommend->all();
+    }
+
+    /**
      * 获取所有推荐位 / 包括推荐位下面得商品
      *
      * @return mixed
@@ -91,6 +102,6 @@ class RecommendRepository
      */
     public function recommendWithGoods()
     {
-        return $this->recommend->with('goods')->get();
+        return $this->recommend->with('cargos')->get();
     }
 }

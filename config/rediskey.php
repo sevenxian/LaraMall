@@ -12,7 +12,7 @@ define('STRING_USER_VERIFY_CODE_', 'STRING:USER:VERIFY:CODE:');
 /**
  * 存储货品信息
  *
- * KEY = HASH:CARGO:INFO: 货品ID
+ * KEY = HASH:CARGO:INFO:货品ID
  * VALUE = 货品信息
  * @author zhulinjie
  */
@@ -35,3 +35,13 @@ define('HASH_SHOPPING_CART_INFO_','HASH:SHOPPING:CART:INFO:');
  * @author zhangyuchao
  */
 define('LIST_SHOPPING_CART_INFO_','LIST:SHOPPING:CART:INFO:');
+
+/**
+ * 存储货品与货品规格对应关系，用于商品详情点击规格获取对应的货品ID
+ *
+ * KEY = STRING:CARGO:STANDARD:货品规格
+ * VALUE = 货品ID
+ * @author zhulinjie
+ */
+define('STRING_CARGO_STANDARD_', 'STRING:CARGO:STANDARD:');
+

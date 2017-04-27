@@ -13,13 +13,14 @@
                     <section class="panel">
                         <header class="panel-heading">
                             货品列表
-                            <small class="pull-right"><a href="javascript: history.back();">返回</a></small>
+                            <small class="pull-right"><a href="/admin/goods">返回</a></small>
                         </header>
                         <table class="table table-striped table-advance table-hover">
                             <thead>
                                 <tr>
                                     <th>ID编号</th>
                                     <th>缩略图</th>
+                                    <th>货品名称</th>
                                     <th>货品原价</th>
                                     <th>货品折扣价</th>
                                     <th>货品状态</th>
@@ -32,6 +33,7 @@
                                 <tr v-for="item in cargo">
                                     <td>@{{ item.id }}</td>
                                     <td><img :src="'{{ env('QINIU_DOMAIN') }}'+item.cargo_cover+'?imageView2/1/w/60/h/60'" alt="" width="60px"></td>
+                                    <td>@{{ item.cargo_name }}</td>
                                     <td>@{{ item.cargo_price }}</td>
                                     <td>@{{ item.cargo_discount }}</td>
                                     <td>

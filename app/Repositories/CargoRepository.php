@@ -66,14 +66,35 @@ class CargoRepository
     }
 
     /**
-     * 查询单条货品
+     * 通过ID获取一条记录
+     * 
+     * @param $id
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function findById($id)
+    {
+        return $this->cargo->find($id);   
+    }
+
+    /**
+     * 获取一条数据
      *
      * @param array $where
      * @return mixed
-     * @author zhangyuchao
+     * @author zhulinjie
      */
-    public function findOneCargo(array $where)
+    public function find(array $where)
     {
         return $this->cargo->where($where)->first();
     }
+
+    public function select(array $where)
+    {
+//        'cargo_ids', ['1'=>'2', '2'=>'4']
+//        return $this->cargo->where(['cargo_ids->1' => '2', 'cargo_ids->2' => '4'])->get();
+        return $this->cargo->where($where)->pluck('cargo_ids');
+
+    }
+
 }

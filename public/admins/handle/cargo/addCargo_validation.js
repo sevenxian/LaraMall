@@ -1,5 +1,12 @@
 $('#cargo').bootstrapValidator({
     fields: {
+        cargo_name: {
+            validators: {
+                notEmpty: {
+                    message: '货品名称不能为空!'
+                }
+            }
+        },
         cargo_price: {
             validators: {
                 notEmpty: {

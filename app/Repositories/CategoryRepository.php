@@ -115,18 +115,13 @@ class CategoryRepository
 
     /**
      * 获取分类
-     *
-     * @param $param
+     * 
+     * @param array $where
+     * @return mixed
      * @author zhulinjie
      */
-    public function select($where)
+    public function select(array $where = [])
     {
         return $this->category->where($where)->get();
-    }
-    
-    
-    public function labels()
-    {
-        return $this->category->labels;
     }
 }

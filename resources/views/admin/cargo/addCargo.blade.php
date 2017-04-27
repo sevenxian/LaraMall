@@ -41,6 +41,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="cargo_name" class="col-md-1 control-label">货品名称</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="cargo_name" v-model="cargo_name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="cargo_price" class="col-md-1 control-label">货品原价</label>
                                     <div class="col-md-6">
                                         <input type="text" name="cargo_price" v-model="cargo_price" class="form-control">
@@ -85,7 +91,7 @@
                                     <div class="col-md-11">
                                         <div class="radios" style="padding-top: 8px;">
                                             <div class="row">
-                                                <div class="col-md-3" v-for="attribute in goodsLabel.labels">
+                                                <div class="col-md-3" v-for="attribute in goodsLabel.attrs">
                                                     <label class="label_radio" @click="selectLabel">
                                                         <input :name="'goodsLabel'+goodsLabel.id" :value="attribute.id" type="radio" />@{{ attribute.goods_label_name }}
                                                     </label>
