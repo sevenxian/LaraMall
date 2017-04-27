@@ -3,23 +3,38 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\CategoryRepository;
 use App\Repositories\RecommendRepository;
 use App\Tools\Common;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-
+    /**
+     * @var RecommendRepository
+     * @author zhulinjie
+     */
     protected $recommend;
 
     /**
-     * IndexController constructor.
-     * @param $recommend
-     * @author Luoyan
+     * @var CategoryRepository
+     * @author zhulinjie
      */
-    public function __construct(RecommendRepository $recommend)
+    protected $category;
+
+    /**
+     * IndexController constructor.
+     * @param RecommendRepository $recommend
+     * @param CategoryRepository $categoryRepository
+     */
+    public function __construct
+    (
+        RecommendRepository $recommend,
+        CategoryRepository $categoryRepository
+    )
     {
         $this->recommend = $recommend;
+        $this->category = $categoryRepository;
     }
 
     /**
@@ -30,14 +45,22 @@ class IndexController extends Controller
      */
     public function index()
     {
+        // 获取分类信息
+        $categorys = $this->category->select(['level'=>1]);
+        foreach ($categorys as $category){
+            $category->children = $this->category->select(['pid'=>$category->id]);
+            foreach ($category->children as $children){
+                $children->grandchild = $this->category->select(['pid'=>$children->id]);
+            }
+        }
+
         // 获取楼层和楼层下面得商品
-        $recommends = $this->recommend();
+        $recommends = $this->recommend->recommendWithGoods();
 
-        return view('home.index', compact('recommends'));
-    }
+//        return $categorys;
 
-    public function recommend()
-    {
-        return $this->recommend->recommendWithGoods();
+//        dd($recommends->toArray());
+
+        return view('home.index', compact('recommends'), compact('categorys'));
     }
 }

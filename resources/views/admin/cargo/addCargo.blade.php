@@ -91,7 +91,7 @@
                                     <div class="col-md-11">
                                         <div class="radios" style="padding-top: 8px;">
                                             <div class="row">
-                                                <div class="col-md-3" v-for="attribute in goodsLabel.labels">
+                                                <div class="col-md-3" v-for="attribute in goodsLabel.attrs">
                                                     <label class="label_radio" @click="selectLabel">
                                                         <input :name="'goodsLabel'+goodsLabel.id" :value="attribute.id" type="radio" />@{{ attribute.goods_label_name }}
                                                     </label>

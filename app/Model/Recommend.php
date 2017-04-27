@@ -32,13 +32,13 @@ class Recommend extends Model
     protected $dates = ['deleted_at'];
 
     /**
-     * 多对多关联 / 推荐位里面得货品信息
+     * 多对多关联 / 推荐位里面的货品信息
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      * @author: Luoyan
      */
-    public function goods()
+    public function cargos()
     {
-        return $this->belongsToMany(Cargo::class, 'rel_recommend_goods')->withTimestamps();
+        return $this->belongsToMany(Cargo::class, 'rel_recommend_goods', 'recommend_id', 'cargo_id')->withTimestamps();
     }
 }

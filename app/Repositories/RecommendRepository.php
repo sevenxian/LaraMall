@@ -102,6 +102,6 @@ class RecommendRepository
      */
     public function recommendWithGoods()
     {
-        return $this->recommend->with('goods')->get();
+        return $this->recommend->with('cargos')->get();
     }
 }

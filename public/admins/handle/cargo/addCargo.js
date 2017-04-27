@@ -18,13 +18,14 @@ new Vue({
             inventory: '',           // 库存量
             categoryLabels: [],      // 分类标签
             goodsLabels: [],         // 商品标签
-            cargoImgs: [1]           // 商品图片个数
+            cargoImgs: [1],           // 商品图片个数
         }
     },
     // 第一次执行
     mounted(){
         // 获取货品相关数据
         axios.post('/admin/cargo/detail', {goods_id: goods_id}).then(response => {
+            console.log(response);
             // 获取数据失败的情况
             if(response.data.ServerNo != 200){
                 sweetAlert("请求失败!", response.request.statusText, "error");
@@ -43,7 +44,7 @@ new Vue({
             // 商品标签
             this.goodsLabels = response.data.ResultData.goodsLabels;
         }).catch(error => {
-            sweetAlert("请求失败!", response.request.statusText, "error");
+            sweetAlert("请求失败!", error, "error");
         });
     },
     // 方法定义
@@ -87,7 +88,7 @@ new Vue({
                 sweetAlert("操作成功!", '分类标签值添加成功', "success");
             // 请求失败的情况
             }).catch(error => {
-                sweetAlert("操作失败!", response.request.statusText, "error");
+                sweetAlert("操作失败!", error, "error");
             });
         },
         // 添加商品标签值
@@ -104,6 +105,7 @@ new Vue({
 
             // 商品标签值添加请求
             axios.post('/admin/addGoodsAttr', {goods_label_id: goods_label_id, goods_label_name: goods_label_name}).then(response => {
+                console.log(response);
                 if(response.data.ServerNo != 200){
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
@@ -113,11 +115,11 @@ new Vue({
                 // 获取标签索引
                 var index = $(e.target).data('index');
                 // 前端实时添加
-                this.goodsLabels[index].labels.push(data);
+                this.goodsLabels[index].attrs.push(data);
                 sweetAlert("操作成功!", '商品标签值添加成功', "success");
                 // 请求失败的情况
             }).catch(error => {
-                sweetAlert("操作失败!", response.request.statusText, "error");
+                sweetAlert("操作失败!", error, "error");
             });
         },
         // 添加货品图片
@@ -162,7 +164,7 @@ new Vue({
                     $(obj).off('change');
                     // 请求失败的情况
                 }).catch(error => {
-                    sweetAlert("操作失败!", response.request.statusText, "error");
+                    sweetAlert("操作失败!", error, "error");
                 });
             });
         },
@@ -222,7 +224,7 @@ new Vue({
                     }
                 });
             }).catch(error => {  // 请求失败的情况
-                sweetAlert("操作失败!", response.request.statusText, "error");
+                sweetAlert("操作失败!", error, "error");
             });
         }
     }

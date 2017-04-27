@@ -48,9 +48,11 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     // 用户登录处理
     Route::post('doLogin', 'UserController@doLogin');
     // 商品列表页
-    Route::get('goodsList', 'GoodsController@goodsList')->name('home.goodsList');
+    Route::get('goodsList/{category_id}', 'GoodsController@goodsList');
     // 商品详情页
-    Route::get('goodsDetail', 'GoodsController@goodsDetail')->name('home.goodsDetail');
+    Route::get('goodsDetail/{cargo_id}', 'GoodsController@goodsDetail');
+    // 获取货品ID
+    Route::post('getCargoId', 'GoodsController@getCargoId');
     // 分类
     Route::get('sort', 'GoodsController@sort')->name('home.sort');
     // 验证邮箱路由

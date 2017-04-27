@@ -10,6 +10,7 @@ use App\Repositories\GoodsAttributeRepository;
 use App\Repositories\GoodsRepository;
 use App\Repositories\IndexGoodsRepository;
 use App\Repositories\RecommendRepository;
+use App\Repositories\RelGoodsAttrRepository;
 use App\Repositories\RelLabelCargoRepository;
 use App\Repositories\RelRecommendGoodRepository;
 use App\Tools\Analysis;
@@ -106,6 +107,14 @@ class CargoController extends Controller
     protected $relRG;
 
     /**
+     * 商品标签值关联
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $relGA;
+
+    /**
      * CargoController constructor.
      * @param GoodsRepository $goodsRepository
      * @param CategoryRepository $categoryRepository
@@ -122,7 +131,8 @@ class CargoController extends Controller
         Analysis $analysis,
         IndexGoodsRepository $indexGoodsRepository,
         RecommendRepository $recommendRepository,
-        RelRecommendGoodRepository $relRecommendGoodRepository
+        RelRecommendGoodRepository $relRecommendGoodRepository,
+        RelGoodsAttrRepository $relGoodsAttrRepository
     )
     {
         // 注入商品操作类
@@ -147,6 +157,8 @@ class CargoController extends Controller
         $this->recommend = $recommendRepository;
         // 注入推荐位货品关联操作类
         $this->relRG = $relRecommendGoodRepository;
+        // 注入商品标签值关联操作类
+        $this->relGA = $relGoodsAttrRepository;
     }
 
     /**
@@ -158,7 +170,7 @@ class CargoController extends Controller
     {
 
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -179,7 +191,7 @@ class CargoController extends Controller
     {
         return view('admin.cargo.addCargo', compact('id'));
     }
-
+    
     /**
      * 获取货品相关信息
      *
@@ -202,7 +214,7 @@ class CargoController extends Controller
 
         // 获取商品标签值
         foreach ($goodsLabels as $label) {
-            $label = $label->labels;
+            $label = $label->attrs;
         }
 
         // 获取三级分类
@@ -239,7 +251,7 @@ class CargoController extends Controller
 
         return responseMsg($res);
     }
-
+    
     /**
      * 添加分类标签值
      *
@@ -258,7 +270,7 @@ class CargoController extends Controller
         }
         return responseMsg($res);
     }
-
+    
     /**
      * 添加商品标签值
      *
@@ -277,7 +289,7 @@ class CargoController extends Controller
         }
         return responseMsg($res);
     }
-
+    
     /**
      * 货品图片上传
      *
@@ -301,7 +313,7 @@ class CargoController extends Controller
         }
         return responseMsg('暂无图片上传', 404);
     }
-
+    
     /**
      * 新增货品操作
      *
@@ -313,19 +325,36 @@ class CargoController extends Controller
     {
         $data = $request->all();
 
+        // 货品标签/标签值ID键值对
         $list = [];
+        // 货品标签值ID集合
+        $goodsAttrIds = [];
+        // 分类标签值ID集合
         $categoryAttrIds = [];
         foreach ($data as $key => $val) {
-            // 获取货品标签
             if (strpos($key, 'goodsLabel') !== false) {
                 $list[str_replace('goodsLabel', '', $key)] = $val;
+                $goodsAttrIds[] = $val;
             }
-            // 获取分类标签值
             if (strpos($key, 'categoryLabel') !== false) {
                 $categoryAttrIds[] = $val;
             }
         }
 
+        // 获取商品信息
+        $goods = $this->goods->findById($data['goods_id']);
+        if (!$goods) {
+            return responseMsg('该商品不存在', 404);
+        }
+
+        // 获取商品规格数量
+        $standardNum = count($goods->labels->toArray());
+
+        // 未选择商品规格或者说只选择了部分商品规格
+        if($standardNum != count($goodsAttrIds)){
+            return responseMsg('请选择商品规格', 400);
+        }
+        
         // 组合货品表中需要的数据
         $param['category_id'] = $data['category_id'];
         $param['goods_id'] = $data['goods_id'];
@@ -365,11 +394,6 @@ class CargoController extends Controller
         array_push($body, $this->analysis->toUnicode($lv1s->name));
         $body = array_merge($body, $this->analysis->QuickCut($lv1s->name));
 
-        // 获取商品信息
-        $goods = $this->goods->findById($data['goods_id']);
-        if (!$goods) {
-            return responseMsg('该商品不存在', 404);
-        }
         // 分词处理 商品标题
         array_push($body, $this->analysis->toUnicode($goods->goods_title));
         $body = array_merge($body, $this->analysis->QuickCut($goods->goods_title));
@@ -386,16 +410,39 @@ class CargoController extends Controller
 
         try {
             \DB::beginTransaction();
+
+            // 组合查询条件
+            foreach($list as $k => $v){
+                $where['cargo_ids->'.$k] = $v;
+            }
+
+            // 新增之前判断相同属性的货品是否存在，如果存在则不添加
+            if($this->cargo->find($where)){
+                return responseMsg('相同规格的货品已经存在', 400);
+            }
+
             // 向货品表中新增记录
             $cargo = $this->cargo->addCargo($param);
 
             // 分类标签值与货品关联表中新增记录
-            if ($categoryAttrIds) {
+            if (!empty($categoryAttrIds)) {
                 foreach ($categoryAttrIds as $id) {
                     $arr['category_attr_id'] = $id;
                     $arr['goods_id'] = $data['goods_id'];
                     $arr['cargo_id'] = $cargo->id;
                     $this->relLabelCargo->add($arr);
+                }
+            }
+
+            // 商品标签值关联表新增记录
+            if (!empty($goodsAttrIds)) {
+                foreach ($goodsAttrIds as $id) {
+                    $arr['goods_attr_id'] = $id;
+                    $arr['goods_id'] = $data['goods_id'];
+                    // 新增之前判断商品是否已经存在这个属性值，如果存在则不添加
+                    if(!$this->relGA->find($arr)){
+                        $this->relGA->add($arr);
+                    }
                 }
             }
 
@@ -416,7 +463,7 @@ class CargoController extends Controller
             return responseMsg('货品添加失败', 400);
         }
     }
-
+    
     /**
      * 货品列表界面
      *

@@ -42,6 +42,17 @@ class Category extends Model
     }
 
     /**
+     * ORM 对应关系 / 获取子类信息
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author zhulinjie
+     */
+    public function childrenCategory()
+    {
+        return $this->hasMany(static::class, 'pid', 'id');
+    }
+
+    /**
      * 多对多关联关系 / 一个分类下面有多个标签
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
