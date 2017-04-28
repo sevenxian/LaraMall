@@ -98,7 +98,8 @@ class AdminUserRepository
      */
     public function deleteOneData($id)
     {
-        return $this->adminUser->destroy($id);
+//        return $this->adminUser->delete($id);
+        dd($this->adminUser->where('id', $id)->delete());
     }
 
     /**

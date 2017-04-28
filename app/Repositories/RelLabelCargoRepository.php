@@ -16,6 +16,8 @@ use App\Model\RelLabelCargo;
  */
 class RelLabelCargoRepository
 {
+    use BaseRepository;
+    
     /**
      * @var RelLabelCargo
      * @author zhulinjie
@@ -28,19 +30,7 @@ class RelLabelCargoRepository
      */
     public function __construct(RelLabelCargo $relLabelCargo)
     {
-        $this->relLabelCargo = $relLabelCargo;
-    }
-
-    /**
-     * 新增一条数据
-     *
-     * @param $data
-     * @return static
-     * @author zhulinjie
-     */
-    public function add($data)
-    {
-        return $this->relLabelCargo->create($data);
+        $this->model = $relLabelCargo;
     }
 
     /**
@@ -52,6 +42,6 @@ class RelLabelCargoRepository
      */
     public function getData(array $where)
     {
-        return $this->relLabelCargo->where($where)->get();
+        return $this->model->where($where)->get();
     }
 }

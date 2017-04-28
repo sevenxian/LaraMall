@@ -10,6 +10,8 @@ use App\Model\RelGoodsLabel;
  */
 class RelGoodsLabelRepository
 {
+    use BaseRepository;
+    
     /**
      * @var RelGoodsLabel
      * @author zhulinjie
@@ -22,18 +24,6 @@ class RelGoodsLabelRepository
      */
     public function __construct(RelGoodsLabel $relGL)
     {
-        $this->relGL = $relGL;
-    }
-
-    /**
-     * 向商品标签关联表中新增一条记录
-     *
-     * @param $data
-     * @return static
-     * @author zhulinjie
-     */
-    public function add($data)
-    {
-        return $this->relGL->create($data);
+        $this->model = $relGL;
     }
 }

@@ -60,7 +60,7 @@ class RecommendController extends Controller
     public function store(Request $request)
     {
         // 创建一个楼位并且判断是否成功
-        if ($this->recommend->createRecommend($request->all())) {
+        if ($this->recommend->insert($request->all())) {
 
             // 成功跳转到推荐位列表
             return redirect()->route('recommend.index');
@@ -79,7 +79,7 @@ class RecommendController extends Controller
      */
     public function recommendList(Request $request)
     {
-        return $this->recommend->recommendPaginate($request->get('perPage'), $request->get('where'));
+        return $this->recommend->paging($request->get('where'), $request->get('perPage'));
     }
 
     /**
@@ -95,9 +95,9 @@ class RecommendController extends Controller
         // 除去请求中得 _token 字段
         $data = $request->except(['_token']);
         // 修改分类数据, 判断返回结果
-        if ($this->recommend->updateById($id, $data)) {
+        if ($this->recommend->update(['id' => $id], $data)) {
             // 查询更新后的值
-            $data = $this->recommend->findById($id);
+            $data = $this->recommend->find(['id' => $id]);
 
             // 成功返回修改数据
             return responseMsg($data);

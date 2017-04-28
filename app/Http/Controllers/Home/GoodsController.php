@@ -63,7 +63,7 @@ class GoodsController extends Controller
      */
     public function goodsList($category_id)
     {
-        $cargos = $this->cargo->cargoList(PAGENUM, ['category_id' => $category_id]);
+        $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM);
         return view('home.goods.list', compact('cargos'));
     }
 
@@ -79,18 +79,15 @@ class GoodsController extends Controller
         $category = $this->category->select();
 
         // 获取货品信息
-        $cargo = $this->cargo->findById($cargo_id);
+        $cargo = $this->cargo->find(['id' => $cargo_id]);
 
         // 获取当前货品拥有的商品规格组合
         $cargo_ids = json_decode($cargo->cargo_ids, 1);
 
         $cids = [];
         foreach($cargo_ids as $k => $v){
-//            $test[] = $this->cargo->getCargoIds(['cargo_ids->'.$k => $v])->toArray();
-            $cids = array_unique(array_merge($cids, $this->cargo->getCargoIds(['cargo_ids->'.$k => $v])->toArray()));
+            $cids = array_unique(array_merge($cids, $this->cargo->lists(['cargo_ids->'.$k => $v], ['cargo_ids'])->toArray()));
         }
-
-//        dd($test);
 
         /**
          * array:3 [▼
@@ -100,9 +97,7 @@ class GoodsController extends Controller
          * ]
          */
         $cids = collect($cids)->toArray();
-
-//        dd($cids);
-
+        
         // 转换格式
         foreach ($cids as $val) {
             foreach (json_decode($val, 1) as $k => $v) {
@@ -126,7 +121,7 @@ class GoodsController extends Controller
         $tree = array_reverse($this->tree($category->toArray(), $cargo->category_id));
 
         // 获取商品标签
-        $goods = $this->goods->findById($cargo->goods_id);
+        $goods = $this->goods->find(['id' => $cargo->goods_id]);
 
         $data['category'] = $category;
         $data['cargo'] = $cargo;

@@ -10,7 +10,8 @@ use App\Model\Permission;
  */
 class PermissionRepository
 {
-
+    use BaseRepository;
+    
     /**
      * @var Permission
      * @author Luoyan
@@ -24,30 +25,6 @@ class PermissionRepository
      */
     public function __construct(Permission $permission)
     {
-        $this->permission = $permission;
-    }
-
-
-    /**
-     * 创建权限
-     *
-     * @param array $data
-     * @return static
-     * @author: Luoyan
-     */
-    public function createRole(array $data)
-    {
-        return $this->permission->create($data);
-    }
-
-    /**
-     * 获取所有权限
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     * @author: Luoyan
-     */
-    public function fetchPermissions()
-    {
-        return $this->permission->all();
+        $this->model = $permission;
     }
 }

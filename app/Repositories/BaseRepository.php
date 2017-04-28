@@ -46,14 +46,14 @@ trait BaseRepository
      * @return bool
      * @author zhangyuchao
      */
-    public function lists(array $where, array $columns)
+    public function lists(array $where, $columns)
     {
         if (empty($where) || empty($columns)) {
 
             return false;
         }
-
-        return $this->model->where($where)->lists($columns);
+        
+        return $this->model->where($where)->pluck(implode(',', $columns));
     }
 
     /**
@@ -65,13 +65,8 @@ trait BaseRepository
      * @return bool
      * @author zhangyuchao
      */
-    public function select(array $where, $fieldName = 'id', $direction = 'asc')
+    public function select(array $where = [], $fieldName = 'id', $direction = 'asc')
     {
-        if (empty($where)) {
-
-            return false;
-        }
-
         return $this->model->where($where)->orderBy($fieldName, $direction)->get();
     }
 
@@ -120,24 +115,19 @@ trait BaseRepository
 
     /**
      * 删除数据
-     *
-     * @param $id
-     * @param bool $status
+     * 
+     * @param $where
      * @return bool
      * @author zhangyuchao
      */
-    public function delete($id, $status = false)
+    public function delete($where)
     {
-        if (empty($id)) {
+        if (empty($where)) {
+            
             return false;
         }
-        if ($status) {
-
-            return $this->model->where(['id' => $id])->delete();
-        }
-
-        return $this->model->destroy($id);
-
+        
+        return $this->model->where($where)->delete();
     }
 
 }

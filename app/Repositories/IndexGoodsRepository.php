@@ -10,6 +10,8 @@ use App\Model\IndexGoods;
  */
 class IndexGoodsRepository
 {
+    use BaseRepository;
+    
     /**
      * @var IndexGoods
      */
@@ -21,18 +23,6 @@ class IndexGoodsRepository
      */
     public function __construct(IndexGoods $indexGoods)
     {
-        $this->indexGoods = $indexGoods;
-    }
-
-    /**
-     * 新增一条记录
-     * 
-     * @param $data
-     * @return static
-     * @author zhulinjie
-     */
-    public function add($data)
-    {
-        return $this->indexGoods->create($data);
+        $this->model = $indexGoods;
     }
 }
