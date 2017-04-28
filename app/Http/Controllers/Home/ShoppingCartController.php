@@ -150,7 +150,7 @@ class ShoppingCartController extends Controller
             }
         } else {
             // 第一次加入购物车 获取货品信息
-            $cargo = $this->cargo->findOneCargo(['id' => $request['cargo_id']]);
+            $cargo = $this->cargo->find(['id' => $request['cargo_id']]);
             // 判断货品信息获取是否成功
             if (empty($cargo)) {
                 return responseMsg('获取商品信息失败!', 400);

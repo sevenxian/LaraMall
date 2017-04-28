@@ -141,6 +141,10 @@ $(document).ready(function() {
 			t.val(parseInt(t.val()) + 1)
 			if (parseInt(t.val()) != 1) {
 				$('#min').attr('disabled', false);
+				if(parseInt(t.val()) > $('#cargo_num').html()) {
+                    t.val($('#cargo_num').html());
+				}
+
 			}
 
 		})

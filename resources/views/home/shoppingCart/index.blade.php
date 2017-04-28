@@ -101,10 +101,10 @@
                                 <div class="item-price price-promo-promo">
                                     <div class="price-content">
                                         <div class="price-line">
-                                            <em class="price-original">{{ number_format($value['cargo_price'],2) }}</em>
+                                            <em class="price-original">{{ $value['cargo_price'] }}</em>
                                         </div>
                                         <div class="price-line">
-                                            <em class="J_Price price-now" tabindex="0">{{ number_format($value['cargo_discount'],2) }}</em>
+                                            <em class="J_Price price-now" tabindex="0">{{ $value['cargo_discount'] }}</em>
                                         </div>
                                     </div>
                                 </div>
@@ -114,15 +114,16 @@
                                     <div class="item-amount ">
                                         <div class="sl">
                                             <input class="min am-btn" name="" type="button" value="-"/>
-                                            <input class="text_box" name="" type="text" value="{{ $value['shopping_number'] }}" style="width:30px;"/>
+                                            <input class="text_box" name="" type="text" value="{{ $value['shopping_number'] }}"  id="inventory" data-max-num="{{ $value['inventory'] }}"style="width:30px;"/>
                                             <input class="add am-btn" name="" type="button" value="+"/>
+                                            <div style="color:red">@if($value['shopping_number'] > $value['inventory']) 已缺货 @else 有货 @endif</div>
                                         </div>
                                     </div>
                                 </div>
                             </li>
                             <li class="td td-sum">
                                 <div class="td-inner">
-                                    <em tabindex="0" class="J_ItemSum number">{{ number_format(($value['shopping_number']*$value['cargo_discount']),2) }}</em>
+                                    <em tabindex="0" class="J_ItemSum number">{{ $value['shopping_number']*$value['cargo_discount'] }}</em>
                                 </div>
                             </li>
                             <li class="td td-op">
@@ -149,7 +150,7 @@
         <div class="float-bar-wrapper">
             <div id="J_SelectAll2" class="select-all J_SelectAll">
                 <div class="cart-checkbox">
-                    <input class="check-all check" id="J_SelectAllCbx2" name="select-all" value="true" type="checkbox">
+                    <input class="check-all check" id="J_SelectAllCbx2" checked="checked" name="select-all" value="true" type="checkbox">
                     <label for="J_SelectAllCbx2"></label>
                 </div>
                 <span>全选</span>
@@ -157,10 +158,11 @@
             <div class="operations">
                 <a href="javascript:;" hidefocus="true" class="deleteAll" id="del">删除</a>
             </div>
+            @inject('shoppingCart', 'App\Presenters\ShoppingCartPresenter')
             <div class="float-bar-right">
                 <div class="amount-sum">
                     <span class="txt">已选商品</span>
-                    <em id="J_SelectedItemsCount">{{ count($data) }}</em><span class="txt">件</span>
+                    <em id="J_SelectedItemsCount" data-number="{{ $shoppingCart->numberForCargo($data) }}">{{ $shoppingCart->numberForCargo($data) }}</em><span class="txt">件</span>
                     <div class="arrow-box">
                         <span class="selected-items-arrow"></span>
                         <span class="arrow"></span>
@@ -168,7 +170,7 @@
                 </div>
                 <div class="price-sum">
                     <span class="txt">合计:</span>
-                    <strong class="price">¥<em id="J_Total"></em></strong>
+                    <strong class="price">¥<em id="J_Total" data-totalPrice="{{ $shoppingCart->totalPrice($data) }}">{{ $shoppingCart->totalPrice($data) }}</em></strong>
                 </div>
                 <div class="btn-area">
                     <a href="pay.html" id="J_Go" class="submit-btn submit-btn-disabled" aria-label="请注意如果没有选择宝贝，将无法结算">
@@ -252,6 +254,12 @@
             var data  = new Array(obj.attr('data-cargo-id'));
             sendAjax({'cargoId':data},'/home/delShoppingCart',function(response){
                 if(response.ServerNo == 200){
+                    var number = obj.parents('.item-content').find('#inventory').val();
+                    var price = obj.parents('.item-content').find('.J_Price').html();
+                    var totalNumberObj = $('#J_SelectedItemsCount');
+                    var totalPriceObj = $('#J_Total');
+                    totalNumberObj.html(totalNumberObj.html()-number)
+                    totalPriceObj.html(totalPriceObj.html()-number*parseInt(price));
                     obj.parents('.item-content').hide();
                 }
             })
@@ -260,18 +268,52 @@
         $('#del').click(function(){
             var obj = $("input[name='items']");
             var param =new Array;
-            //console.log(.length);
             $.each(obj,function(key,value){
                if(value.checked) {
                    param[key] = $(value).val();
                }
             })
-
             sendAjax({'cargoId':param},'/home/delShoppingCart',function(response){
                 if(response.ServerNo == 200){
                     obj.parents('.item-content').hide();
                 }
             })
+        })
+        // 全选复选框
+        $('#J_SelectAllCbx2').click(function(){
+            var obj = $("input[name='items']");
+            if($(this).attr('checked')){
+                $.each(obj,function(key,value){
+                    $(value).attr('checked','checked');
+                })
+                $('#J_SelectedItemsCount').html($('#J_SelectedItemsCount').attr('data-number'));
+                $('#J_Total').html($('#J_Total').attr('data-totalprice'));
+            }else{
+                $.each(obj,function(key,value){
+                    $(value).attr('checked',false);
+                })
+                $('#J_SelectedItemsCount').html(0);
+                $('#J_Total').html(0.00);
+            }
+        })
+        // 单个复选框
+        $("input[name='items']").click(function(){
+            var number = $(this).parents('.item-content').find('#inventory').val();
+            var price = $(this).parents('.item-content').find('.J_Price').html();
+            var totalNumberObj = $('#J_SelectedItemsCount');
+            var totalPriceObj = $('#J_Total');
+
+            if($(this).attr('checked')) {
+                totalNumberObj.html(parseInt(totalNumberObj.html())+parseInt(number));
+                totalPriceObj.html(parseInt(totalPriceObj.html())+parseInt(number*parseInt(price)));
+            }else{
+                totalNumberObj.html(totalNumberObj.html()-number)
+                totalPriceObj.html(totalPriceObj.html()-number*parseInt(price));
+            }
+        })
+        // 数量加加
+        $('.add').click(function(){
+            
         })
 
     </script>

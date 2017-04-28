@@ -18,6 +18,8 @@ use App\Tools\Analysis;
  */
 class CargoRepository
 {
+
+    use BaseRepository;
     /**
      * @var Cargo
      * @author zhulinjie

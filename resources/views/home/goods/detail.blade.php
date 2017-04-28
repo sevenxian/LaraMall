@@ -245,22 +245,13 @@
                                                     <input id="min" class="am-btn am-btn-default" name="" type="button" value="-"/>
                                                     <input id="text_box" name="" type="text" value="1" style="width:30px;"/>
                                                     <input id="add" class="am-btn am-btn-default" name="" type="button" value="+"/>
-                                                    <span id="Stock" class="tb-hidden">库存<span class="stock">{{ $data['cargo']->inventory }}</span>件</span>
+                                                    <span id="Stock" class="tb-hidden">库存<span class="stock" id="cargo_num">{{ $data['cargo']->inventory }}</span>件</span>
                                                 </div>
                                             </div>
                                             <div class="clear"></div>
                                             <div class="btn-op">
                                                 <div class="btn am-btn am-btn-warning">确认</div>
                                                 <div class="btn close am-btn am-btn-warning">取消</div>
-                                            </div>
-                                        </div>
-                                        <div class="theme-signin-right">
-                                            <div class="img-info">
-                                                <img src="/images/songzi.jpg"/>
-                                            </div>
-                                            <div class="text-info">
-                                                <span class="J_Price price-now">¥39.00</span>
-                                                <span id="Stock" class="tb-hidden">库存<span class="stock">1000</span>件</span>
                                             </div>
                                         </div>
                                     </form>
@@ -299,12 +290,12 @@
                     </div>
                     <li>
                         <div class="clearfix tb-btn tb-btn-buy theme-login">
-                            <a id="LikBuy" title="点此按钮到下一步确认购买信息" href="#">立即购买</a>
+                            <a id="LikBuy" title="点此按钮到下一步确认购买信息" href="javascript:;" data-cargoId="{{ $data['cargo']->id }}">立即购买</a>
                         </div>
                     </li>
                     <li>
                         <div class="clearfix tb-btn tb-btn-basket theme-login">
-                            <a id="LikBasket" title="加入购物车" href="#"><i></i>加入购物车</a>
+                            <a id="LikBasket" title="加入购物车" href="javascript:;"  data-cargoId="{{ $data['cargo']->id }}"><i></i>加入购物车</a>
                         </div>
                     </li>
                 </div>
@@ -1144,4 +1135,34 @@
 
     @include('home.public.tip')
 @stop
+@section('customJs')
+    <script src="{{ asset('/js/check.js') }}"></script>
+    <script>
+        $('#LikBuy').click(function(){
+            var data = {
+                "cargo_id":$(this).attr('data-cargoId'),
+                'number':$('#text_box').val()
+            }
 
+            sendAjax(data,'/home/addToShoppingCart',function(response){
+                if(response.ServerNo == 200){
+                   window.location.href='/home/shoppingCart'
+                }
+            })
+        })
+        $('#LikBasket').click(function(){
+            var data = {
+                "cargo_id":$(this).attr('data-cargoId'),
+                'number':$('#text_box').val()
+            }
+
+            sendAjax(data,'/home/addToShoppingCart',function(response){
+                if(response.ServerNo == 200){
+                    var number=parseInt($('#J_MiniCartNum').html())+parseInt(response.ResultData);
+                    $('#J_MiniCartNum').html(number);
+                    $('.cart_num').html(number);
+                }
+            })
+        })
+    </script>
+@stop
