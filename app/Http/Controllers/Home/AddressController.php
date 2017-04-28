@@ -27,7 +27,7 @@ class AddressController extends Controller
     public function index()
     {
         // 获取该用户所有收货地址
-        $result = $this->address->getAddressAllData(['user_id'=>\Session::get('user')->user_id]);
+        $result = $this->address->select(['user_id'=>\Session::get('user')->user_id]);
         // 判断返回结果
         if(empty($result)) {
             $result = [];
@@ -57,18 +57,19 @@ class AddressController extends Controller
     public function store(Request $request)
     {
         // 设定最多可填写9个收货地址
-        $count = $this->address->getUserAddressCount(['user_id'=>\Session::get('user')->user_id]);
+        $count = $this->address->count(['user_id'=>\Session::get('user')->user_id]);
         if($count>9) {
             // 返回错误信息
             return back()->withErrors('收货地址到达上线,最多可填写9个!');
         }
         // 添加单条数据
-        $result = $this->address->createOneAddress($request->all());
+        $result = $this->address->insert($request->all());
         // 判断返回值
         if(!empty($result)) {
             // 添加成功
             return redirect('/home/address');
         }
+
         // 添加失败
         return back()->withErrors('添加收货地址失败!');
 
@@ -94,7 +95,7 @@ class AddressController extends Controller
     public function edit($id)
     {
         // 获取单挑数据
-        $result = $this->address->getOneAddressData(['id'=>$id]);
+        $result = $this->address->find(['id' => $id]);
         if(empty($result)) {
             $result = [];
         }
@@ -115,10 +116,10 @@ class AddressController extends Controller
         $data = $request->except(['_token','_method']);
         // 设置默认
         if(count($data) == 1) {
-            $this->address->updateOneAddress(['user_id'=>\Session::get('user')->user_id],['status'=>1]);
+            $this->address->update(['user_id'=>\Session::get('user')->user_id],['status'=>1]);
         }
         // 修改操作
-        $result = $this->address->updateOneAddress(['id'=>$id],$data);
+        $result = $this->address->update(['id'=>$id],$data);
         // 判断返回结果
         if(!empty($result)) {
             // 成功
@@ -138,7 +139,7 @@ class AddressController extends Controller
     public function destroy($id)
     {
         // 删除操作
-        $result = $this->address->deleteOneData($id);
+        $result = $this->address->delete($id);
         // 判断返回结果
         if(!empty($result)) {
             // 成功
