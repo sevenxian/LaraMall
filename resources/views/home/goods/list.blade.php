@@ -52,16 +52,12 @@
                 <div class="am-u-sm-12 am-u-md-12">
                     <div class="theme-popover">
                         <div class="searchAbout">
-                            <span class="font-pale">相关搜索：</span>
-                            <a title="坚果" href="#">坚果</a>
-                            <a title="瓜子" href="#">瓜子</a>
-                            <a title="鸡腿" href="#">豆干</a>
-
+                            <span class="font-pale">电脑 > 电脑整机 > 笔记本</span>
                         </div>
                         <ul class="select">
                             <p class="title font-normal">
-                                <span class="fl">松子</span>
-                                <span class="total fl">搜索到<strong class="num">997</strong>件相关商品</span>
+                                <span class="fl">笔记本 商品筛选</span>
+                                <span class="total fl">共<strong class="num">997</strong>件相关商品</span>
                             </p>
                             <div class="clear"></div>
                             <li class="select-result">

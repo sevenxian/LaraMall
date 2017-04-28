@@ -16,6 +16,8 @@ use App\Model\CategoryAttribute;
  */
 class CategoryAttributeRepository
 {
+    use BaseRepository;
+    
     /**
      * 分类标签值操作类
      *
@@ -27,29 +29,18 @@ class CategoryAttributeRepository
     public function __construct(CategoryAttribute $categoryAttribute)
     {
         // 注入分类标签值操作类
-        $this->categoryAttrbute = $categoryAttribute;
-    }
-
-    /**
-     * 添加分类标签值
-     * 
-     * @param $data
-     * @return static
-     * @author zhulinjie
-     */
-    public function addCategoryAttribute($data)
-    {
-        return $this->categoryAttrbute->create($data);
+        $this->model = $categoryAttribute;
     }
 
     /**
      * 通过一组ID获取多条记录
-     *
-     * @param $id
+     * 
+     * @param $ids
+     * @return mixed
      * @author zhulinjie
      */
     public function selectByWhereIn($ids)
     {
-        return $this->categoryAttrbute->whereIn('id', $ids)->get();
+        return $this->model->whereIn('id', $ids)->get();
     }
 }

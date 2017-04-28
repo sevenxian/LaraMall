@@ -10,11 +10,13 @@ use App\Model\RelRecommendGood;
  */
 class RelRecommendGoodRepository
 {
+    use BaseRepository;
+    
     protected $relRG;
 
     public function __construct(RelRecommendGood $recommendGood)
     {
-        $this->relRG = $recommendGood;
+        $this->model = $recommendGood;
     }
 
     /**
@@ -30,18 +32,6 @@ class RelRecommendGoodRepository
     }
 
     /**
-     * 获取货品对应的推荐位的所有recommend_id 
-     *
-     * @param $cargo_id
-     * @return mixed
-     * @author zhulinjie
-     */
-    public function fetchRecommendIds($cargo_id)
-    {
-        return $this->relRG->where(['cargo_id' => $cargo_id])->pluck('recommend_id');
-    }
-
-    /**
      * 删除指定货品并且recommend_id不等于指定范围的数据
      * 
      * @param $cargo_id
@@ -52,17 +42,5 @@ class RelRecommendGoodRepository
     public function whereNotInRecommendIds($cargo_id, array $data)
     {
         return $this->relRG->where('cargo_id', $cargo_id)->whereNotIn('recommend_id', $data)->delete();
-    }
-
-    /**
-     * 获取货品推荐位
-     *
-     * @param $cargo_id
-     * @return mixed
-     * @author zhulinjie
-     */
-    public function fetchRecommend($cargo_id)
-    {
-        return $this->relRG->where(['cargo_id' => $cargo_id])->get();
     }
 }

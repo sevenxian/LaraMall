@@ -10,6 +10,7 @@ use App\Model\CategoryLabel;
  */
 class CategoryLabelRepository
 {
+    use BaseRepository;
 
     /**
      * 分类标签模型
@@ -28,41 +29,6 @@ class CategoryLabelRepository
      */
     public function __construct(CategoryLabel $categoryLabel)
     {
-        $this->categoryLabel = $categoryLabel;
-    }
-
-    /**
-     * 创建分类标签
-     *
-     * @param array $data
-     * @return static
-     * @author: Luoyan
-     */
-    public function createCategoryLabel(array $data)
-    {
-        return $this->categoryLabel->create($data);
-    }
-
-    /**
-     * 获取所有分类下的标签
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     * @author: Luoyan
-     */
-    public function fetchLabels()
-    {
-        return $this->categoryLabel->all();
-    }
-
-    /**
-     * 根据ID查找数据
-     *
-     * @param $id
-     * @return mixed
-     * @author zhulinjie
-     */
-    public function findById($id)
-    {
-        return $this->categoryLabel->find($id);
+        $this->model = $categoryLabel;
     }
 }

@@ -64,14 +64,14 @@ class CategoryLabelController extends Controller
     public function index(Request $request)
     {
         // 获取所有标签
-        $labels = $this->categoryLabel->fetchLabels();
+        $labels = $this->categoryLabel->select();
         // 判断获取结果, 因为 ORM 获取一个空数据，返回的集合会被判断为 true 所有得转换成数组判断
         if (!$labels->toArray()) {
             // 暂无标签
             return responseMsg([], 200);
         }
         // 查询当前分类下面已有的标签
-        $existLabels = $this->relCL->fetchListsFor(['category_id' => $request->get('id')], 'category_label_id');
+        $existLabels = $this->relCL->lists(['category_id' => $request->get('id')], ['category_label_id']);
         // 判断查询结果
         if (!$existLabels = $existLabels->toArray()) {
             // 不打标记直接返回所有标签
@@ -100,7 +100,7 @@ class CategoryLabelController extends Controller
     public function store(Request $request)
     {
         // 创建一个分类标签，并且判断创建结果
-        if ($label = $this->categoryLabel->createCategoryLabel($request->all())) {
+        if ($label = $this->categoryLabel->insert($request->all())) {
             // 创建成功返回数据
             return responseMsg($label);
         }
@@ -119,7 +119,7 @@ class CategoryLabelController extends Controller
     public function update(Request $request, $id)
     {
         // 查询当前分类信息
-        $category = $this->category->findById($id);
+        $category = $this->category->find(['id' => $id]);
         // 分类绑定或取消绑定标签
         $category->labels()->sync($request->all());
     }

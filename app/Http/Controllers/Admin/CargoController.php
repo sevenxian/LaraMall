@@ -204,7 +204,7 @@ class CargoController extends Controller
         $data = $request->all();
 
         // 获取商品信息
-        $goods = $this->goods->findById($data['goods_id']);
+        $goods = $this->goods->find(['id'=>$data['goods_id']]);
         if (!$goods) {
             return responseMsg('该商品不存在', 404);
         }
@@ -218,19 +218,19 @@ class CargoController extends Controller
         }
 
         // 获取三级分类
-        $lv3s = $this->category->findById($goods->category_id);
+        $lv3s = $this->category->find(['id' => $goods->category_id]);
         if (!$lv3s) {
             return responseMsg('该分类不存在', 404);
         }
 
         // 获取二级分类
-        $lv2s = $this->category->findById($lv3s['pid']);
+        $lv2s = $this->category->find(['id' => $lv3s['pid']]);
         if (!$lv2s) {
             return responseMsg('该分类不存在', 404);
         }
 
         // 获取一级分类
-        $lv1s = $this->category->findById($lv2s['pid']);
+        $lv1s = $this->category->find(['id' => $lv2s['pid']]);
         if (!$lv1s) {
             return responseMsg('该分类不存在', 404);
         }
@@ -263,7 +263,7 @@ class CargoController extends Controller
     {
         $data = $request->all();
         // 添加操作
-        $res = $this->categoryAttribute->addCategoryAttribute($data);
+        $res = $this->categoryAttribute->insert($data);
         // 判断操作是否成功
         if (!$res) {
             return responseMsg('分类标签值添加失败', 400);
@@ -282,7 +282,7 @@ class CargoController extends Controller
     {
         $data = $request->all();
         // 添加操作
-        $res = $this->goodsAttribute->addGoodsAttribute($data);
+        $res = $this->goodsAttribute->insert($data);
         // 判断操作是否成功
         if (!$res) {
             return responseMsg('商品标签值添加失败', 400);
@@ -342,7 +342,7 @@ class CargoController extends Controller
         }
 
         // 获取商品信息
-        $goods = $this->goods->findById($data['goods_id']);
+        $goods = $this->goods->find(['id' => $data['goods_id']]);
         if (!$goods) {
             return responseMsg('该商品不存在', 404);
         }
@@ -368,7 +368,7 @@ class CargoController extends Controller
         $param['cargo_info'] = $data['cargo_info'];
 
         // 获取三级分类
-        $lv3s = $this->category->findById($data['category_id']);
+        $lv3s = $this->category->find(['id' => $data['category_id']]);
         if (!$lv3s) {
             return responseMsg('该分类不存在', 404);
         }
@@ -377,7 +377,7 @@ class CargoController extends Controller
         $body = array_merge($body, $this->analysis->QuickCut($lv3s->name));
 
         // 获取二级分类
-        $lv2s = $this->category->findById($lv3s['pid']);
+        $lv2s = $this->category->find(['id' => $lv3s['pid']]);
         if (!$lv2s) {
             return responseMsg('该分类不存在', 404);
         }
@@ -386,7 +386,7 @@ class CargoController extends Controller
         $body = array_merge($body, $this->analysis->QuickCut($lv2s->name));
 
         // 获取一级分类
-        $lv1s = $this->category->findById($lv2s['pid']);
+        $lv1s = $this->category->find(['id' => $lv2s['pid']]);
         if (!$lv1s) {
             return responseMsg('该分类不存在', 404);
         }
@@ -418,30 +418,32 @@ class CargoController extends Controller
 
             // 新增之前判断相同属性的货品是否存在，如果存在则不添加
             if($this->cargo->find($where)){
-                return responseMsg('相同规格的货品已经存在', 400);
+                throw new \Exception('相同规格的货品已经存在', 400);
             }
 
             // 向货品表中新增记录
-            $cargo = $this->cargo->addCargo($param);
+            $cargo = $this->cargo->insert($param);
 
             // 分类标签值与货品关联表中新增记录
             if (!empty($categoryAttrIds)) {
+                $arr = [];
                 foreach ($categoryAttrIds as $id) {
                     $arr['category_attr_id'] = $id;
                     $arr['goods_id'] = $data['goods_id'];
                     $arr['cargo_id'] = $cargo->id;
-                    $this->relLabelCargo->add($arr);
+                    $this->relLabelCargo->insert($arr);
                 }
             }
 
             // 商品标签值关联表新增记录
             if (!empty($goodsAttrIds)) {
+                $arr = [];
                 foreach ($goodsAttrIds as $id) {
                     $arr['goods_attr_id'] = $id;
                     $arr['goods_id'] = $data['goods_id'];
                     // 新增之前判断商品是否已经存在这个属性值，如果存在则不添加
                     if(!$this->relGA->find($arr)){
-                        $this->relGA->add($arr);
+                        $this->relGA->insert($arr);
                     }
                 }
             }
@@ -450,7 +452,7 @@ class CargoController extends Controller
             $indexs['goods_id'] = $data['goods_id'];
             $indexs['cargo_id'] = $cargo->id;
             $indexs['body'] = implode(' ', $body);
-            $this->indexGoods->add($indexs);
+            $this->indexGoods->insert($indexs);
 
             // 将货品信息存储到redis
             \Redis::hmset(HASH_CARGO_INFO_ . $cargo->id, $cargo->toArray());
@@ -459,7 +461,9 @@ class CargoController extends Controller
             return responseMsg('货品添加成功');
         } catch (\Exception $e) {
             \DB::rollback();
-            dd($e->getMessage());
+            if($e->getCode() == 400){
+                return responseMsg($e->getMessage(), $e->getCode());
+            }
             return responseMsg('货品添加失败', 400);
         }
     }
@@ -488,15 +492,15 @@ class CargoController extends Controller
         $data = $request->all();
 
         // 获取货品列表数据
-        $cargos = $this->cargo->cargoList($data['perPage'], ['goods_id' => $data['goods_id']]);
+        $cargos = $this->cargo->paging(['goods_id' => $data['goods_id']], $data['perPage']);
         
         // 获取货品推荐位
         foreach($cargos as $cargo){
-            $recommends = $this->relRG->fetchRecommend($cargo->id);
+            $recommends = $this->relRG->select(['cargo_id' => $cargo->id]);
             $tmp = [];
             if(!empty($recommends)){
                 foreach($recommends as $recommend){
-                    $tmp[] = $this->recommend->findById($recommend->recommend_id);
+                    $tmp[] = $this->recommend->findById(['id' => $recommend->recommend_id]);
                 }
             }
             $cargo->recommends = $tmp;
@@ -523,10 +527,10 @@ class CargoController extends Controller
         $reqs = $request->all();
 
         // 获取一个货品对应的推荐位的所有ID
-        $recommendIds = $this->relRG->fetchRecommendIds($reqs['cargo_id']);
+        $recommendIds = $this->relRG->lists(['cargo_id' => $reqs['cargo_id']], ['recommend_id']);
 
         // 获取所有的推荐位
-        $recommends = $this->recommend->fetchAll();
+        $recommends = $this->recommend->select();
 
         if (empty($recommends)) {
             return responseMsg('暂无数据', 404);
@@ -553,7 +557,7 @@ class CargoController extends Controller
         }
 
         // 获取货品对应的推荐位的所有ID
-        $recommendCargoIds = $this->relRG->fetchRecommendIds($data['cargo_id'])->toArray();
+        $recommendCargoIds = $this->relRG->fetchRecommendIds(['cargo_id' => $data['cargo_id']], ['recommend_id'])->toArray();
 
         // 求出现在选择的推荐位与已有的推荐位的交集
         $intersect = array_intersect($data['recommend_id'], $recommendCargoIds);
@@ -567,7 +571,7 @@ class CargoController extends Controller
             $this->relRG->whereNotInRecommendIds($data['cargo_id'], $intersect);
             // 新增差集的部分
             foreach ($diff as $rid) {
-                $this->relRG->addRelRecommendGoods(['recommend_id' => $rid, 'cargo_id' => $data['cargo_id']]);
+                $this->relRG->insert(['recommend_id' => $rid, 'cargo_id' => $data['cargo_id']]);
             }
             \DB::commit();
             return responseMsg('选择推荐位成功');
