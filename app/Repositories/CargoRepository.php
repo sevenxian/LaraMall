@@ -34,4 +34,17 @@ class CargoRepository
     {
         $this->model = $cargo;
     }
+
+    /**
+     * 通过whereIn获取多条数据
+     * 
+     * @param $fields
+     * @param array $ids
+     * @param array $where
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function selectWhereIn($fields, array $ids, array $where = []){
+        return $this->model->where($where)->whereIn($fields, $ids)->get();
+    }
 }

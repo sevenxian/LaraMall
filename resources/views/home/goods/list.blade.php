@@ -16,7 +16,6 @@
 
 @section('coreJs')
     <script type="text/javascript" src="/basic/js/jquery-1.7.min.js"></script>
-    <script type="text/javascript" src="/js/script.js"></script>
 @stop
 
 @section('header')
@@ -28,6 +27,7 @@
 @stop
 
 @section('content')
+    @inject('GoodsListPresenter', 'App\Presenters\HomeGoodsListPresenter')
     <b class="line"></b>
     <div class="search">
         <div class="search-list">
@@ -60,55 +60,81 @@
                                 <span class="total fl">共<strong class="num">997</strong>件相关商品</span>
                             </p>
                             <div class="clear"></div>
-                            <li class="select-result">
-                                <dl>
-                                    <dt>已选</dt>
-                                    <dd class="select-no"></dd>
-                                    <p class="eliminateCriteria">清除</p>
-                                </dl>
-                            </li>
+                            @if(!empty($data['ev']))
+                                <li class="select-result" style="display: list-item;">
+                                    <dl>
+                                        <dt>已选</dt>
+                                        <dd class="select-no" style="display: none;"></dd>
+                                        <p class="eliminateCriteria" style="display: block;" onclick="location.href='/home/goodsList/{{ $data['category_id'] }}'">清除</p>
+                                        @foreach($data['ev'] as $k => $v)
+                                            <dd class="selected" id="selectA"><a href="{{ $GoodsListPresenter->delSelectedUrl($k, $v, $data['ev']) }}">{{ $data['labels'][$k] }}：{{ $data['attrs'][$v] }}</a></dd>
+                                        @endforeach
+                                    </dl>
+                                </li>
+                            @endif
+                            {{--<li class="select-result">--}}
+                                {{--<dl>--}}
+                                    {{--<dt>已选</dt>--}}
+                                    {{--<dd class="select-no"></dd>--}}
+                                    {{--<p class="eliminateCriteria">清除</p>--}}
+                                {{--</dl>--}}
+                            {{--</li>--}}
                             <div class="clear"></div>
-                            <li class="select-list">
-                                <dl id="select1">
-                                    <dt class="am-badge am-round">品牌</dt>
-
-                                    <div class="dd-conent">
-                                        <dd class="select-all selected"><a href="#">全部</a></dd>
-                                        <dd><a href="#">百草味</a></dd>
-                                        <dd><a href="#">良品铺子</a></dd>
-                                        <dd><a href="#">新农哥</a></dd>
-                                        <dd><a href="#">楼兰蜜语</a></dd>
-                                        <dd><a href="#">口水娃</a></dd>
-                                        <dd><a href="#">考拉兄弟</a></dd>
-                                    </div>
-
-                                </dl>
-                            </li>
-                            <li class="select-list">
-                                <dl id="select2">
-                                    <dt class="am-badge am-round">种类</dt>
-                                    <div class="dd-conent">
-                                        <dd class="select-all selected"><a href="#">全部</a></dd>
-                                        <dd><a href="#">东北松子</a></dd>
-                                        <dd><a href="#">巴西松子</a></dd>
-                                        <dd><a href="#">夏威夷果</a></dd>
-                                        <dd><a href="#">松子</a></dd>
-                                    </div>
-                                </dl>
-                            </li>
-                            <li class="select-list">
-                                <dl id="select3">
-                                    <dt class="am-badge am-round">选购热点</dt>
-                                    <div class="dd-conent">
-                                        <dd class="select-all selected"><a href="#">全部</a></dd>
-                                        <dd><a href="#">手剥松子</a></dd>
-                                        <dd><a href="#">薄壳松子</a></dd>
-                                        <dd><a href="#">进口零食</a></dd>
-                                        <dd><a href="#">有机零食</a></dd>
-                                    </div>
-                                </dl>
-                            </li>
-
+                            @foreach($data['labelInfo'] as $label)
+                                @if(!isset($data['ev'][$label->id]))
+                                    <li class="select-list">
+                                        <dl id="select1">
+                                            <dt class="am-badge am-round">{{ $label->category_label_name }}</dt>
+                                            <div class="dd-conent">
+                                                @foreach($label->labels as $attr)
+                                                    <dd><a href="{{ $GoodsListPresenter->createUrl($label->id, $attr->id, $data['ev']) }}">{{ $attr->attribute_name }}</a></dd>
+                                                    {{--@if(strpos(Request::fullUrl(), '?ev') === false)--}}
+                                                        {{--<dd><a href="{{ Request::fullUrl() }}?ev={{ $label->id }}_{{ $attr->id }}">{{ $attr->attribute_name }}</a></dd>--}}
+                                                    {{--@else--}}
+                                                        {{--<dd><a href="{{ Request::fullUrl() }}%{{ $label->id }}_{{ $attr->id }}">{{ $attr->attribute_name }}</a></dd>--}}
+                                                    {{--@endif--}}
+                                                @endforeach
+                                            </div>
+                                        </dl>
+                                    </li>
+                                @endif
+                            @endforeach
+                            {{--<li class="select-list">--}}
+                                {{--<dl id="select2">--}}
+                                    {{--<dt class="am-badge am-round">种类</dt>--}}
+                                    {{--<div class="dd-conent">--}}
+                                        {{--<dd class="select-all selected"><a href="#">全部</a></dd>--}}
+                                        {{--<dd><a href="#">东北松子</a></dd>--}}
+                                        {{--<dd><a href="#">巴西松子</a></dd>--}}
+                                        {{--<dd><a href="#">夏威夷果</a></dd>--}}
+                                        {{--<dd><a href="#">松子</a></dd>--}}
+                                    {{--</div>--}}
+                                {{--</dl>--}}
+                            {{--</li>--}}
+                            {{--<li class="select-list">--}}
+                                {{--<dl id="select3">--}}
+                                    {{--<dt class="am-badge am-round">选购热点</dt>--}}
+                                    {{--<div class="dd-conent">--}}
+                                        {{--<dd class="select-all selected"><a href="#">全部</a></dd>--}}
+                                        {{--<dd><a href="#">手剥松子</a></dd>--}}
+                                        {{--<dd><a href="#">薄壳松子</a></dd>--}}
+                                        {{--<dd><a href="#">进口零食</a></dd>--}}
+                                        {{--<dd><a href="#">有机零食</a></dd>--}}
+                                    {{--</div>--}}
+                                {{--</dl>--}}
+                            {{--</li>--}}
+                            {{--<li class="select-list">--}}
+                                {{--<dl id="select4">--}}
+                                    {{--<dt class="am-badge am-round">选购热点</dt>--}}
+                                    {{--<div class="dd-conent">--}}
+                                        {{--<dd class="select-all selected"><a href="#">全部</a></dd>--}}
+                                        {{--<dd><a href="#">手剥松子</a></dd>--}}
+                                        {{--<dd><a href="#">薄壳松子</a></dd>--}}
+                                        {{--<dd><a href="#">进口零食</a></dd>--}}
+                                        {{--<dd><a href="#">有机零食</a></dd>--}}
+                                    {{--</div>--}}
+                                {{--</dl>--}}
+                            {{--</li>--}}
                         </ul>
                         <div class="clear"></div>
                     </div>
@@ -120,9 +146,8 @@
                             <li class="big"><a title="评价" href="#">评价为主</a></li>
                         </div>
                         <div class="clear"></div>
-
                         <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 boxes">
-                            @foreach($cargos as $cargo)
+                            @foreach($data['cargos'] as $cargo)
                                 <li>
                                     <div class="i-pic limit">
                                         <a href="/home/goodsDetail/{{ $cargo->id }}"><img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/430/h/430"/></a>
@@ -140,11 +165,9 @@
                         </ul>
                     </div>
                     <div class="search-side">
-
                         <div class="side-title">
                             经典搭配
                         </div>
-
                         <li>
                             <div class="i-pic check">
                                 <img src="/images/cp.jpg"/>
@@ -184,14 +207,16 @@
                                 </p>
                             </div>
                         </li>
-
                     </div>
                     <div class="clear"></div>
-
                     <!--分页 -->
-                    @if(!$cargos->isEmpty())
+                    @if(!$data['cargos']->isEmpty())
                         <div class="am-pagination">
-                            {{ $cargos->render() }}
+                            @if(isset($data['ev']) && !empty($data['ev']))
+                                {{ $data['cargos']->appends(['ev'=>$GoodsListPresenter->convertUrl($data['ev'])]) }}
+                            @else
+                                {{ $data['cargos']->render() }}
+                            @endif
                         </div>
                     @endif
                 </div>
