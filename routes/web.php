@@ -103,6 +103,8 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::post('addToShoppingCart', 'ShoppingCartController@store');
         // 购物车 删除商品
         Route::post('delShoppingCart', 'ShoppingCartController@destroy');
+        // 查询购物车 库存
+        Route::post('checkShoppingCart', 'ShoppingCartController@checkShoppingCart');
 
         // 退出登录
         Route::get('logout', 'UserController@logout');

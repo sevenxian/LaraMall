@@ -20,7 +20,7 @@ class CargoRepository
 {
 
     use BaseRepository;
-    
+
     /**
      * @var Cargo
      * @author zhulinjie

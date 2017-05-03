@@ -71,7 +71,7 @@ class UserInfoController extends Controller
         // 获取用户ID
         $userId = \Session::get('user')->user_id;
         // 更新数据
-        $userInfoResult = $this->userInfo->updateOneUser(['user_id' => $userId] ,$param);
+        $userInfoResult = $this->userInfo->update(['user_id' => $userId] ,$param);
         // 判断数据是否更新成功
         if(empty($userInfoResult)){
             // 更新失败，返回
@@ -84,7 +84,7 @@ class UserInfoController extends Controller
         // 成功记录用户操作日志
         $logMessage = Common::logMessageForInside($userId, config('log.userLog')[2]);
         // 填写操作日志
-        $this->log->writeUserLog($logMessage);
+        $this->log->writeUserLog($logMessage,false);
 
         // 返回用户信息展示页
         return redirect('/home/userInfo/information');
@@ -97,7 +97,7 @@ class UserInfoController extends Controller
         if ($request->hasFile('photo') && checkImage($file = $request->file('photo'))) {
             // 上传七牛文件云存储后返回图片名字
             $imageName = $this->disk->put(IMAGE_PATH, $file);
-            $result = $this->userInfo->updateOneUser(['user_id'=>\Session::get('userInfo')->user_id],['avatar'=>$imageName]);
+            $result = $this->userInfo->update(['user_id'=>\Session::get('userInfo')->user_id],['avatar'=>$imageName]);
             if(!empty($result)) {
                 \Session::get('userInfo')->avatar = env('QINIU_DOMAIN').$imageName;
                 return responseMsg($imageName,200);

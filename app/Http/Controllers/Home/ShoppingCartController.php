@@ -77,7 +77,7 @@ class ShoppingCartController extends Controller
                         // 查分查询数据库需要信息
                         $cargoId = explode(':', $item)[5];
                         // 查询数据库
-                        $cargo = $this->cargo->findOneCargo(['id' => $cargoId]);
+                        $cargo = $this->cargo->find(['id' => $cargoId]);
                         // 判断是否存在该商品
                         if (empty($cargo)) {
                             // 记录log日志
@@ -93,9 +93,9 @@ class ShoppingCartController extends Controller
                         // 便利标签
                         foreach ($labels as $k => $v) {
                             // 查询商品标签
-                            $label = $this->goodsLabel->getOneLabel(['id' => $k]);
+                            $label = $this->goodsLabel->find(['id' => $k]);
                             // 查询商品标签值
-                            $attr = $this->goodsAttr->getOneGoodsAttr(['id' => $v]);
+                            $attr = $this->goodsAttr->find(['id' => $v]);
                             // 拼装货品信息
                             if (!empty($label) && !empty($attr)) {
                                 $cargo['label'][$v] = [
@@ -228,20 +228,45 @@ class ShoppingCartController extends Controller
         // 获取用户ID
         $userId = \Session::get('user')->user_id;
         // 获取货品ID
-        foreach ($request['cargoId'] as $value){
+        foreach ($request['cargoId'] as $value) {
             // 判断货品是否存在缓存中
-            if(\Redis::exists($this->hashShoppingCart . $userId . ':' . $value)) {
+            if (\Redis::exists($this->hashShoppingCart . $userId . ':' . $value)) {
                 // 从缓存中删除货品
                 $result = \Redis::del($this->hashShoppingCart . $userId . ':' . $value);
-                if(!$result) {
+                if (!$result) {
                     // 记录log日志
                 }
             }
             // 删除缓存中list记录
-            \Redis::lRem($this->listShoppingCart.$userId,0,$this->hashShoppingCart . $userId . ':' . $value);
+            \Redis::lRem($this->listShoppingCart . $userId, 0, $this->hashShoppingCart . $userId . ':' . $value);
         }
 
         // 返回信息
-        return responseMsg('删除成功',200);
+        return responseMsg('删除成功', 200);
+    }
+
+    /**
+     * 检测库存是否充足
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhangyuchao
+     */
+    public function checkShoppingCart(Request $request)
+    {
+        // 获取用户ID
+        $userId = \Session::get('user')->user_id;
+        // 获取货品ID
+        $cargoId = $request['cargoId'];
+        // 获取货品库存
+        $hashResult = \Redis::hGetAll($this->hashShoppingCart . $userId . ':' . $cargoId);
+        // 判断库存是否充足
+        if ($hashResult['inventory'] < $request['number']) {
+            // 库存不充足
+            return responseMsg($hashResult,400);
+        } else {
+            // 库存充足
+            return responseMsg(['shopping_number' =>$hashResult['shopping_number']],200);
+        }
     }
 }

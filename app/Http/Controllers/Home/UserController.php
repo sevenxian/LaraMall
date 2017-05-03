@@ -83,7 +83,7 @@ class UserController extends Controller
     public function doLogin(Request $request)
     {
         // 根据条件查找用户
-        $result = $this->indexUserLogin->findOneUserManner(['login_name' =>$request['loginName'] ]);
+        $result = $this->indexUserLogin->find(['login_name' =>$request['loginName'] ]);
         // 判断是否找到该用户
         if(empty($result)) {
             // 未找到返回信息
@@ -107,7 +107,7 @@ class UserController extends Controller
         $request['login_name'] = $request['loginName'];
         $request['user_id'] = $result->user_id;
         // 把登录日志写进数据库
-        $logUserLoginResult = $this->logUserLogin->addOneUserLoginData($request->all());
+        $logUserLoginResult = $this->logUserLogin->insert($request->all());
         // 判断登录日志信息是否写进数据库
         if(!empty($logUserLoginResult)){
             // 数据库写入不成功 记录系统文件日志

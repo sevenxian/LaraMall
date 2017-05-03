@@ -15,6 +15,6 @@ class UserOperationLog extends Model
     /**
      * @var array
      */
-    protected $fillable = ['operator_id', 'login_ip', 'events', 'content'];
+    protected $fillable = ['operator_id', 'login_ip', 'content','events'];
 
 }
