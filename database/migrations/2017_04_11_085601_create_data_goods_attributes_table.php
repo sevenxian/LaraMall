@@ -14,14 +14,10 @@ class CreateDataGoodsAttributesTable extends Migration
     public function up()
     {
         Schema::create('data_goods_attributes', function (Blueprint $table) {
-            $table->increments('id')->comment('商品属性表');
-            $table->integer('category_id')->index()->comment('分类ID');
-            $table->integer('goods_label_id')->index()->comment('商品标签表ID');
-            $table->string('goods_label_name',32)->comment('商品标签名称');
-            $table->string('goods_attribute_name',32)->comment('商品属性名称');
-            $table->tinyInteger('goods_attribute_sort')->comment('商品属性排序');
+            $table->increments('id')->comment('商品标签值表');
+            $table->integer('goods_label_id')->index()->comment('商品标签ID');
+            $table->string('goods_label_name',64)->comment('商品标签值名称');
             $table->timestamps();
-            $table->softDeletes()->comment('软删除');
         });
     }
 

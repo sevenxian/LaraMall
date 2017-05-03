@@ -64,6 +64,7 @@
     <script src="/js/axios.min.js"></script>
     <script src="/js/sweetalert.min.js"></script>
 @show
+
 @yield('externalJs')
 
 <!--common script for all pages-->
@@ -71,7 +72,6 @@
 
 <!--script for this page-->
 @yield('customJs')
-
 
 <!--flashy-->
 @include('flashy::message')

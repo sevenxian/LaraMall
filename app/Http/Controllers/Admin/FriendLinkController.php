@@ -10,17 +10,27 @@ use App\Repositories\FriendLinkRepository;
 class FriendLinkController extends Controller
 {
     /**
+     *  文件操作
+     *
+     * @var \Storage
+     */
+    protected $disk;
+
+    /**
      * @var FriendLinkRepository
      */
     protected $friendLink;
 
     /**
      * AdminUserController constructor.
-     * @param AdminUserRepository $adminUser
+     * @param FriendLinkRepository $friendLink
      * @author wutao
      */
     public function __construct(FriendLinkRepository $friendLink)
     {
+        //注入七牛服务
+        $this->disk = \Storage::disk('qiniu');
+        //注入友情链接操作
         $this->friendLink = $friendLink;
     }
     /**
@@ -35,16 +45,40 @@ class FriendLinkController extends Controller
     }
 
     /**
+     * 文件处理函数
+     *
+     * @param Request $request
+     * @return bool
+     * @author: wutao
+     */
+    public function fileDo(Request $request)
+    {
+        //判断是否有图标上传，而且检查图片是否合法
+        if($request->hasFile('image') && checkImage($file = $request->file('image'))){
+            //上传七牛文件云存储后返回图片名字
+            $imageName = $this->disk->put(IMAGE_PATH,$file);
+            //dd($imageName);
+            //将图片名字塞入请求之中
+            $request->merge(['image' => $imageName]);
+            $message = $imageName;
+            return responseMsg($message,200);
+        }
+    }
+
+    /**
      * 添加友情链接
      *
      * @author  wutao
      */
     public function store(Request $request)
     {
-        //数据插入成功 返回成功信息
+        dd($request['image']);
+        //判断错误信息
         if(empty($request['name'])) return responseMsg('名称不能为空','400');
         if(empty($request['url'])) return responseMsg('链接地址不能为空','400');
+        //数据操作
         $result = $this->friendLink->createByCategory($request->all());
+        //数据插入成功 返回成功信息
         if (!empty($result)) {
             return responseMsg('添加成功', 200);
             // 录入成功跳转

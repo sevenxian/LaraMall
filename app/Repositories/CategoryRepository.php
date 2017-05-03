@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-
 use App\Model\Category;
 
 /**
@@ -50,7 +49,19 @@ class CategoryRepository
      */
     public function categoryPaginate($perPage = 10, array $where = [])
     {
-        return $this->category->with('parentCategory')->where($where)->paginate($perPage);
+        return $this->category->withTrashed()->with('parentCategory')->where($where)->orderBy('created_at', 'desc')->paginate($perPage);
+    }
+
+    /**
+     * 根据 id 查找数据 / 附带父类信息
+     *
+     * @param $id
+     * @return mixed
+     * @author: Luoyan
+     */
+    public function findByIdWithParent($id)
+    {
+        return $this->category->with('parentCategory')->find($id);
     }
 
     /**
@@ -78,4 +89,44 @@ class CategoryRepository
         return $this->category->where('id', $id)->update($data);
     }
 
+    /**
+     * 软删除一条数据
+     *
+     * @param $id
+     * @return int
+     * @author: Luoyan
+     */
+    public function softDeletes($id)
+    {
+        return $this->category->destroy($id);
+    }
+
+    /**
+     * 恢复软删除的数据
+     *
+     * @param $id
+     * @return mixed
+     * @author: Luoyan
+     */
+    public function softRstore($id)
+    {
+        return $this->category->withTrashed()->where('id', $id)->restore();
+    }
+
+    /**
+     * 获取分类
+     *
+     * @param $param
+     * @author zhulinjie
+     */
+    public function select($where)
+    {
+        return $this->category->where($where)->get();
+    }
+    
+    
+    public function labels()
+    {
+        return $this->category->labels;
+    }
 }

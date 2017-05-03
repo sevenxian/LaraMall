@@ -62,3 +62,16 @@ function checkImage($file)
 
     return false;
 }
+
+if (!function_exists('dda')) {
+    /**
+     * dda 等于： dd to array
+     *
+     * @param $model
+     * @author: Luoyan
+     */
+    function dda($model)
+    {
+        dd($model->toArray());
+    }
+}

@@ -6,8 +6,9 @@
 @section('sidebar') @stop
 @section('content')
     <div class="container">
-        <form class="form-signin" action="{{ route('admin.user.login') }}" id="profileForm" method="post">
+        <form class="form-signin" action="{{ route('user.store') }}" id="profileForm" method="post">
             <h2 class="form-signin-heading">管理员登录</h2>
+            {{ csrf_field() }}
             <div class="login-wrap">
                 <!-- Errors Messages -->
                 @include('notice.error')

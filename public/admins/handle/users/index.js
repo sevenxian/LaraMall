@@ -14,10 +14,10 @@ var userListVue = new Vue({
                 to: 0, // 当前页码最后一栏数据是数据库第几条
                 current_page: 1 // 当前页
             },
-            adminId:'',
+            adminId: '',
             offset: 4, // 页码偏移量
             datas: [], // 页码内容
-            search: {'type':0,'value':''}, // 搜索条件
+            search: {'type': 0, 'value': ''}, // 搜索条件
             per_page: 20, // 一页显示的数据
         }
     },
@@ -72,7 +72,7 @@ var userListVue = new Vue({
             };
             // 请求数据
             axios.post('/admin/usersList', data).then(response => {
-                if(response.data.ServerNo == 200){
+                if (response.data.ServerNo == 200) {
                     this.datas = response.data.ResultData.data;
                     this.pagination = response.data.ResultData;
                     layer.closeAll();
@@ -100,17 +100,17 @@ var userListVue = new Vue({
         },
         // 获取管理员ID
         getAdminId(id) {
-           this.adminId = id;
+            this.adminId = id;
         },
         // 删除管理员操作
-        deleteAdmin(id,index) {
-            axios.post('/admin/users/'+id,{'_method':'delete'}).then(response => {
-                if(response.data.ServerNo == 200){
+        deleteAdmin(id, index) {
+            axios.post('/admin/users/' + id, {'_method': 'delete'}).then(response => {
+                if (response.data.ServerNo == 200) {
                     // 删除成功 页面数据移除
-                    this.datas.splice(index,1)
+                    this.datas.splice(index, 1)
                     layer.closeAll();
                     sweetAlert("删除成功!", "", "success");
-                }else{
+                } else {
                     layer.closeAll();
                     sweetAlert("删除失败!", "", "success");
                 }
@@ -119,7 +119,85 @@ var userListVue = new Vue({
                 layer.closeAll();
                 sweetAlert("请求数据失败!", "", "error");
             });
+        },
+        // 角色绑定
+        fetchRoles(index, id) {
+            role.fetchRoles(index, id);
         }
-
     }
+});
+
+/**
+ * 角色绑定
+ * @author Luoyan
+ */
+var role = new Vue({
+    el: '#bindModal',
+    // 响应式参数
+    data() {
+        return {
+            user: [], // 修改时显示的单个数据
+            roles: [], // 角色权限列表
+        }
+    },
+    // 方法定义
+    methods: {
+        // 获取分类下得标签
+        fetchRoles(index, id) {
+            // layer 加载层
+            layer.load(2);
+            this.user = [];
+            // 将查询分类数据赋值都变量方便提供给修改模态框
+            this.user = userListVue.datas[index];
+            // 清空标签列表数据
+            this.roles = [];
+            // 获取当前分类已有的标签
+            axios.get('/admin/users/' + id).then(response => {
+                // layer 加载层关闭
+                layer.closeAll();
+                // 判断修改是否成功
+                if (response.data.ServerNo != 200) {
+                    return sweetAlert("失败!", "获取失败!", "error");
+                }
+                // 添加到标签列表之中，并且页面自动生成新元素
+                this.roles = response.data.ResultData;
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("失败!", "请求失败!", "error");
+            });
+        },
+        // 完成权限绑定
+        doneBind() {
+            // layer 加载层
+            layer.load(2);
+            // 获取选中标签的 id
+            var labels = [];
+            $('.r_on > input[type="radio"]').each(function (i, e) {
+                labels[i] = $(e).val();
+            });
+            // 发送一次分类绑定标签请求
+            axios.patch('/admin/syncRoles/' + this.user.id, labels).then(response => {
+                // layer 加载层关闭
+                layer.closeAll();
+                // 隐藏模态框
+                $('#bindModal').modal('hide');
+            }).catch(error => {
+                // layer 加载层关闭
+                sweetAlert("失败!", "请求失败!", "error");
+            });
+        },
+    }
+});
+
+// 复选框样式切换
+$('#bindModal').on('click', '.label_radio', function (e) {
+    // 阻止事件冒泡
+    e.preventDefault();
+
+    if ($(this).hasClass('r_on')) {
+        return $(this).removeClass('r_on');
+    }
+    // 样式切换
+    $('.label_radio').removeClass('r_on');
+    $(this).addClass('r_on');
 });

@@ -15,7 +15,6 @@ class UserLoginRequest extends FormRequest
     {
         return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -29,7 +28,6 @@ class UserLoginRequest extends FormRequest
             'captcha'  => 'required|captcha',
         ];
     }
-
     /**
      * 消息提示转换
      *

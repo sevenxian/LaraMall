@@ -128,6 +128,25 @@ var linkListVue = new Vue({
                 sweetAlert("请求数据失败!", "", "error");
             });
         },
+        //上传图片方法
+        upload(e) {
+            $(e.target).next().trigger('click');
+            //给图片绑定onchange事件
+            $('#img').on('change',function() {
+                //获取控件中的文件
+                var obj = this;
+                var formData = new FormData();
+                formData.append('image', this.files[0]);
+                //formData.append('_token', $('#token').val());
+                //发送参数
+                axios.post('/admin/linkPhoto', formData).then(response => {
+                    //判断返回结果
+                    if(response.data.ServerNo==200) {
+                        $('#img_img').attr('src','http://oa3kxwz8k.bkt.clouddn.com/' + response.data.ResultData);
+                    }
+                });
+            });
+        },
         //添加定义方法
         sub() {
             // FormData支援把 Form 元素丟進去

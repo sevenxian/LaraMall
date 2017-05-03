@@ -1,26 +1,66 @@
 @extends('admin.layouts.master')
 @section('title','管理员列表')
 @section('content')
-    <section id="main-content">
+    <section id="main-content" class="has-js">
         <section class="wrapper">
-
+            <!-- 绑定角色模态框模态框 Start -->
+            <div class="modal fade" id="bindModal" tabindex="-1" role="dialog" aria-labelledby="bindModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form method="post">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="exampleModalLabel">授权职务</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="addName" class="control-label">用户名称:</label>
+                                    <span class="form-control">@{{ user.nickname }}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addName" class="control-label">角色:</label>
+                                    <div class="radios">
+                                        <div class="row" id="labelsC">
+                                            <div class="col-md-6"  v-for="role in roles">
+                                                <label class="label_radio" :class="{'r_on':role.checked}">
+                                                    <input
+                                                            :value="role.id"
+                                                            type="radio"/> @{{ role.display_name }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" @click="doneBind()" class="btn btn-primary">
+                                    完成
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- 绑定角色模态框 End -->
             <div class="row">
-                    <div class="col-lg-12">
-                        <section class="panel">
-                            <header class="panel-heading" style="padding: 20px;">
-                                <font><font>
-                                        管理员列表
-                                    </font></font>
-                                <button type="button" style="float: right" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">添加管理员</button>
-                            </header>
-                        </section>
+                <div class="col-lg-12">
+                    <section class="panel">
+                        <header class="panel-heading" style="padding: 20px;">
+                            <font><font>
+                                    管理员列表
+                                </font></font>
+                            <button type="button" style="float: right" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#exampleModal" data-whatever="@getbootstrap">添加管理员
+                            </button>
+                        </header>
+                    </section>
                 </div>
                 <div class="col-lg-12">
                     <section class="panel " id="userList">
                         <header class="panel-heading" style="padding: 15px;">
                             <form class="form-horizontal tasi-form">
                                 <div class="form-group">
-
                                     <div class="col-lg-2">
                                         <select class="form-control m-bot15" v-model="search.type">
                                             <option value="0"><font><font>搜索类型</font></font></option>
@@ -31,7 +71,8 @@
                                     <div class="col-sm-2">
                                         <input type="text" class="form-control" v-model="search.value">
                                     </div>
-                                    <button type="submit" @click.prevent="searchLists" class="btn btn-info"><font><font>搜索</font></font></button>
+                                    <button type="submit" @click.prevent="searchLists" class="btn btn-info"><font><font>搜索</font></font>
+                                    </button>
                                 </div>
                             </form>
                         </header>
@@ -55,8 +96,17 @@
                                 <td v-else><font><font> 尚未登录 </font></font></td>
 
                                 <td>
-                                    <button  @click="getAdminId(data.id)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updatePassword" data-whatever="@getbootstrap"  >重置密码</button>
-                                    <button  @click="deleteAdmin(data.id,index)" class="btn btn-danger btn-xs">删除</button>
+                                    <button @click="getAdminId(data.id)" class="btn btn-warning btn-xs"
+                                            data-toggle="modal" data-target="#updatePassword"
+                                            data-whatever="@getbootstrap">重置密码
+                                    </button>
+                                    <button @click="deleteAdmin(data.id,index)" class="btn btn-danger btn-xs">删除
+                                    </button>
+                                    <button class="btn btn-primary btn-xs"
+                                            @click="fetchRoles(index, data.id)"
+                                            data-toggle="modal" data-target="#bindModal"
+                                            data-whatever="@getbootstrap">授权职务
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -64,11 +114,13 @@
                         <center>@include('common.page')</center>
                     </section>
                     <!-- create admin form  start -->
-                    <div class="modal fade createAdminUser" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                    <div class="modal fade createAdminUser" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title" id="exampleModalLabel">添加管理员</h4>
                                 </div>
                                 <div class="modal-body">
@@ -76,7 +128,11 @@
                                         {{ csrf_field() }}
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">用户名:</label>
+<<<<<<< HEAD
                                             <input type="text" class="form-control"  name="nickname">
+=======
+                                            <input type="text" class="form-control" name="nickname">
+>>>>>>> origin/dev
                                         </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">手机号码:</label>
@@ -84,15 +140,24 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">密码:</label>
+<<<<<<< HEAD
                                             <input type="password" class="form-control"  name="password">
                                         </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">确认密码:</label>
                                             <input type="password" class="form-control"  name="rel_password">
+=======
+                                            <input type="password" class="form-control" name="password">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message-text" class="control-label">确认密码:</label>
+                                            <input type="password" class="form-control" name="rel_password">
+>>>>>>> origin/dev
                                         </div>
                                         <div class="modal-footer" style="margin-top: 45px;">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                            <button type="submit"  class="btn btn-primary">提交</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">提交</button>
                                         </div>
                                     </form>
                                 </div>
@@ -101,17 +166,24 @@
                     </div>
                     <!-- create admin form  end -->
                     <!-- update admin password form  start -->
+<<<<<<< HEAD
                         <div class="modal fade updateAdminUse`" id="updatePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+=======
+                    <div class="modal fade updateAdminUser" id="updatePassword" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel">
+>>>>>>> origin/dev
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title" id="exampleModalLabel">重置密码</h4>
                                 </div>
                                 <div class="modal-body">
                                     <form class="userForm">
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">密码:</label>
+<<<<<<< HEAD
                                             <input type="password" class="form-control"  name="password"  v-model="data.password">
                                         </div>
                                         <div class="form-group">
@@ -121,6 +193,21 @@
                                         <div class="modal-footer" style="margin-top: 45px;">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                                             <button type="button"  @click="userUpdate()" class="btn btn-primary">提交</button>
+=======
+                                            <input type="password" class="form-control" name="password"
+                                                   v-model="data.password">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message-text" class="control-label">确认密码:</label>
+                                            <input type="password" class="form-control" name="rel_password"
+                                                   v-model="data.rel_password">
+                                        </div>
+                                        <div class="modal-footer" style="margin-top: 45px;">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                            </button>
+                                            <button type="button" @click="userUpdate()" class="btn btn-primary">提交
+                                            </button>
+>>>>>>> origin/dev
                                         </div>
                                     </form>
                                 </div>

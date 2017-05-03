@@ -72,8 +72,15 @@
                                             <input type="radio" name="type" value="2" v-model="type"> 文字
                                         </div>
                                         <div class="form-group" v-if="type==1">
-                                            <input type="file" name="image" id="image" value="1" /> <br>
-                                        </div>
+                                                <div class="col-lg-13">
+                                                    {{--<label for="img">--}}
+                                                        {{----}}
+                                                    {{--</label>--}}
+                                                    <img width="100px" class="img-responsive" id="img_img" @click="upload" src="https://dn-phphub.qbox.me/uploads/images/201704/11/4430/U0ctyGJUV7.png">
+                                                    <input id="img" style="display: none" type="file" class="form-control" name="image">
+                                                    <input type="hidden" name="image">
+                                                </div>
+                                            </div>
                                         <div class="form-group">
                                             <label for="message-text" class="control-label">链接地址:</label>
                                             <input type="text" class="form-control"  name="url" id="url">

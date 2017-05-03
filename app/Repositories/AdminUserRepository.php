@@ -1,13 +1,9 @@
 <?php
 
 namespace App\Repositories;
+
 use App\Model\AdminUser;
 
-
-/**
- * Class AdminUserRepository
- * @package App\Repositories
- */
 class AdminUserRepository
 {
     /**
@@ -45,10 +41,10 @@ class AdminUserRepository
      * @return mixed
      * @author zhangyuchao
      */
-    public function getAllData(array $where , $perPage = 20)
+    public function getAllData(array $where, $perPage = 20)
     {
-         // 按照管理员登录的时间老获取数据
-        return $this->adminUser->where($where)->orderBy('last_login_at','desc')->paginate($perPage);
+        // 按照管理员登录的时间老获取数据
+        return $this->adminUser->where($where)->orderBy('last_login_at', 'desc')->paginate($perPage);
     }
 
     /**
@@ -84,9 +80,9 @@ class AdminUserRepository
      * @return mixed
      * @author zhangyuchao
      */
-    public function updateOneData(array $where , array $params)
+    public function updateOneData(array $where, array $params)
     {
-        return  $this->adminUser->where($where)->update($params);
+        return $this->adminUser->where($where)->update($params);
     }
 
     /**
@@ -99,5 +95,17 @@ class AdminUserRepository
     public function deleteOneData($id)
     {
         return $this->adminUser->destroy($id);
+    }
+
+    /**
+     * 获取角色所拥有权限的 id
+     *
+     * @param $id
+     * @return mixed
+     * @author: Luoyan
+     */
+    public function fetchRolesTheIds($id)
+    {
+        return $this->adminUser->where('id', $id)->first()->roles()->pluck('id');
     }
 }

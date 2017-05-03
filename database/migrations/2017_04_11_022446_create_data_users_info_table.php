@@ -25,7 +25,7 @@ class CreateDataUsersInfoTable extends Migration
             $table->string('id_number',32)->nullable()->comment('身份证号码');
             $table->string('answer_1',64)->nullable()->comment('密保问题1');
             $table->string('answer_2',64)->nullable()->comment('密保问题2');
-            $table->timestamp('birthday')->comment('生日');
+            $table->string('birthday',32)->nullable()->comment('生日');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
         });
