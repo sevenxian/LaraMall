@@ -20,5 +20,5 @@ class RelLabelCargo extends Model
      * @var array
      * @author zhulinjie
      */
-    protected $fillable = ['category_attr_id', 'goods_id', 'cargo_id'];
+    protected $fillable = ['category_attr_ids', 'goods_id', 'cargo_id'];
 }

@@ -33,14 +33,15 @@ class CategoryAttributeRepository
     }
 
     /**
-     * 通过一组ID获取多条记录
+     * 通过一组$fields获取多条记录
      * 
+     * @param $fields
      * @param $ids
      * @return mixed
      * @author zhulinjie
      */
-    public function selectByWhereIn($ids)
+    public function selectByWhereIn($fields, $ids)
     {
-        return $this->model->whereIn('id', $ids)->get();
+        return $this->model->whereIn($fields, $ids)->get();
     }
 }

@@ -326,17 +326,20 @@ class CargoController extends Controller
         $data = $request->all();
 
         // 货品标签/标签值ID键值对
-        $list = [];
+        $cargoLabels = [];
         // 货品标签值ID集合
         $goodsAttrIds = [];
+        // 货品标签/标签值ID键值对
+        $categoryLabels = [];
         // 分类标签值ID集合
         $categoryAttrIds = [];
         foreach ($data as $key => $val) {
             if (strpos($key, 'goodsLabel') !== false) {
-                $list[str_replace('goodsLabel', '', $key)] = $val;
+                $cargoLabels[str_replace('goodsLabel', '', $key)] = $val;
                 $goodsAttrIds[] = $val;
             }
             if (strpos($key, 'categoryLabel') !== false) {
+                $categoryLabels[str_replace('categoryLabel', '', $key)] = $val;
                 $categoryAttrIds[] = $val;
             }
         }
@@ -358,7 +361,7 @@ class CargoController extends Controller
         // 组合货品表中需要的数据
         $param['category_id'] = $data['category_id'];
         $param['goods_id'] = $data['goods_id'];
-        $param['cargo_ids'] = json_encode($list);
+        $param['cargo_ids'] = json_encode($cargoLabels);
         $param['cargo_cover'] = $data['cargo_original'][0];
         $param['inventory'] = $data['inventory'];
         $param['cargo_price'] = $data['cargo_price'];
@@ -400,7 +403,7 @@ class CargoController extends Controller
 
         // 获取分类标签值
         if ($categoryAttrIds) {
-            $categoryAttrs = $this->categoryAttribute->selectByWhereIn($categoryAttrIds);
+            $categoryAttrs = $this->categoryAttribute->selectByWhereIn('id', $categoryAttrIds);
             foreach ($categoryAttrs as $categoryAttr) {
                 // 分词处理 分类标签值
                 array_push($body, $this->analysis->toUnicode($categoryAttr->attribute_name));
@@ -412,7 +415,7 @@ class CargoController extends Controller
             \DB::beginTransaction();
 
             // 组合查询条件
-            foreach($list as $k => $v){
+            foreach($cargoLabels as $k => $v){
                 $where['cargo_ids->'.$k] = $v;
             }
 
@@ -425,14 +428,12 @@ class CargoController extends Controller
             $cargo = $this->cargo->insert($param);
 
             // 分类标签值与货品关联表中新增记录
-            if (!empty($categoryAttrIds)) {
+            if (!empty($categoryLabels)) {
                 $arr = [];
-                foreach ($categoryAttrIds as $id) {
-                    $arr['category_attr_id'] = $id;
-                    $arr['goods_id'] = $data['goods_id'];
-                    $arr['cargo_id'] = $cargo->id;
-                    $this->relLabelCargo->insert($arr);
-                }
+                $arr['category_attr_ids'] = json_encode($categoryLabels);
+                $arr['goods_id'] = $data['goods_id'];
+                $arr['cargo_id'] = $cargo->id;
+                $this->relLabelCargo->insert($arr);
             }
 
             // 商品标签值关联表新增记录

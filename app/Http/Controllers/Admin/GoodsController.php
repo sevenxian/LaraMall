@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Model\RelRecommendGood;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsLabelRepository;
 use App\Repositories\GoodsRepository;
