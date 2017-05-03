@@ -4,6 +4,10 @@ namespace App\Repositories;
 
 use App\Model\IndexUserLogin;
 
+/**
+ * Class IndexUserLoginRepository
+ * @package App\Repositories
+ */
 class IndexUserLoginRepository
 {
     /**

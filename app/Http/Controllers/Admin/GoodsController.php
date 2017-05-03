@@ -99,8 +99,14 @@ class GoodsController extends Controller
     public function goodsList(Request $request)
     {
         $data = $request->all();
+
         // 获取商品列表
-        $res = $this->goods->goodsList($data['perPage'], $data['where']);
+        $res = $this->goods->paging($data['where'], $data['perPage']);
+
+        // 判断商品是否存在
+        if(empty($res)){
+            return responseMsg('暂无数据', 404);
+        }
         
         return responseMsg($res);
     }
@@ -134,13 +140,13 @@ class GoodsController extends Controller
         try{
             \DB::beginTransaction();
             // 向商品表中新增记录
-            $goods = $this->goods->addGoods($param);
+            $goods = $this->goods->insert($param);
 
             // 向商品标签关联表中新增记录
             foreach($data['goods_label'] as $val){
                 $arr['goods_id'] = $goods->id;
                 $arr['goods_label_id'] = $val;
-                $this->relGL->add($arr);
+                $this->relGL->insert($arr);
             }
             \DB::commit();
             return responseMsg('商品添加成功');
@@ -175,7 +181,7 @@ class GoodsController extends Controller
     {
         $data = $request->all();
         // 获取分类下的商品标签
-        $goodsLabels = $this->goodsLabel->selectByCategoryId($data['category_id']);
+        $goodsLabels = $this->goodsLabel->select(['category_id'=>$data['category_id']]);
         // 判断是否添加成功
         if($goodsLabels){
             return responseMsg($goodsLabels);
@@ -194,7 +200,7 @@ class GoodsController extends Controller
     public function addGoodsLabel(Request $request)
     {
         $data = $request->all();
-        $res = $this->goodsLabel->addGoodsLable($data);
+        $res = $this->goodsLabel->insert($data);
         return responseMsg($res);
     }
 

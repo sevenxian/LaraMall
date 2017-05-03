@@ -28,7 +28,7 @@ class GoodsLabel extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author zhulinjie
      */
-    public function labels()
+    public function attrs()
     {
         return $this->hasMany(GoodsAttribute::class);
     }

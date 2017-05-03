@@ -4,8 +4,14 @@ namespace App\Repositories;
 
 use App\Model\GoodsLabel;
 
+/**
+ * Class GoodsLabelRepository
+ * @package App\Repositories
+ */
 class GoodsLabelRepository
 {
+    use BaseRepository;
+    
     /**
      * @var
      * @author zhulinjie
@@ -18,30 +24,18 @@ class GoodsLabelRepository
      */
     public function __construct(GoodsLabel $goodsLabel)
     {
-        $this->goodsLabel = $goodsLabel;
+        $this->model = $goodsLabel;
     }
 
     /**
-     * 获取分类下的商品标签
+     * 根据ID查找商品 标签
      *
-     * @param $id
+     * @param $where
      * @return mixed
-     * @author zhulinjie
+     * @author zhangyuchao
      */
-    public function selectByCategoryId($id)
+    public function getOneLabel($where)
     {
-       return $this->goodsLabel->where('category_id', $id)->get();
-    }
-
-    /**
-     * 添加商品标签
-     *
-     * @param $data
-     * @return mixed
-     * @author zhulinjie
-     */
-    public function addGoodsLable($data)
-    {
-        return $this->goodsLabel->create($data);
+        return $this->goodsLabel->where($where)->first();
     }
 }

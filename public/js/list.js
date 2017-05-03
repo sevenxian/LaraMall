@@ -2,21 +2,41 @@
 
 //商品规格选择
 $(function() {
-	$(".theme-options").each(function() {
-		var i = $(this);
-		var p = i.find("ul>li");
-		p.click(function() {
-			if (!!$(this).hasClass("selected")) {
-				$(this).removeClass("selected");
+	$.ajaxSetup({
+		headers: { 'X-CSRF-TOKEN' : csrf_token }
+	});
 
-			} else {
+	$('.theme-options ul li').on('click', function () {
+		if(!$(this).hasClass('selected')){
+			if(!$(this).hasClass('in-no-stock')){
 				$(this).addClass("selected").siblings("li").removeClass("selected");
 
+				var cargo_ids = {};
+				$('.theme-options ul .selected').each(function (index, elem) {
+					var label_id = $(elem).data('label');
+					var attr_id = $(elem).data('attr');
+					cargo_ids[label_id] = attr_id;
+				});
+
+				$.ajax({
+					type: 'post',
+					url: '/home/getCargoId',
+					data: cargo_ids,
+					dataType: 'json',
+					success: function(response, status, xhr){
+						if(response.ServerNo != 200){
+							console.log(response.ResultData);
+						}else{
+							location.href='/home/goodsDetail/'+response.ResultData;
+						}
+					},
+					error: function (xhr, status, errorThrown) {
+						console.log(errorThrown);
+					}
+				});
 			}
-
-		})
-	})
-
+		}
+	});
 })
 
 

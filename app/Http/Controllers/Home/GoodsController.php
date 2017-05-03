@@ -3,35 +3,263 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\CargoRepository;
+use App\Repositories\CategoryAttributeRepository;
+use App\Repositories\CategoryRepository;
+use App\Repositories\GoodsRepository;
+use App\Repositories\RelGoodsLabelRepository;
+use App\Repositories\RelLabelCargoRepository;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GoodsController extends Controller
 {
     /**
+     * 货品
+     *
+     * @var CargoRepository
+     * @author zhulinjie
+     */
+    protected $cargo;
+
+    /**
+     * 商品
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $goods;
+
+    /**
+     * 分类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $category;
+
+    /**
+     * 商品规格
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $relGoodsLabel;
+
+    /**
+     * 分类属性
+     *
+     * @var CategoryAttributeRepository
+     * @author zhulinjie
+     */
+    protected $categoryAttr;
+
+    /**
+     * 分类标签值与货品关联表
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $relLabelCargo;
+
+    /**
+     * GoodsController constructor.
+     * @param CargoRepository $cargoRepository
+     * @param CategoryRepository $categoryRepository
+     * @param GoodsRepository $goodsRepository
+     */
+    public function __construct
+    (
+        CargoRepository $cargoRepository,
+        CategoryRepository $categoryRepository,
+        GoodsRepository $goodsRepository,
+        RelGoodsLabelRepository $relGoodsLabelRepository,
+        CategoryAttributeRepository $categoryAttributeRepository,
+        RelLabelCargoRepository $relLabelCargoRepository
+    )
+    {
+        // 注入货品操作类
+        $this->cargo = $cargoRepository;
+        // 注入分类操作类
+        $this->category = $categoryRepository;
+        // 注入商品操作类
+        $this->goods = $goodsRepository;
+        // 注入商品规格操作类
+        $this->relGoodsLabel = $relGoodsLabelRepository;
+        // 注入分类属性值操作类
+        $this->categoryAttr = $categoryAttributeRepository;
+        // 分类标签值与货品关联表
+        $this->relLabelCargo = $relLabelCargoRepository;
+    }
+
+    /**
      * 商品列表页
-     * 
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author zhulinjie
      */
-    public function goodsList()
+    public function goodsList(Request $request, $category_id)
     {
-        return view('home.goods.list');    
+        $req = $request->all();
+
+        // 获取标签搜索条件
+        if (isset($req['ev']) && !empty($req['ev'])) {
+            $ev = explode('%', $req['ev']);
+            foreach ($ev as $v) {
+                $vs = explode('_', $v);
+                $arr[$vs[0]] = $vs[1];
+            }
+            $data['ev'] = $arr;
+        } else {
+            $data['ev'] = [];
+        }
+
+        if(!empty($data['ev'])){
+            // 当前页
+            $page = isset($req['page']) ? $req['page'] : 1;
+            // 拼装查询条件
+            $where = [];
+            foreach ($data['ev'] as $k => $v) {
+                $where['category_attr_ids->' . $k] = $v;
+            }
+            // 手动创建分页
+            $cargoIds = $this->relLabelCargo->lists($where, ['cargo_id'])->toArray();
+            $cargos = $this->cargo->selectWhereIn('id', $cargoIds);
+            $cargos = new LengthAwarePaginator($cargos->forPage($page, PAGENUM), count($cargos), PAGENUM);
+            $cargos->setPath(''.$category_id);
+        }else{
+            // 获取货品列表
+            $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM);
+        }
+        
+        // 获取分类标签信息
+        $labelInfo = $this->category->find(['id' => $category_id])->labels;
+        
+        // 分类标签ID/名称配对
+        $labels = $labelInfo->pluck('category_label_name', 'id')->toArray();
+
+        // 分类标签值ID/名称配对
+        $lids = $labelInfo->pluck('id')->toArray();
+        $attrs = $this->categoryAttr->selectByWhereIn('category_label_id', $lids)->pluck('attribute_name', 'id')->toArray();
+
+        $data['category_id'] = $category_id;
+        $data['cargos'] = $cargos;
+        $data['labelInfo'] = $labelInfo;
+        $data['labels'] = $labels;
+        $data['attrs'] = $attrs;
+
+        return view('home.goods.list', compact('data'));
     }
 
     /**
      * 商品详情页
-     * 
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author zhulinjie
      */
-    public function goodsDetail()
+    public function goodsDetail($cargo_id)
     {
-        return view('home.goods.detail');
+        // 获取分类信息
+        $category = $this->category->select();
+
+        // 获取货品信息
+        $cargo = $this->cargo->find(['id' => $cargo_id]);
+
+        // 先判断当前商品拥有多少种规格
+        $standards = $this->relGoodsLabel->select(['goods_id' => $cargo->goods_id], 'created_at')->toArray();
+
+        // 只有一种规格的情况
+        $cids = [];
+        if (count($standards) == 1) {
+            $cids = $this->cargo->lists(['goods_id' => $cargo->goods_id], ['cargo_ids'])->toArray();
+        // 多种规格的情况
+        } else if (count($standards) > 1) {
+            $cargo_ids = json_decode($cargo->cargo_ids, 1);
+            foreach ($cargo_ids as $k => $v) {
+                $cids = array_unique(array_merge($cids, $this->cargo->lists(['cargo_ids->' . $k => $v], ['cargo_ids'])->toArray()));
+            }
+        }
+
+        /**
+         * array:3 [▼
+         * 0 => "{"1": "2", "2": "3"}"
+         * 1 => "{"1": "2", "2": "4"}"
+         * 2 => "{"1": "1", "2": "3"}"
+         * ]
+         */
+//        dd($cids);
+
+        // 转换格式
+        foreach ($cids as $val) {
+            foreach (json_decode($val, 1) as $k => $v) {
+                $tmp[] = $k . ':' . $v;
+            }
+        }
+
+        /**
+         * array:4 [▼
+         * 0 => "1:2"
+         * 1 => "2:3"
+         * 3 => "2:4"
+         * 4 => "1:1"
+         * ]
+         */
+        $cids = array_unique($tmp);
+
+        // 查找家谱树
+        $tree = array_reverse($this->tree($category->toArray(), $cargo->category_id));
+
+        // 获取商品标签
+        $goods = $this->goods->find(['id' => $cargo->goods_id]);
+
+        $data['category'] = $category;
+        $data['cargo'] = $cargo;
+        $data['tree'] = $tree;
+        $data['goods'] = $goods;
+        $data['cids'] = $cids;
+
+        return view('home.goods.detail', compact('data'));
+    }
+
+    /**
+     * 获取货品ID
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhulinjie
+     */
+    public function getCargoId(Request $request)
+    {
+        $data = $request->all();
+
+        // 判断货品ID在redis中是否存在
+        $cargo_ids = md5(json_encode($data));
+        if (\Redis::get(STRING_CARGO_STANDARD_ . $cargo_ids)) {
+            return responseMsg(\Redis::get(STRING_CARGO_STANDARD_ . $cargo_ids));
+        }
+
+        // 组合查询条件
+        $where = [];
+        foreach ($data as $k => $v) {
+            $where['cargo_ids->' . $k] = $v;
+        }
+
+        // 获取货品信息
+        $cargo = $this->cargo->find($where);
+
+        // 存入redis
+        \Redis::set(STRING_CARGO_STANDARD_ . $cargo_ids, $cargo->id);
+
+        if (!$cargo) {
+            return responseMsg('该货品不存在', 404);
+        }
+
+        return responseMsg($cargo->id);
     }
 
     /**
      * 购物车
-     * 
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author zhulinjie
      */
@@ -46,7 +274,32 @@ class GoodsController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @author zhulinjie
      */
-    public function sort(){
+    public function sort()
+    {
         return view('home.goods.sort');
+    }
+
+    /**
+     * 查找家谱树
+     *
+     * @param $arr
+     * @param $id
+     * @return array
+     * @author zhulinjie
+     */
+    public function tree($arr, $id)
+    {
+        $tree = array();
+        while ($id != 0) {
+            foreach ($arr as $v) {
+                if ($v['id'] == $id) {
+                    $tree[] = $v;
+
+                    $id = $v['pid'];
+                    break;
+                }
+            }
+        }
+        return $tree;
     }
 }

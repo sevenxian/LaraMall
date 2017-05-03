@@ -8,11 +8,18 @@
 
 namespace App\Repositories;
 
-
 use App\Model\Cargo;
+use App\Model\IndexGoods;
+use App\Tools\Analysis;
 
+/**
+ * Class CargoRepository
+ * @package App\Repositories
+ */
 class CargoRepository
 {
+    use BaseRepository;
+    
     /**
      * @var Cargo
      * @author zhulinjie
@@ -23,20 +30,21 @@ class CargoRepository
      * CargoRepository constructor.
      * @param Cargo $cargo
      */
-    public function __construct(Cargo $cargo)
+    public function __construct(Cargo $cargo, Analysis $analysis)
     {
-        $this->cargo = $cargo;
+        $this->model = $cargo;
     }
 
     /**
-     * 添加货品
+     * 通过whereIn获取多条数据
      * 
-     * @param $data
-     * @return static
+     * @param $fields
+     * @param array $ids
+     * @param array $where
+     * @return mixed
      * @author zhulinjie
      */
-    public function addCargo($data)
-    {
-        return $this->cargo->create($data);
+    public function selectWhereIn($fields, array $ids, array $where = []){
+        return $this->model->where($where)->whereIn($fields, $ids)->get();
     }
 }

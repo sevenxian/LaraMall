@@ -10,3 +10,4 @@ _ide_helper.php
 public/uploads
 /storage/debugbar
 /storage/*
+/storage/logs/laravel.log

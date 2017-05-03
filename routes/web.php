@@ -48,9 +48,11 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     // 用户登录处理
     Route::post('doLogin', 'UserController@doLogin');
     // 商品列表页
-    Route::get('goodsList', 'GoodsController@goodsList')->name('home.goodsList');
+    Route::get('goodsList/{category_id}', 'GoodsController@goodsList');
     // 商品详情页
-    Route::get('goodsDetail', 'GoodsController@goodsDetail')->name('home.goodsDetail');
+    Route::get('goodsDetail/{cargo_id}', 'GoodsController@goodsDetail');
+    // 获取货品ID
+    Route::post('getCargoId', 'GoodsController@getCargoId');
     // 分类
     Route::get('sort', 'GoodsController@sort')->name('home.sort');
     // 验证邮箱路由
@@ -91,6 +93,16 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::get('safety/idCard', 'SafetyController@idCard');
         // 安全设置 实名认证 处理
         Route::post('safety/handleIdCard', 'SafetyController@handleIdCard');
+        // 收货地址管理
+        Route::resource('address', 'AddressController');
+        // 商品收藏
+        Route::resource('GoodsCollection', 'GoodsCollectionController');
+        // 购物车 购物车列表
+        Route::get('shoppingCart', 'ShoppingCartController@index');
+        // 购物车 加入购物车
+        Route::post('addToShoppingCart', 'ShoppingCartController@store');
+        // 购物车 删除商品
+        Route::post('delShoppingCart', 'ShoppingCartController@destroy');
 
         // 退出登录
         Route::get('logout', 'UserController@logout');
@@ -163,14 +175,24 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
         // 货品管理
         Route::resource('cargo', 'CargoController');
+        // 货品添加
+        Route::get('addCargo/{goods_id}', 'CargoController@addCargo');
         // 获取货品的分类信息
-        Route::resource('cargo/detail', 'CargoController@detail');
+        Route::post('cargo/detail', 'CargoController@detail');
         // 添加分类标签值
-        Route::resource('addCategoryAttr', 'CargoController@addCategoryAttr');
+        Route::post('addCategoryAttr', 'CargoController@addCategoryAttr');
         // 添加商品标签值
-        Route::resource('addGoodsAttr', 'CargoController@addGoodsAttr');
+        Route::post('addGoodsAttr', 'CargoController@addGoodsAttr');
         // 上传货品图片
         Route::post('cargoImgUpload', 'CargoController@cargoImgUpload');
+        // 货品列表界面
+        Route::get('cargoList/{goods_id}', 'CargoController@cargoList');
+        // 获取货品列表数据
+        Route::post('getCargoList', 'CargoController@getCargoList');
+        // 获取推荐位相关数据
+        Route::post('getRecommend', 'CargoController@getRecommend');
+        // 选择推荐位
+        Route::post('selectRecommend', 'CargoController@selectRecommend');
 
         // 权限块
         Route::resource('acl', 'AclController');

@@ -4,6 +4,10 @@ namespace App\Repositories;
 
 use App\Model\AdminUser;
 
+/**
+ * Class AdminUserRepository
+ * @package App\Repositories
+ */
 class AdminUserRepository
 {
     /**
@@ -94,7 +98,8 @@ class AdminUserRepository
      */
     public function deleteOneData($id)
     {
-        return $this->adminUser->destroy($id);
+//        return $this->adminUser->delete($id);
+        dd($this->adminUser->where('id', $id)->delete());
     }
 
     /**

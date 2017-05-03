@@ -15,6 +15,8 @@ use App\Model\Recommend;
  */
 class RecommendRepository
 {
+    use BaseRepository;
+    
     /**
      * @var Recommend
      * @author Luoyan
@@ -30,59 +32,9 @@ class RecommendRepository
      */
     public function __construct(Recommend $recommend)
     {
-        $this->recommend = $recommend;
+        $this->model = $recommend;
     }
-
-    /**
-     * 创建推荐位
-     *
-     * @param array $data
-     * @return static
-     * @author: Luoyan
-     */
-    public function createRecommend(array $data)
-    {
-        return $this->recommend->create($data);
-    }
-
-    /**
-     * 分类搜索分页
-     *
-     * @param int $perPage
-     * @param array $where
-     * @return mixed
-     * @author: Luoyan
-     */
-    public function recommendPaginate($perPage = 10, array $where = [])
-    {
-        return $this->recommend->withTrashed()->where($where)->orderBy('created_at', 'desc')->paginate($perPage);
-    }
-
-    /**
-     * 根据 Id 修改信息
-     *
-     * @param $id
-     * @param array $data
-     * @return mixed
-     * @author: Luoyan
-     */
-    public function updateById($id, array $data)
-    {
-        return $this->recommend->where('id', $id)->update($data);
-    }
-
-    /**
-     * 根据 id 查找数据
-     *
-     * @param $id
-     * @return mixed
-     * @author: Luoyan
-     */
-    public function findById($id)
-    {
-        return $this->recommend->find($id);
-    }
-
+    
     /**
      * 获取所有推荐位 / 包括推荐位下面得商品
      *
@@ -91,6 +43,6 @@ class RecommendRepository
      */
     public function recommendWithGoods()
     {
-        return $this->recommend->with('goods')->get();
+        return $this->model->with('cargos')->get();
     }
 }

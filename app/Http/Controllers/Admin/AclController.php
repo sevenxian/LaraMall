@@ -108,7 +108,7 @@ class AclController extends Controller
     public function permission(CreatePermissionRequest $request)
     {
         // 添加角色并且判读是否成功
-        if ($this->permission->createRole($request->all())) {
+        if ($this->permission->insert($request->all())) {
             // 成功跳转角色列表
             return back()->with('success', '添加成功!');
         }
@@ -127,7 +127,7 @@ class AclController extends Controller
     public function store(CreateRoleRequest $request)
     {
         // 添加角色并且判读是否成功
-        if ($this->role->createRole($request->all())) {
+        if ($this->role->insert($request->all())) {
             // 写入日志
             $logMsg = $this->common->logMessageForInside(\Auth::guard('admin')->id(), config('log.adminLog')[11]);
             $this->log->writeAdminLog($logMsg);
@@ -150,7 +150,7 @@ class AclController extends Controller
     public function aclList(Request $request)
     {
         // 获取分页或搜索后的数据
-        return $this->role->aclPaginate($request->get('perPage'), $request->get('where'));
+        return $this->role->paging($request->get('where'), $request->get('perPage'));
     }
 
     /**
@@ -166,9 +166,9 @@ class AclController extends Controller
         // 除去请求中得 _token 字段
         $data = $request->except(['_token']);
         // 修改分类数据, 判断返回结果
-        if ($this->role->updateById($id, $data)) {
+        if ($this->role->update(['id' => $id], $data)) {
             // 查询更新后的值
-            $data = $this->role->findById($id);
+            $data = $this->role->find(['id' => $id]);
 
             // 成功返回修改数据
             return responseMsg($data, 200);
@@ -188,7 +188,7 @@ class AclController extends Controller
     public function show($id)
     {
         // 获取所有权限
-        $permissions = $this->permission->fetchPermissions();
+        $permissions = $this->permission->select();
         // 判断是否有权限数据
         if (!$permissions->toArray()) {
             // 暂无权限
@@ -224,7 +224,7 @@ class AclController extends Controller
     public function syncPermissions(Request $request, $id)
     {
         // 查询当前角色
-        $role = $this->role->findById($id);
+        $role = $this->role->find(['id' => $id]);
         // 同步角色权限
         $role->syncPermissions($request->all());
     }

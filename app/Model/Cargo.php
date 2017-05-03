@@ -21,6 +21,17 @@ class Cargo extends Model
      * @author zhulinjie
      */
     protected $fillable = [
-        'category_id', 'goods_id', 'cargo_ids', 'cargo_cover', 'inventory', 'cargo_price', 'cargo_discount', 'cargo_original', 'cargo_info'
+        'category_id', 'goods_id', 'cargo_ids', 'cargo_cover', 'inventory', 'cargo_name', 'cargo_price', 'cargo_discount', 'cargo_original', 'cargo_info'
     ];
+
+    /**
+     * 多对一关联 / 一个货品属于某一个商品 
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @author zhulinjie
+     */
+    public function goods()
+    {
+        return $this->belongsTo(Goods::class, 'goods_id');
+    }
 }

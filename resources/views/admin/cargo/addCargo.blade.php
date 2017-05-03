@@ -25,6 +25,7 @@
                         </header>
                         <div class="panel-body">
                             <form id="cargo" class="form-horizontal" role="form">
+                                {{ csrf_field() }}
                                 <div class="form-group">
                                     <label for="category" class="col-md-1 control-label">商品分类</label>
                                     <div class="col-md-11">
@@ -37,6 +38,12 @@
                                     <div class="col-md-11">
                                         <p class="form-control-static">@{{ goods.goods_title }}</p>
                                         <input type="hidden" name="goods_id" :value="goods.id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cargo_name" class="col-md-1 control-label">货品名称</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="cargo_name" v-model="cargo_name" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -84,7 +91,7 @@
                                     <div class="col-md-11">
                                         <div class="radios" style="padding-top: 8px;">
                                             <div class="row">
-                                                <div class="col-md-3" v-for="attribute in goodsLabel.labels">
+                                                <div class="col-md-3" v-for="attribute in goodsLabel.attrs">
                                                     <label class="label_radio" @click="selectLabel">
                                                         <input :name="'goodsLabel'+goodsLabel.id" :value="attribute.id" type="radio" />@{{ attribute.goods_label_name }}
                                                     </label>
@@ -166,9 +173,9 @@
         // 商品ID
         var goods_id = '{{ $id }}';
     </script>
-    <script src="/admins/handle/cargo/show.js"></script>
+    <script src="/admins/handle/cargo/addCargo.js"></script>
     <!-- 页面表单验证 js -->
-    <script src="/admins/handle/cargo/show_validation.js"></script>
+    <script src="/admins/handle/cargo/addCargo_validation.js"></script>
     <!-- 实例化编辑器 -->
     <script type="text/javascript">
         var ue = UE.getEditor('cargo_info');

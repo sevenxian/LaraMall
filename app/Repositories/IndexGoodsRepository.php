@@ -4,8 +4,14 @@ namespace App\Repositories;
 
 use App\Model\IndexGoods;
 
+/**
+ * Class IndexGoodsRepository
+ * @package App\Repositories
+ */
 class IndexGoodsRepository
 {
+    use BaseRepository;
+    
     /**
      * @var IndexGoods
      */
@@ -17,11 +23,6 @@ class IndexGoodsRepository
      */
     public function __construct(IndexGoods $indexGoods)
     {
-        $this->indexGoods = $indexGoods;
-    }
-
-    public function add($data)
-    {
-        return $this->indexGoods->create($data);
+        $this->model = $indexGoods;
     }
 }
