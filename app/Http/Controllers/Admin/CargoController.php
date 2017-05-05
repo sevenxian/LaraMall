@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\ActivityRepository;
 use App\Repositories\CargoRepository;
 use App\Repositories\CategoryAttributeRepository;
 use App\Repositories\CategoryRepository;
@@ -10,6 +11,7 @@ use App\Repositories\GoodsAttributeRepository;
 use App\Repositories\GoodsRepository;
 use App\Repositories\IndexGoodsRepository;
 use App\Repositories\RecommendRepository;
+use App\Repositories\RelGoodsActivityRepository;
 use App\Repositories\RelGoodsAttrRepository;
 use App\Repositories\RelLabelCargoRepository;
 use App\Repositories\RelRecommendGoodRepository;
@@ -107,7 +109,7 @@ class CargoController extends Controller
     protected $relRG;
 
     /**
-     * 商品标签值关联
+     * 商品标签值关联操作类
      *
      * @var
      * @author zhulinjie
@@ -501,7 +503,7 @@ class CargoController extends Controller
             $tmp = [];
             if(!empty($recommends)){
                 foreach($recommends as $recommend){
-                    $tmp[] = $this->recommend->findById(['id' => $recommend->recommend_id]);
+                    $tmp[] = $this->recommend->find(['id' => $recommend->recommend_id]);
                 }
             }
             $cargo->recommends = $tmp;
@@ -558,7 +560,7 @@ class CargoController extends Controller
         }
 
         // 获取货品对应的推荐位的所有ID
-        $recommendCargoIds = $this->relRG->fetchRecommendIds(['cargo_id' => $data['cargo_id']], ['recommend_id'])->toArray();
+        $recommendCargoIds = $this->relRG->lists(['cargo_id' => $data['cargo_id']], ['recommend_id'])->toArray();
 
         // 求出现在选择的推荐位与已有的推荐位的交集
         $intersect = array_intersect($data['recommend_id'], $recommendCargoIds);

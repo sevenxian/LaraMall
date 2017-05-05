@@ -11,7 +11,7 @@
 @stop
 
 @section('customCss')
-    <link type="text/css" href="/css/goodsDetail.css" rel="stylesheet"/>
+    <link type="text/css" href="/css/custom/goodsDetail.css" rel="stylesheet"/>
 @stop
 
 @section('coreJs')
@@ -25,6 +25,9 @@
     <script type="text/javascript" src="/js/jquery.flexslider.js"></script>
     <script>
         var csrf_token = '{{ csrf_token() }}';
+        @if($data['activity']->cargoActivity)
+            var intDiff = parseInt('{{ $data['activity']->length * 60 - (time() - $data['activity']->start_timestamp) }}');
+        @endif
     </script>
     <script type="text/javascript" src="/js/list.js"></script>
 @stop
@@ -153,14 +156,21 @@
                 <div class="tb-detail-list">
                     <!--价格-->
                     <div class="tb-detail-price">
-                        <li class="price iteminfo_price">
-                            <dt>促销价</dt>
-                            <dd><em>¥</em><b class="sys_item_price">{{ $data['cargo']->cargo_discount }}</b></dd>
-                        </li>
-                        <li class="price iteminfo_mktprice">
-                            <dt>原价</dt>
-                            <dd><em>¥</em><b class="sys_item_mktprice">{{ $data['cargo']->cargo_price }}</b></dd>
-                        </li>
+                        @if($data['activity']->cargoActivity)
+                            <li class="price iteminfo_price">
+                                <dt>秒杀价</dt>
+                                <dd><em>¥</em><b class="sys_item_price">{{ $data['activity']->cargoActivity->promotion_price }}</b></dd>
+                            </li>
+                            <li class="price iteminfo_mktprice">
+                                <dt>原价</dt>
+                                <dd><em>¥</em><b class="sys_item_mktprice">{{ $data['cargo']->cargo_price }}</b></dd>
+                            </li>
+                        @else
+                            <li class="price iteminfo_price">
+                                <dt>价格</dt>
+                                <dd><em>¥</em><b class="sys_item_price">{{ $data['cargo']->cargo_price }}</b></dd>
+                            </li>
+                        @endif
                         <div class="clear"></div>
                     </div>
 
@@ -270,25 +280,32 @@
                     </dl>
                     <div class="clear"></div>
                     <!--活动	-->
-                    <div class="shopPromotion gold">
-                        <div class="hot">
-                            <dt class="tb-metatit">店铺优惠</dt>
-                            <div class="gold-list">
-                                <p>购物满2件打8折，满3件7折<span>点击领券<i class="am-icon-sort-down"></i></span></p>
+                    @if($data['activity']->cargoActivity)
+                        <div class="shopPromotion gold activity">
+                            <span class="intDiff"></span>
+                            <h3>京东秒杀</h3>
+                        </div>
+                    @else
+                        <div class="shopPromotion gold">
+                            <div class="hot">
+                                <dt class="tb-metatit">店铺优惠</dt>
+                                <div class="gold-list">
+                                    <p>购物满2件打8折，满3件7折<span>点击领券<i class="am-icon-sort-down"></i></span></p>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="coupon">
+                                <dt class="tb-metatit">优惠券</dt>
+                                <div class="gold-list">
+                                    <ul>
+                                        <li>125减5</li>
+                                        <li>198减10</li>
+                                        <li>298减20</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <div class="clear"></div>
-                        <div class="coupon">
-                            <dt class="tb-metatit">优惠券</dt>
-                            <div class="gold-list">
-                                <ul>
-                                    <li>125减5</li>
-                                    <li>198减10</li>
-                                    <li>298减20</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
 
                 <div class="pay">

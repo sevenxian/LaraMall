@@ -16,7 +16,7 @@ class RelCategoryLabelRepository
      * @var RelCategoryLabel
      * @author Luoyan
      */
-    protected $relCategoryLabel;
+    protected $model;
 
     /**
      * 关联表模型注入

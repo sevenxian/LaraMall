@@ -15,7 +15,7 @@ class CategoryRepository
     /**
      * @var Category
      */
-    protected $category;
+    protected $model;
 
     /**
      * 服务注入

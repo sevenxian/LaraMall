@@ -194,6 +194,18 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 选择推荐位
         Route::post('selectRecommend', 'CargoController@selectRecommend');
 
+        // 对货品做活动
+        Route::resource('cargoActivity', 'CargoActivityController');
+        // 获取所有活动，暂时只做秒杀活动
+        Route::post('getActivity', 'CargoActivityController@getActivity');
+        // 获取在做活动的货品列表
+        Route::post('cargoActivityList', 'CargoActivityController@cargoActivityList');
+        
+        // 活动管理
+        Route::resource('activity', 'ActivityController');
+        // 获取活动列表
+        Route::post('activityList', 'ActivityController@activityList');
+
         // 权限块
         Route::resource('acl', 'AclController');
         // 角色列表

@@ -23,6 +23,7 @@
 @stop
 
 @section('nav')
+    @inject('HomeIndexPresenter', 'App\Presenters\HomeIndexPresenter')
     <div class="banner">
         <!--轮播 -->
         <div class="am-slider am-slider-default scoll" data-am-flexslider id="demo-slider-0">
@@ -60,34 +61,38 @@
                     <div class="category-content" id="guide_2">
                         <div class="category">
                             <ul class="category-list" id="js_climit_li">
-                                @foreach($categorys as $category)
+                                @foreach($data['categorys'] as $category)
                                     <li class="appliance js_toggle relative first">
-                                    <div class="category-info">
-                                        <h3 class="category-name b-category-name">
-                                            <a class="ml-22" title="{{ $category->name }}">{{ $category->name }}</a>
-                                        </h3>
-                                        <em>&gt;</em>
-                                    </div>
-                                    <div class="menu-item menu-in top">
-                                        <div class="area-in">
-                                            <div class="area-bg">
-                                                <div class="menu-srot">
-                                                    <div class="sort-side">
-                                                        @foreach($category->children as $children)
-                                                            <dl class="dl-sort">
-                                                                <dt><span title="{{ $children->name }}">{{ $children->name }}</span></dt>
-                                                                @foreach($children->grandchild as $grandchild)
-                                                                    <dd><a title="{{ $grandchild->name }}" href="/home/goodsList/{{ $grandchild->id }}"><span>{{ $grandchild->name }}</span></a></dd>
-                                                                @endforeach
-                                                            </dl>
-                                                        @endforeach
+                                        <div class="category-info">
+                                            <h3 class="category-name b-category-name">
+                                                <a class="ml-22" title="{{ $category->name }}">{{ $category->name }}</a>
+                                            </h3>
+                                            <em>&gt;</em>
+                                        </div>
+                                        <div class="menu-item menu-in top">
+                                            <div class="area-in">
+                                                <div class="area-bg">
+                                                    <div class="menu-srot">
+                                                        <div class="sort-side">
+                                                            @foreach($category->children as $children)
+                                                                <dl class="dl-sort">
+                                                                    <dt>
+                                                                        <span title="{{ $children->name }}">{{ $children->name }}</span>
+                                                                    </dt>
+                                                                    @foreach($children->grandchild as $grandchild)
+                                                                        <dd><a title="{{ $grandchild->name }}"
+                                                                               href="/home/goodsList/{{ $grandchild->id }}"><span>{{ $grandchild->name }}</span></a>
+                                                                        </dd>
+                                                                    @endforeach
+                                                                </dl>
+                                                            @endforeach
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <b class="arrow"></b>
-                                </li>
+                                        <b class="arrow"></b>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -209,9 +214,7 @@
 @section('content')
     <div class="shopMainbg">
         <div class="shopMain" id="shopmain">
-
             <!--今日推荐 -->
-
             <div class="am-g am-g-fixed recommendation">
                 <div class="clock am-u-sm-3"
                 ">
@@ -245,435 +248,56 @@
                     <img src="/images/tj2.png "></img>
                 </div>
             </div>
-
         </div>
         <div class="clear "></div>
-        <!--热门活动 -->
-
-        <div class="am-container activity ">
-            <div class="shopTitle ">
-                <h4>活动</h4>
-                <h3>每期活动 优惠享不停 </h3>
-                <span class="more ">
-                              <a class="more-link " href="# ">全部活动</a>
-                            </span>
-            </div>
-
-            <div class="am-g am-g-fixed ">
-                <div class="am-u-sm-3 ">
-                    <div class="icon-sale one "></div>
-                    <h4>秒杀</h4>
-                    <div class="activityMain ">
-                        <img src="/images/activity1.jpg "></img>
-                    </div>
-                    <div class="info ">
-                        <h3>春节送礼优选</h3>
-                    </div>
+        @if($data['activity'])
+            <!--热门活动 -->
+            <div class="am-container activity ">
+                <div class="shopTitle ">
+                    <h4>{{ $data['activity']->name }}</h4>
+                    <h3>{{ $data['activity']->desc }}</h3>
+                    <span class="more intDiff"></span>
                 </div>
-
-                <div class="am-u-sm-3 ">
-                    <div class="icon-sale two "></div>
-                    <h4>特惠</h4>
-                    <div class="activityMain ">
-                        <img src="/images/activity2.jpg "></img>
-                    </div>
-                    <div class="info ">
-                        <h3>春节送礼优选</h3>
-                    </div>
-                </div>
-
-                <div class="am-u-sm-3 ">
-                    <div class="icon-sale three "></div>
-                    <h4>团购</h4>
-                    <div class="activityMain ">
-                        <img src="/images/activity3.jpg "></img>
-                    </div>
-                    <div class="info ">
-                        <h3>春节送礼优选</h3>
-                    </div>
-                </div>
-
-                <div class="am-u-sm-3 last ">
-                    <div class="icon-sale "></div>
-                    <h4>超值</h4>
-                    <div class="activityMain ">
-                        <img src="/images/activity.jpg "></img>
-                    </div>
-                    <div class="info ">
-                        <h3>春节送礼优选</h3>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="clear "></div>
-
-        <!-- 循环楼位 -->
-    @foreach($recommends as $recommend)
-        <!-- 样式一 -->
-            @if($recommend->recommend_type == 1)
-                <div class="am-container ">
-                    <div class="shopTitle ">
-                        <h4>{{ $recommend->recommend_name }}</h4>
-                        <h3>{{ $recommend->recommend_introduction }}</h3>
-                        <span class="more ">
-                    <a class="more-link " href="# ">更多...</a>
-                        </span>
-                    </div>
-                </div>
-                <div class="am-g am-g-fixed floodOne ">
-                    @foreach($recommend->cargos->chunk(6) as $goods)
-                        <div class="am-u-sm-5 am-u-md-3 am-u-lg-4 text-one ">
-                            <a href="# ">
-                                <div class="outer-con ">
-                                    <div class="title ">
-                                        零食大礼包开抢啦
-                                    </div>
-                                    <div class="sub-title ">
-                                        当小鱼儿恋上软豆腐
-                                    </div>
-                                </div>
-                                <img src="/images/act1.png "/>
-                            </a>
-                        </div>
-
-                        <div class="am-u-sm-7 am-u-md-5 am-u-lg-4">
-                            <div class="text-two">
-                                <div class="outer-con ">
-                                    <div class="title ">
-                                        雪之恋和风大福
-                                    </div>
-                                    <div class="sub-title ">
-                                        仅售：¥13.8
-                                    </div>
-
-                                </div>
-                                <a href="# "><img src="/images/act2.png "/></a>
-                            </div>
-                            <div class="text-two last">
-                                <div class="outer-con ">
-                                    <div class="title ">
-                                        雪之恋和风大福
-                                    </div>
-                                    <div class="sub-title ">
-                                        仅售：¥13.8
-                                    </div>
-
-                                </div>
-                                <a href="# "><img src="/images/act2.png "/></a>
-                            </div>
-                        </div>
-                        <div class="am-u-sm-12 am-u-md-4">
-                            <div class="am-u-sm-3 am-u-md-6 text-three">
-                                <div class="outer-con ">
-                                    <div class="title ">
-                                        小优布丁
-                                    </div>
-
-                                    <div class="sub-title ">
-                                        尝鲜价：¥4.8
-                                    </div>
-                                </div>
-                                <a href="# "><img src="/images/act3.png "/></a>
-                            </div>
-
-                            <div class="am-u-sm-3 am-u-md-6 text-three">
-                                <div class="outer-con ">
-                                    <div class="title ">
-                                        小优布丁
-                                    </div>
-
-                                    <div class="sub-title ">
-                                        尝鲜价：¥4.8
-                                    </div>
-                                </div>
-                                <a href="# "><img src="/images/act3.png "/></a>
-                            </div>
-
-                            <div class="am-u-sm-3 am-u-md-6 text-three">
-                                <div class="outer-con ">
-                                    <div class="title ">
-                                        小优布丁
-                                    </div>
-
-                                    <div class="sub-title ">
-                                        尝鲜价：¥4.8
-                                    </div>
-                                </div>
-                                <a href="# "><img src="/images/act3.png "/></a>
-                            </div>
-
-                            <div class="am-u-sm-3 am-u-md-6 text-three last ">
-                                <div class="outer-con ">
-                                    <div class="title ">
-                                        小优布丁
-                                    </div>
-
-                                    <div class="sub-title ">
-                                        尝鲜价：¥4.8
-                                    </div>
-                                </div>
-                                <a href="# "><img src="/images/act3.png "/></a>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="clear "></div>
-            @endif
-        <!-- 样式二 -->
-            @if($recommend->recommend_type == 2)
-                <div class="am-container ">
-                    <div class="shopTitle ">
-                        <h4>坚果</h4>
-                        <h3>酥酥脆脆，回味无穷</h3>
-                        <div class="today-brands ">
-                            <a href="# ">腰果</a>
-                            <a href="# ">松子</a>
-                            <a href="# ">夏威夷果 </a>
-                            <a href="# ">碧根果</a>
-                            <a href="# ">开心果</a>
-                            <a href="# ">核桃仁</a>
-                        </div>
-                        <span class="more ">
-                    <a class="more-link " href="# ">更多美味</a>
-                        </span>
-                    </div>
-                </div>
-                <div class="am-g am-g-fixed floodTwo ">
-
-
-                    <div class="am-u-sm-5 am-u-md-4 text-one ">
-                        <a href="# ">
-                            <img src="/images/act1.png "/>
-                            <div class="outer-con ">
-                                <div class="title ">
-                                    零食大礼包开抢啦
-                                </div>
-                                <div class="sub-title ">
-                                    当小鱼儿恋上软豆腐
-                                </div>
-
-                            </div>
-                        </a>
-                    </div>
-                    <div class="am-u-sm-7 am-u-md-4 am-u-lg-2 text-two">
-                        <div class="outer-con ">
-                            <div class="title ">
-                                雪之恋和风大福
-                            </div>
-
-                            <div class="sub-title ">
-                                仅售：¥13.8
-                            </div>
-                        </div>
-                        <a href="# "><img src="/images/5.jpg "/></a>
-                    </div>
-
-                    <div class="am-u-md-4 am-u-lg-2 text-three">
-                        <div class="outer-con ">
-                            <div class="title ">
-                                小优布丁
-                            </div>
-
-                            <div class="sub-title ">
-                                尝鲜价：¥4.8
-                            </div>
-                        </div>
-                        <a href="# "><img src="/images/act3.png "/></a>
-                    </div>
-                    <div class="am-u-md-4 am-u-lg-2 text-three">
-                        <div class="outer-con ">
-                            <div class="title ">
-                                小优布丁
-                            </div>
-
-                            <div class="sub-title ">
-                                尝鲜价：¥4.8
-                            </div>
-                        </div>
-                        <a href="# "><img src="/images/act3.png "/></a>
-                    </div>
-                    <div class="am-u-sm-6 am-u-md-4 am-u-lg-2 text-two ">
-                        <div class="outer-con ">
-                            <div class="title ">
-                                雪之恋和风大福
-                            </div>
-
-                            <div class="sub-title ">
-                                仅售：¥13.8
-                            </div>
-                        </div>
-                        <a href="# "><img src="/images/5.jpg "/></a>
-                    </div>
-                    <div class="am-u-sm-6 am-u-md-3 am-u-lg-2 text-four ">
-                        <div class="outer-con ">
-                            <div class="title ">
-                                雪之恋和风大福
-                            </div>
-
-                            <div class="sub-title ">
-                                仅售：¥13.8
-                            </div>
-                        </div>
-                        <a href="# "><img src="/images/5.jpg "/></a>
-                    </div>
-                    <div class="am-u-sm-4 am-u-md-3 am-u-lg-4 text-five">
-                        <div class="outer-con ">
-                            <div class="title ">
-                                小优布丁
-                            </div>
-                            <div class="sub-title ">
-                                尝鲜价：¥4.8
-                            </div>
-
-                        </div>
-                        <a href="# "><img src="/images/act2.png "/></a>
-                    </div>
-                    <div class="am-u-sm-4 am-u-md-3 am-u-lg-2 text-six">
-                        <div class="outer-con ">
-                            <div class="title ">
-                                小优布丁
-                            </div>
-
-                            <div class="sub-title ">
-                                尝鲜价：¥4.8
-                            </div>
-                        </div>
-                        <a href="# "><img src="/images/act3.png "/></a>
-                    </div>
-                    <div class="am-u-sm-4 am-u-md-3 am-u-lg-4 text-five">
-                        <div class="outer-con ">
-                            <div class="title ">
-                                小优布丁
-                            </div>
-                            <div class="sub-title ">
-                                尝鲜价：¥4.8
-                            </div>
-
-                        </div>
-                        <a href="# "><img src="/images/act2.png "/></a>
-                    </div>
-                </div>
-                <div class="clear "></div>
-            @endif
-
-        <!-- 样式三 -->
-            @if($recommend->recommend_type == 3)
-                <div class="am-container ">
-                    <div class="shopTitle ">
-                        <h4>海味</h4>
-                        <h3>你是我的优乐美么？不，我是你小鱼干</h3>
-                        <div class="today-brands ">
-                            <a href="# ">小鱼干</a>
-                            <a href="# ">海苔</a>
-                            <a href="# ">鱿鱼丝</a>
-                            <a href="# ">海带丝</a>
-                        </div>
-                        <span class="more ">
-                    <a class="more-link " href="# ">更多美味</a>
-                        </span>
-                    </div>
-                </div>
-                <div class="am-g am-g-fixed flood method3 ">
-                    <ul class="am-thumbnails ">
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp.jpg "/>
-                                    <div class="pro-title ">萨拉米 1+1小鸡腿</div>
-                                    <span class="e-price ">￥29.90</span>
+                <div class="am-g am-g-fixed">
+                    <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-thumbnails">
+                        @foreach($data['activity']->relGoodsActivitys as $relGoodsActivity)
+                            <li>
+                                <a href="/home/goodsDetail/{{ $relGoodsActivity->cargo->id }}">
+                                    <img src="{{ env('QINIU_DOMAIN') }}{{ $relGoodsActivity->cargo->cargo_cover }}?imageView2/1/w/350/h/350"/>
+                                    <div class="pro-title ">{{ str_limit($relGoodsActivity->cargo->cargo_name, 50, '...') }}</div>
+                                    <span class="e-price ">￥{{ $relGoodsActivity->cargo->cargo_price }}</span> <span class="seckill-price"><i>¥</i><del>{{ $relGoodsActivity->promotion_price }}</del></span>
                                 </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp2.jpg "/>
-                                    <div class="pro-title ">ZEK 原味海苔</div>
-                                    <span class="e-price ">￥8.90</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp.jpg "/>
-                                    <div class="pro-title ">萨拉米 1+1小鸡腿</div>
-                                    <span class="e-price ">￥29.90</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp2.jpg "/>
-                                    <div class="pro-title ">ZEK 原味海苔</div>
-                                    <span class="e-price ">￥8.90</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp.jpg "/>
-                                    <div class="pro-title ">萨拉米 1+1小鸡腿</div>
-                                    <span class="e-price ">￥29.90</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp2.jpg "/>
-                                    <div class="pro-title ">ZEK 原味海苔</div>
-                                    <span class="e-price ">￥8.90</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp.jpg "/>
-                                    <div class="pro-title ">萨拉米 1+1小鸡腿</div>
-                                    <span class="e-price ">￥29.90</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp2.jpg "/>
-                                    <div class="pro-title ">ZEK 原味海苔</div>
-                                    <span class="e-price ">￥8.90</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp.jpg "/>
-                                    <div class="pro-title ">萨拉米 1+1小鸡腿</div>
-                                    <span class="e-price ">￥29.90</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="list ">
-                                <a href="# ">
-                                    <img src="/images/cp2.jpg "/>
-                                    <div class="pro-title ">ZEK 原味海苔</div>
-                                    <span class="e-price ">￥8.90</span>
-                                </a>
-                            </div>
-                        </li>
-
+                            </li>
+                        @endforeach
                     </ul>
-
                 </div>
-                <div class="clear"></div>
-            @endif
-        @endforeach
+            </div>
+            <div class="clear "></div>
+        @endif
 
+        @foreach($data['recommends'] as $recommend)
+            <!-- 海味 -->
+            <div class="am-container activity">
+                <div class="shopTitle ">
+                    <h4>{{ $recommend->recommend_name }}</h4>
+                    <h3>{{ $recommend->recommend_introduction }}</h3>
+                </div>
+                <div class="am-g am-g-fixed">
+                    <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-thumbnails">
+                        @foreach($recommend->cargos as $cargo)
+                            <li>
+                                <a href="/home/goodsDetail/{{ $cargo->id }}">
+                                    <img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/350/h/350"/>
+                                    <div class="pro-title ">{{ str_limit($cargo->cargo_name, 50, '...') }}</div>
+                                    <span class="e-price ">￥{{ $cargo->cargo_price }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            <div class="clear"></div>
+        @endforeach
         @include('home.public.footer')
     </div>
     </div>
@@ -688,5 +312,12 @@
     <script>
         window.jQuery || document.write('<script src="basic/js/jquery.min.js "><\/script>');
     </script>
-    <script type="text/javascript " src="/basic/js/quick_links.js "></script>
+    <script type="text/javascript " src="/basic/js/quick_links.js"></script>
+    <script>
+        @if($data['activity'])
+            // 获取距离活动开始的秒数或者距离活动结束的秒数
+            var intDiff = parseInt('{{ $HomeIndexPresenter->diffSeconds($data['activity']->start_timestamp, $data['activity']->length) }}');
+        @endif
+    </script>
+    <script type="text/javascript " src="/handle/index.js"></script>
 @stop

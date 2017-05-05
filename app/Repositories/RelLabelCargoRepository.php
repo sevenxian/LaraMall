@@ -22,7 +22,7 @@ class RelLabelCargoRepository
      * @var RelLabelCargo
      * @author zhulinjie
      */
-    protected $relLabelCargo;
+    protected $model;
 
     /**
      * RelLabelCargoRepository constructor.

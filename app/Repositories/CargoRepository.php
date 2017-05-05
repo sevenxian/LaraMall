@@ -19,12 +19,12 @@ use App\Tools\Analysis;
 class CargoRepository
 {
     use BaseRepository;
-    
+
     /**
      * @var Cargo
      * @author zhulinjie
      */
-    protected $cargo;
+    protected $model;
 
     /**
      * CargoRepository constructor.

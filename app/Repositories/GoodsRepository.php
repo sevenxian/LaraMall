@@ -15,7 +15,7 @@ class GoodsRepository
     /**
      * @var
      */
-    protected $goods;
+    protected $model;
     
     /**
      * GoodsRepository constructor.

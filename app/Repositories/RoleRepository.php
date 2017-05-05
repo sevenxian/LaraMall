@@ -17,7 +17,7 @@ class RoleRepository
      * @var Role
      * @author Luoyan
      */
-    protected $role;
+    protected $model;
 
     /**
      * 模型注入

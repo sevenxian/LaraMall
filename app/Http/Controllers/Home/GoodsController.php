@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\ActivityRepository;
 use App\Repositories\CargoRepository;
 use App\Repositories\CategoryAttributeRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsRepository;
+use App\Repositories\RelGoodsActivityRepository;
 use App\Repositories\RelGoodsLabelRepository;
 use App\Repositories\RelLabelCargoRepository;
 use Illuminate\Http\Request;
@@ -63,6 +65,22 @@ class GoodsController extends Controller
     protected $relLabelCargo;
 
     /**
+     * 活动操作类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $activity;
+
+    /**
+     * 商品活动关联操作类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $relGoodsActivity;
+
+    /**
      * GoodsController constructor.
      * @param CargoRepository $cargoRepository
      * @param CategoryRepository $categoryRepository
@@ -75,7 +93,9 @@ class GoodsController extends Controller
         GoodsRepository $goodsRepository,
         RelGoodsLabelRepository $relGoodsLabelRepository,
         CategoryAttributeRepository $categoryAttributeRepository,
-        RelLabelCargoRepository $relLabelCargoRepository
+        RelLabelCargoRepository $relLabelCargoRepository,
+        ActivityRepository $activityRepository,
+        RelGoodsActivityRepository $relGoodsActivityRepository
     )
     {
         // 注入货品操作类
@@ -90,6 +110,10 @@ class GoodsController extends Controller
         $this->categoryAttr = $categoryAttributeRepository;
         // 分类标签值与货品关联表
         $this->relLabelCargo = $relLabelCargoRepository;
+        // 注入活动操作类
+        $this->activity = $activityRepository;
+        // 商品活动操作类
+        $this->relGoodsActivity = $relGoodsActivityRepository;
     }
 
     /**
@@ -101,7 +125,7 @@ class GoodsController extends Controller
     public function goodsList(Request $request, $category_id)
     {
         $req = $request->all();
-
+        
         // 获取标签搜索条件
         if (isset($req['ev']) && !empty($req['ev'])) {
             $ev = explode('%', $req['ev']);
@@ -165,6 +189,11 @@ class GoodsController extends Controller
         // 获取货品信息
         $cargo = $this->cargo->find(['id' => $cargo_id]);
 
+        // 获取正在进行的活动
+        $currentTimestamp = time();
+        $activity = $this->activity->ongoingActivities($currentTimestamp);
+        $activity->cargoActivity = $this->relGoodsActivity->find(['cargo_id' => $cargo->id, 'activity_id' => $activity->id]);
+
         // 先判断当前商品拥有多少种规格
         $standards = $this->relGoodsLabel->select(['goods_id' => $cargo->goods_id], 'created_at')->toArray();
 
@@ -217,6 +246,7 @@ class GoodsController extends Controller
         $data['tree'] = $tree;
         $data['goods'] = $goods;
         $data['cids'] = $cids;
+        $data['activity'] = $activity;
 
         return view('home.goods.detail', compact('data'));
     }

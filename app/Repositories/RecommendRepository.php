@@ -21,7 +21,7 @@ class RecommendRepository
      * @var Recommend
      * @author Luoyan
      */
-    protected $recommend;
+    protected $model;
 
     /**
      * 服务注入
