@@ -57,7 +57,8 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::get('sort', 'GoodsController@sort')->name('home.sort');
     // 验证邮箱路由
     Route::get('safety/checkEmail', 'SafetyController@checkEmail');
-
+    // 同步回调
+    Route::get('order/aliPayCogradient', 'OrderController@aliPayCogradient');
     Route::group(['middleware' => 'member'], function () {
         // 购物车
         Route::get('goods/shopCart', 'GoodsController@shopCart')->name('home.goods.shopCart');
@@ -103,6 +104,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::post('addToShoppingCart', 'ShoppingCartController@store');
         // 购物车 删除商品
         Route::post('delShoppingCart', 'ShoppingCartController@destroy');
+        // 查询购物车 库存
+        Route::post('checkShoppingCart', 'ShoppingCartController@checkShoppingCart');
+        // 订单
+        Route::resource('order', 'OrderController');
 
         // 退出登录
         Route::get('logout', 'UserController@logout');

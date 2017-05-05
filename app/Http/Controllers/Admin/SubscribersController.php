@@ -121,13 +121,13 @@ class SubscribersController extends Controller
             return responseMsg('两次密码输入不一致', 400);
         }
         // 查询单挑数据 判断密码是否更新
-        $data = $this->indexUserLogin->findOneUserManner(['user_id' => $request['id']]);
+        $data = $this->indexUserLogin->find(['user_id' => $request['id']]);
         // 检测原始密码与新密码
         if (\Hash::check($password, $data->password)) {
             return responseMsg('新密码与原始密码一致', 400);
         }
         // 更改该用户所有登录方式的密码
-        $result = $this->indexUserLogin->updateUserManner(['user_id' => $request['id']], ['password' => bcrypt(trim($request['password']))]);
+        $result = $this->indexUserLogin->update(['user_id' => $request['id']], ['password' => bcrypt(trim($request['password']))]);
         if (empty($result)) {
             // 返回错误信息
             return responseMsg('更新失败', 400);
@@ -174,7 +174,7 @@ class SubscribersController extends Controller
                 break;
         }
         // 获取用户列表数据
-        $result = $this->registerUser->getUserList($where, $request['perPage']);
+        $result = $this->registerUser->paging($where, $request['perPage']);
         // 判断是否执行成功
         if (empty($result)) {
             // 返回错误信息

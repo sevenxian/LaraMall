@@ -18,6 +18,7 @@ use App\Tools\Analysis;
  */
 class CargoRepository
 {
+
     use BaseRepository;
 
     /**

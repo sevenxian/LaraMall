@@ -15,8 +15,10 @@ trait BaseRepository
     public function insert(array $param)
     {
         if(empty($param)) {
+
             return false;
         }
+
        return $this->model->create($param);
     }
 
@@ -108,8 +110,10 @@ trait BaseRepository
     public function update(array $where, array $param)
     {
         if (empty($where) || empty($param)) {
+
             return false;
         }
+
         return $this->model->where($where)->update($param);
     }
 
