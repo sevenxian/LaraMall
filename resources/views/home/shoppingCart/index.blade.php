@@ -470,19 +470,24 @@
         }
         // 更新购物车数据
         $('#J_Go').click(function(){
-            var param = [];
-            var data = [];
+
+            var cargo_id = '';
+            var shopping_number = '';
             $.each($("input[name='items']"), function (key, value) {
                 // 把货品全部添加到购物车
                 if($(value).attr('checked')){
-                    param['cargoId']= $(value).parents('.item-content').find('.check').val();
-                    param['shopping_number'] = $(value).parents('.item-content').find('.text_box').val();
-                    data.push(param);
+                    shopping_number += $(value).parents('.item-content').find('.text_box').val()+',';
+                    cargo_id +=$(value).parents('.item-content').find('.check').val()+',';
                 }
             });
-            if(data.length < 1){
+
+            if(!cargo_id || !shopping_number){
                 return layer.msg('没有选择宝贝，无法结算');
             }
+
+           // console.log(shopping_number.substring(0,shopping_number.Length-1));
+            // 拆分数组
+            window.location.href = '/home/order/create?cargo_id='+cargo_id.substring(0,cargo_id.length-1)+'&shopping_number='+shopping_number.substring(0,shopping_number.length-1);
         });
     </script>
 @stop

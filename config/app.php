@@ -186,6 +186,8 @@ return [
         Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class, // 七牛云存储
         iscms\Alisms\AlidayuServiceProvider::class, // 阿里大鱼 短信验证
         Naux\Mail\SendCloudServiceProvider::class,  // sendCloud邮箱服务
+        Latrell\Alipay\AlipayServiceProvider::class, // 支付宝支付
+        Overtrue\LaravelWechat\ServiceProvider::class, // 微信支付
     ],
 
     /*
@@ -238,6 +240,7 @@ return [
         'Debugbar'     => Barryvdh\Debugbar\Facade::class,
         'Laratrust'    => Laratrust\LaratrustFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'wechat' =>Overtrue\LaravelWechat\ServiceProvider::class, // 微信
     ],
 
 ];

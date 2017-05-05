@@ -4,6 +4,7 @@ namespace App\Tools;
 
 
 use Naux\Mail\SendCloudTemplate;
+use Ramsey\Uuid\Uuid;
 
 class Common
 {
@@ -109,4 +110,20 @@ class Common
 
         return true;
     }
+
+    /**
+     * 获取uuid
+     *
+     * @return string
+     * @author zhangyuchao
+     */
+    public static function getUuid()
+    {
+        //生成uuid
+        $temp = Uuid::uuid1();
+        $uuid = $temp->getHex();
+
+        return $uuid;
+    }
+
 }
