@@ -125,7 +125,7 @@ class GoodsController extends Controller
     public function goodsList(Request $request, $category_id)
     {
         $req = $request->all();
-        
+
         // 获取标签搜索条件
         if (isset($req['ev']) && !empty($req['ev'])) {
             $ev = explode('%', $req['ev']);
@@ -138,7 +138,7 @@ class GoodsController extends Controller
             $data['ev'] = [];
         }
 
-        if(!empty($data['ev'])){
+        if (!empty($data['ev'])) {
             // 当前页
             $page = isset($req['page']) ? $req['page'] : 1;
             // 拼装查询条件
@@ -150,15 +150,15 @@ class GoodsController extends Controller
             $cargoIds = $this->relLabelCargo->lists($where, ['cargo_id'])->toArray();
             $cargos = $this->cargo->selectWhereIn('id', $cargoIds);
             $cargos = new LengthAwarePaginator($cargos->forPage($page, PAGENUM), count($cargos), PAGENUM);
-            $cargos->setPath(''.$category_id);
-        }else{
+            $cargos->setPath('' . $category_id);
+        } else {
             // 获取货品列表
             $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM);
         }
-        
+
         // 获取分类标签信息
         $labelInfo = $this->category->find(['id' => $category_id])->labels;
-        
+
         // 分类标签ID/名称配对
         $labels = $labelInfo->pluck('category_label_name', 'id')->toArray();
 
@@ -192,8 +192,10 @@ class GoodsController extends Controller
         // 获取正在进行的活动
         $currentTimestamp = time();
         $activity = $this->activity->ongoingActivities($currentTimestamp);
-        $activity->cargoActivity = $this->relGoodsActivity->find(['cargo_id' => $cargo->id, 'activity_id' => $activity->id]);
-
+        if ($activity) {
+            $activity->cargoActivity = $this->relGoodsActivity->find(['cargo_id' => $cargo->id, 'activity_id' => $activity->id]);
+        }
+        
         // 先判断当前商品拥有多少种规格
         $standards = $this->relGoodsLabel->select(['goods_id' => $cargo->goods_id], 'created_at')->toArray();
 
@@ -201,7 +203,7 @@ class GoodsController extends Controller
         $cids = [];
         if (count($standards) == 1) {
             $cids = $this->cargo->lists(['goods_id' => $cargo->goods_id], ['cargo_ids'])->toArray();
-        // 多种规格的情况
+            // 多种规格的情况
         } else if (count($standards) > 1) {
             $cargo_ids = json_decode($cargo->cargo_ids, 1);
             foreach ($cargo_ids as $k => $v) {
@@ -249,6 +251,30 @@ class GoodsController extends Controller
         $data['activity'] = $activity;
 
         return view('home.goods.detail', compact('data'));
+    }
+
+    /**
+     * 立即抢购
+     *
+     * @param Request $request
+     * @author zhulinjie
+     */
+    public function toSnapUp(Request $request)
+    {
+        $req = $request->all();
+
+        $cargoActivity = $this->relGoodsActivity->find(['activity_id' => $req['activity_id'], 'cargo_id' => $req['cargo_id']]);
+
+        if (!\Redis::get(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'])) {
+            // 抢购的数量超出用来做活动的商品数量
+            if($req['number'] >= $cargoActivity->number){
+                \Redis::set(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $cargoActivity->number);
+            }else{
+                \Redis::set(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $req['number']);
+            }
+        }
+
+        \Redis::incrBy(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $req['number']);
     }
 
     /**

@@ -39,9 +39,8 @@ $(function () {
     });
 
     // 秒杀倒计时
-    timer(intDiff);
+    if (typeof intDiff != 'undefined') timer(intDiff);
 });
-
 
 
 /**
@@ -50,45 +49,33 @@ $(function () {
  * @param param
  */
 function timer(intDiff) {
-
-    window.setInterval(function () {
-
+    setInterval(function () {
         var day = 0,
-
             hour = 0,
-
             minute = 0,
-
             second = 0; //时间默认值
 
         if (intDiff > 0) {
-
             day = Math.floor(intDiff / (60 * 60 * 24));
-
             hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
-
             minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
-
             second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
-
+        }else{
+            layer.msg('活动已结束');
         }
 
         if (minute <= 9) minute = '0' + minute;
-
         if (second <= 9) second = '0' + second;
 
         var html = '距离结束 <strong>';
-        if(day > 0) html += day + ':';
-        html += (hour < 10 ? '0'+hour : hour) + ':' + minute + ':' + second;
+        if (day > 0) html += day + ':';
+        html += (hour < 10 ? '0' + hour : hour) + ':' + minute + ':' + second;
 
         $('.intDiff').html(html);
-        
+
         intDiff--;
-
     }, 1000);
-
 }
-
 
 //弹出规格选择
 $(document).ready(function () {
@@ -99,7 +86,7 @@ $(document).ready(function () {
             $('.theme-popover-mask').show();
             $('.theme-popover').slideDown(200);
 
-        })
+        });
 
         $('.theme-poptit .close,.btn-op .close').click(function () {
             $(document.body).css("position", "static");
@@ -109,7 +96,6 @@ $(document).ready(function () {
             $('.theme-popover-mask').hide();
             $('.theme-popover').slideUp(200);
         })
-
     }
 });
 
@@ -120,7 +106,6 @@ $(document).ready(function () {
         st;
 
     if ($ww < 623) {
-
         var tp = $ww + 363;
         $(window).scroll(function () {
             st = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
@@ -142,7 +127,6 @@ $(document).ready(function () {
             $(document).scrollTop(sts);
         });
     } else {
-
         dv.attr('otop', dv.offset().top); //存储原来的距离顶部的距离
         var tp = parseInt(dv.attr('otop')) + 36;
         $(window).scroll(function () {
@@ -165,8 +149,6 @@ $(document).ready(function () {
                 'position': 'static'
             });
         });
-
-
     }
 });
 
@@ -176,7 +158,6 @@ $(document).ready(function () {
     $(".hot span").click(function () {
         $(".shopPromotion.gold .coupon").toggle();
     });
-
 
     //获得文本框对象
     var t = $("#text_box");
@@ -188,7 +169,6 @@ $(document).ready(function () {
         if (parseInt(t.val()) != 1) {
             $('#min').attr('disabled', false);
         }
-
     });
 
     //数量减少操作
@@ -197,7 +177,5 @@ $(document).ready(function () {
         if (parseInt(t.val()) == 1) {
             $('#min').attr('disabled', true);
         }
-
     });
-
 });

@@ -24,6 +24,7 @@
     @section('coreJs')
         <script src="/AmazeUI-2.4.2/assets/js/jquery.min.js"></script>
         <script src="/AmazeUI-2.4.2/assets/js/amazeui.js"></script>
+        <script src="/layer/layer.js"></script>
     @show
 
     <!-- external js -->

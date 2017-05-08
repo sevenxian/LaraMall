@@ -22,6 +22,6 @@ class ShoppingCart extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'cargo_id', 'shopping_number'];
+    protected $fillable = ['user_id', 'cargo_id', 'shopping_number', 'price'];
 
 }
