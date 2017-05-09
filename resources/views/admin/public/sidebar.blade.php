@@ -56,8 +56,8 @@ s
                     <li><a href="/admin/goods/create">添加商品</a></li>
                 </ul>
             </li>
-            <li>
-                <a class="" href="login.html">
+            <li class="sub-menu {{ $aside->openTag(['order']) }}">
+                <a class="" href="{{ url('/admin/order') }}">
                     <i class="icon-user"></i>
                     <span>订单管理</span>
                 </a>

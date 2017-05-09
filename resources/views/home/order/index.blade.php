@@ -113,7 +113,7 @@
                     <div class="bundle  bundle-last">
 
                         <div class="bundle-main">
-                            <ul class="item-content clearfix" data-cargo-id="{{ $value['id'] }}" data-goods-id ="{{ $value['goods_id'] }}">
+                            <ul class="item-content clearfix" data-cargo-id="{{ $value['id'] }}" data-goods-id ="{{ $value['goods_id'] }}"   data-number="{{ $value['inventory'] }}">
                                 <div class="pay-phone">
                                     <li class="td td-item">
                                         <div class="item-pic">
@@ -140,10 +140,7 @@
                                             <div class="price-content">
                                                 <div class="price-content">
                                                     <div class="price-line">
-                                                        <em class="price-original">{{ $value['cargo_price']  }}</em>
-                                                    </div>
-                                                    <div class="price-line">
-                                                        <em class="J_Price price-now" tabindex="0">{{ $value['cargo_discount'] }}</em>
+                                                        <em class="J_Price price-now" tabindex="0">{{ $value['cargo_price'] }}</em>
                                                     </div>
                                                 </div>
                                             </div>
@@ -154,18 +151,26 @@
                                     <div class="amount-wrapper ">
                                         <div class="item-amount ">
                                             <span class="phone-title">购买数量</span>
-                                            <div class="sl">{{ $value['shopping_number'] }} </div>
+                                            @if($value['inventory'] == 0)
+                                                <div style="color:red">已无货</div>
+                                            @elseif($value['inventory'] < $value['shopping_number'] )
+                                                <div class="sl"> {{ $value['inventory'] }} </div>
+                                                <span style="color:red;font-size:12px">库存不足{{ $value['shopping_number'] }}件</span>
+                                            @else
+                                                <div class="sl">{{ $value['shopping_number'] }}</div>
+                                            @endif
+
                                         </div>
                                     </div>
                                 </li>
                                 <li class="td td-sum">
                                     <div class="td-inner">
-                                        <em tabindex="0" class="J_ItemSum number">{{ $value['shopping_number'] * $value['cargo_discount'] }}</em>
+                                        <em tabindex="0" class="J_ItemSum number">{{ $value['shopping_number'] * $value['cargo_price'] }}</em>
                                     </div>
                                 </li>
                                 <li class="td td-oplist">
                                     <div class="td-inner">
-                                        {{ ($value['cargo_price'] * $value['shopping_number']) - ($value['shopping_number'] * $value['cargo_discount']) }}
+                                        0
                                     </div>
                                 </li>
 
@@ -259,29 +264,36 @@
         });
         // 提交订单
         $('#J_Go').click(function(){
-            layer.load(3);
+            //layer.load(3);
             // 初始化购买商品信息
             var goodsMessage =[];
             // 初始化收货地址信息
             var addressMessage;
             // 拼装商品信息
             $.each($('.item-content'),function(key,val){
-                // 初始化货品信息
-                var cargo={};
-                // 获取货品数量
-                cargo.shopping_number=$(val).find('.sl').html();
-                // 商品标题
-                cargo.cargo_title=$(val).find('.item-title').html();
-                // 获取货品ID
-                cargo.cargo_id = $(val).attr('data-cargo-id');
-                // 添加到商品信息
-                goodsMessage.push(cargo);
+                // 过滤掉没有库存的商品
+                if( $(val).attr('data-number') != 0){
+                    // 初始化货品信息
+                    var cargo={};
+                    // 获取货品数量
+                    cargo.shopping_number=$(val).find('.sl').html();
+                    // 商品标题
+                    cargo.cargo_title=$(val).find('.item-title').html();
+                    // 获取货品ID
+                    cargo.cargo_id = $(val).attr('data-cargo-id');
+                    // 添加到商品信息
+                    goodsMessage.push(cargo);
+                }
             });
             // 收货地址表ID
             addressMessage = $('#holyshit268').attr('data-address-id');
             // 定义支付方式
             var pay_type = $('.pay.selected').attr('data-pay-type');
 
+            if(goodsMessage.length < 1){
+                layer.msg('没有库存了,下单失败了!');
+                return false;
+            }
             // 拼接提交参数
             var data = {
                 'goods_message':JSON.stringify(goodsMessage),
@@ -290,15 +302,44 @@
                 '_token':"{{ csrf_token() }}",
             };
             sendAjax(data,'/home/order',function (response) {
-                layer.closeAll();
+                //layer.closeAll();
                 if(response.ServerNo == 200){
+                    if(pay_type == 2){
+                        location.href=response.ResultData;
+                    }else{
+                        layer.open({
+                            type: 1,
+                            skin: 'layui-layer-rim', //加上边框
+                            area: ['270px', '310px'], //宽高
+                            content: eval(response.ResultData.QrCode)
+                        });
+                        $('.layui-layer-title').html('金额：'+response.ResultData.total_fee+'元');
+                        getInfo(response.ResultData.out_trade_no);
+                    }
 
-                    window.location.href=response.ResultData;
                 } else {
                     layer.msg(response.ResultData);
                 }
             });
 
         });
+
+        function getInfo($orderGuid) {
+            var data ={'guid': $orderGuid, '_token': "{{ csrf_token() }}"}
+            sendAjax(data, '/home/order/rotation', function (res) {
+                    // 支付完成
+                    if(res.ServerNo == 200){
+                        $('#layui-layer-shade1').hide();
+
+                        location.href = "/home/order/aliPayCogradient?trade_status=TRADE_SUCCESS&total_fee="+res.ResultData.total_amount+"&body="+res.ResultData.guid
+                    } else if(res.ServerNo == 400){
+                        setTimeout('getInfo("'+$orderGuid+'")',1000);
+                    } else {
+                        $('.layui-layer-close1').trigger('click');
+                        layer.msg('下单失败了!');
+                    }
+            });
+
+        }
     </script>
 @stop

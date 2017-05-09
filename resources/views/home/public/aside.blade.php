@@ -17,20 +17,18 @@
                 <li><a href="{{ url('/home/address/create') }}">新增地址</a></li>
             </ul>
         <li class="person">
-            <a href="javascript:;">我的小窝</a>
+            <a href="javascript:;">我的交易</a>
             <ul>
-                <li><a href="{{ url('/home/GoodsCollection') }}">收藏</a></li>
-                <li><a href="#">订单</a></li>
-                <li><a href="#">评价</a></li>
+                <li><a href="{{ url('/home/orders') }}/0">订单管理</a></li>
             </ul>
         </li>
         <li class="person">
-            <a href="javascript:;">售后管理</a>
+            <a href="javascript:;">我的小窝</a>
             <ul>
-                <li><a href="change.html">退款售后</a></li>
+                <li><a href="{{ url('/home/GoodsCollection') }}">商品收藏</a></li>
+                <li><a href="#">商品评价</a></li>
             </ul>
         </li>
-
     </ul>
 
 </aside>

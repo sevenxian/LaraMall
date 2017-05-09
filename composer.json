@@ -18,7 +18,8 @@
         "overtrue/laravel-wechat": "~3.0",
         "predis/predis": "^1.1",
         "ramsey/uuid": "^3.6",
-        "santigarcor/laratrust": "3.2.*"
+        "santigarcor/laratrust": "3.2.*",
+        "simplesoftwareio/simple-qrcode": "^1.5"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.3",

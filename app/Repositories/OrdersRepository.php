@@ -21,4 +21,8 @@ class OrdersRepository
     {
         $this->model = $order;
     }
+    public function a()
+    {
+       return  $this->model->with(['detailsMessage'])->get();
+    }
 }

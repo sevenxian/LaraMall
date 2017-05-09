@@ -24,4 +24,9 @@ class Order extends Model
      * @var array
      */
     protected $fillable = ['user_id', 'guid', 'goods_message', 'address_message', 'pay_transaction','pay_type','pay_status','total_amount',];
+
+    public function detailsMessage()
+    {
+         return $this->hasMany('App\Model\OrderDetails','order_guid','guid')->where(['order_status'=>1]);
+    }
 }

@@ -71,11 +71,11 @@
                         </div>
 
                         <!--分页 -->
-                        @if(!$page->isEmpty())
-                            <div class="am-pagination" style="text-align:center">
-                                {{ $page->render() }}
-                            </div>
-                        @endif
+                        {{--@if(!$page->isEmpty())--}}
+                            {{--<div class="am-pagination" style="text-align:center">--}}
+                                {{--{{ $page->render() }}--}}
+                            {{--</div>--}}
+                        {{--@endif--}}
 
                     </div>
 

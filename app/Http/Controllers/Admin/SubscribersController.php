@@ -174,7 +174,7 @@ class SubscribersController extends Controller
                 break;
         }
         // 获取用户列表数据
-        $result = $this->registerUser->paging($where, $request['perPage']);
+        $result = $this->registerUser->userList($where, $request['perPage']);
         // 判断是否执行成功
         if (empty($result)) {
             // 返回错误信息

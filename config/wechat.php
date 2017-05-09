@@ -16,8 +16,8 @@ return [
     /*
      * 账号基本信息，请从微信公众平台/开放平台获取
      */
-    'app_id'  => env('WECHAT_APPID', 'your-app-id'),         // AppID
-    'secret'  => env('WECHAT_SECRET', 'your-app-secret'),     // AppSecret
+    'app_id'  => env('WECHAT_APPID', 'wxb79f65dbb228d8ec'),         // AppID
+    'secret'  => env('WECHAT_SECRET', '124b087978a48c6f897e18f42883174c'),     // AppSecret
     'token'   => env('WECHAT_TOKEN', 'your-token'),          // Token
     'aes_key' => env('WECHAT_AES_KEY', ''),                    // EncodingAESKey
 
@@ -59,16 +59,17 @@ return [
     /*
      * 微信支付
      */
-    // 'payment' => [
-    //     'merchant_id'        => env('WECHAT_PAYMENT_MERCHANT_ID', 'your-mch-id'),
-    //     'key'                => env('WECHAT_PAYMENT_KEY', 'key-for-signature'),
-    //     'cert_path'          => env('WECHAT_PAYMENT_CERT_PATH', 'path/to/your/cert.pem'), // XXX: 绝对路径！！！！
-    //     'key_path'           => env('WECHAT_PAYMENT_KEY_PATH', 'path/to/your/key'),      // XXX: 绝对路径！！！！
-    //     // 'device_info'     => env('WECHAT_PAYMENT_DEVICE_INFO', ''),
-    //     // 'sub_app_id'      => env('WECHAT_PAYMENT_SUB_APP_ID', ''),
-    //     // 'sub_merchant_id' => env('WECHAT_PAYMENT_SUB_MERCHANT_ID', ''),
-    //     // ...
-    // ],
+     'payment' => [
+         'merchant_id'        => env('WECHAT_PAYMENT_MERCHANT_ID', '1415581602'),
+         'key'                => env('WECHAT_PAYMENT_KEY', '6cec4c06056611e7a127afc3e04f2fdd'),
+         'cert_path'          => env('WECHAT_PAYMENT_CERT_PATH', './wechar/apiclient_cert.pem'), // XXX: 绝对路径！！！！
+         'key_path'           => env('WECHAT_PAYMENT_KEY_PATH', './wechar/apiclient_key.pem'),      // XXX: 绝对路径！！！！
+         'notify_url'         => 'http://www.laramall.com/home/order/wechatNotify',//添加回调地址
+         // 'device_info'     => env('WECHAT_PAYMENT_DEVICE_INFO', ''),
+         // 'sub_app_id'      => env('WECHAT_PAYMENT_SUB_APP_ID', ''),
+         // 'sub_merchant_id' => env('WECHAT_PAYMENT_SUB_MERCHANT_ID', ''),
+         // ...
+     ],
 
     /*
      * 开发模式下的免授权模拟授权用户资料

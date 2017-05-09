@@ -57,8 +57,12 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::get('sort', 'GoodsController@sort')->name('home.sort');
     // 验证邮箱路由
     Route::get('safety/checkEmail', 'SafetyController@checkEmail');
-    // 同步回调
+    // 支付宝同步回调
     Route::get('order/aliPayCogradient', 'OrderController@aliPayCogradient');
+    // 支付宝异步回调
+    Route::post('order/aliPayNotify', 'OrderController@aliPayNotify');
+    // 微信异步回调
+    Route::post('order/wechatNotify', 'OrderController@wechatNotify');
     Route::group(['middleware' => 'member'], function () {
         // 购物车
         Route::get('goods/shopCart', 'GoodsController@shopCart')->name('home.goods.shopCart');
@@ -108,6 +112,11 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::post('checkShoppingCart', 'ShoppingCartController@checkShoppingCart');
         // 订单
         Route::resource('order', 'OrderController');
+        // 订单 查询订单状态
+        Route::post('order/rotation', 'OrderController@rotation');
+        // 用户订单列表
+        Route::get('orders/{order_status}', 'OrderController@index');
+
 
         // 退出登录
         Route::get('logout', 'UserController@logout');
@@ -219,6 +228,15 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('recommend/update/{id}', 'RecommendController@update');
         // 推荐位管理
         Route::resource('recommend', 'RecommendController');
+        // 订单管理
+        Route::resource('order', 'OrderController');
+        // 获取订单列表
+        Route::post('orderList', 'OrderController@orderList');
+        // 获取订单收货地址
+        Route::post('orderAddress', 'OrderController@orderAddress');
+        // 点击发货
+        Route::post('order/sendGoods', 'OrderController@sendGoods');
+
 
     });
 });

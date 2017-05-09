@@ -188,6 +188,7 @@ return [
         Naux\Mail\SendCloudServiceProvider::class,  // sendCloud邮箱服务
         Latrell\Alipay\AlipayServiceProvider::class, // 支付宝支付
         Overtrue\LaravelWechat\ServiceProvider::class, // 微信支付
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class//二维码组件
     ],
 
     /*
@@ -239,8 +240,9 @@ return [
         'Flashy'       => MercurySeries\Flashy\Flashy::class,
         'Debugbar'     => Barryvdh\Debugbar\Facade::class,
         'Laratrust'    => Laratrust\LaratrustFacade::class,
-        'Image' => Intervention\Image\Facades\Image::class,
-        'wechat' =>Overtrue\LaravelWechat\ServiceProvider::class, // 微信
+        'Image'        => Intervention\Image\Facades\Image::class,
+        'Wechat'       => Overtrue\LaravelWechat\Facade::class, // 微信
+        'QrCode'       => SimpleSoftwareIO\QrCode\Facades\QrCode::class // 二维码
     ],
 
 ];
