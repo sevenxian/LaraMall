@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\ActivityRepository;
+use App\Repositories\RelGoodsActivityRepository;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -15,12 +16,24 @@ class ActivityController extends Controller
     protected $activity;
 
     /**
+     * @var
+     * @author zhulinjie
+     */
+    protected $relGoodsActivity;
+
+    /**
      * ActivityController constructor.
      * @param ActivityRepository $activityRepository
+     * @param RelGoodsActivityRepository $relGoodsActivityRepository
      */
-    public function __construct(ActivityRepository $activityRepository)
+    public function __construct
+    (
+        ActivityRepository $activityRepository,
+        RelGoodsActivityRepository $relGoodsActivityRepository
+    )
     {
         $this->activity = $activityRepository;
+        $this->relGoodsActivity = $relGoodsActivityRepository;
     }
 
     /**
@@ -32,7 +45,7 @@ class ActivityController extends Controller
     {
         return view('admin.activity.index');
     }
-
+    
     /**
      * 获取活动列表数据
      *
@@ -63,6 +76,23 @@ class ActivityController extends Controller
     public function create()
     {
         return view('admin.activity.create');
+    }
+
+    /**
+     * 获取某一个活动信息
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhulinjie
+     */
+    public function findActivity(Request $request)
+    {
+        $data = $request->all();
+        $activity = $this->activity->find($data);
+        if(!$activity){
+            return responseMsg('暂无活动', 404);
+        }
+        return responseMsg($activity);
     }
 
     /**
@@ -101,7 +131,7 @@ class ActivityController extends Controller
     {
         //
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -114,7 +144,7 @@ class ActivityController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 修改活动
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -122,7 +152,16 @@ class ActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $req = $request->all();
+        $req['start_timestamp'] = strtotime($req['start_timestamp']);
+        $req['end_timestamp'] = $req['start_timestamp'] + $req['length']*60;
+        $res = $this->activity->update(['id' => $id], $req);
+        if(!$res){
+            return responseMsg('修改失败', 400);
+        }
+        // 修改成功获取修改成功后的数据
+        $activity = $this->activity->find(['id' => $id]);
+        return responseMsg($activity);
     }
 
     /**
@@ -133,6 +172,15 @@ class ActivityController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $relGoodsActivity = $this->relGoodsActivity->find(['activity_id' => $id]);
+        if($relGoodsActivity){
+            return responseMsg('有货品正在做活动，不能删除', 400);
+        }
+        $res = $this->activity->delete(['id' => $id]);
+        if(!$res){
+            return responseMsg('删除失败', 400);
+        }
+
+        return responseMsg('删除成功');
     }
 }

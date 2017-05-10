@@ -220,7 +220,7 @@ class GoodsController extends Controller
         }
         
         // 先判断当前商品拥有多少种规格
-        $standards = $this->relGoodsLabel->select(['goods_id' => $cargo->goods_id], 'created_at')->toArray();
+        $standards = $this->relGoodsLabel->select(['goods_id' => $cargo->goods_id], 'goods_label_id')->toArray();
 
         // 只有一种规格的情况
         $cids = [];
@@ -272,14 +272,12 @@ class GoodsController extends Controller
         $data['goods'] = $goods;
         $data['cids'] = $cids;
         $data['activity'] = $activity;
-
         // 统计好评
         $data['star']['good'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 1]);
         // 统计中评
         $data['star']['almost'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 2]);
         // 统计差评
         $data['star']['bad'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 3]);
-
         return view('home.goods.detail', compact('data'));
     }
 
@@ -317,7 +315,6 @@ class GoodsController extends Controller
     public function getCargoId(Request $request)
     {
         $data = $request->all();
-
         // 判断货品ID在redis中是否存在
         $cargo_ids = md5(json_encode($data));
         if (\Redis::get(STRING_CARGO_STANDARD_ . $cargo_ids)) {
@@ -364,7 +361,7 @@ class GoodsController extends Controller
     {
         return view('home.goods.sort');
     }
-
+    
     /**
      * 查找家谱树
      *

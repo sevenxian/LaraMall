@@ -45,13 +45,13 @@ s
                 </ul>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag(['goods', 'cargoList']) }}">
+            <li class="sub-menu {{ $aside->openTag(['goods', 'cargoList', 'cargoActivity']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
                     <span>商品管理</span>
-                    <span class="arrow {{ $aside->openTag(['goods', 'cargoList']) }}"></span>
+                    <span class="arrow {{ $aside->openTag(['goods', 'cargoList', 'cargoActivity']) }}"></span>
                 </a>
-                <ul class="sub" {{ $aside->displayBlock(['goods', 'cargoList']) }}>
+                <ul class="sub" {{ $aside->displayBlock(['goods', 'cargoList', 'cargoActivity']) }}>
                     <li><a href="/admin/goods">商品列表</a></li>
                     <li><a href="/admin/goods/create">添加商品</a></li>
                     <li><a href="/admin/cargoActivity">活动列表</a></li>
@@ -64,13 +64,13 @@ s
                 </a>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag(['activity']) }}">
+            <li class="sub-menu {{ $aside->openTag(['activity', 'activity/create']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
                     <span>活动管理</span>
-                    <span class="arrow {{ $aside->openTag(['activity']) }}"></span>
+                    <span class="arrow {{ $aside->openTag(['activity', 'activity/create']) }}"></span>
                 </a>
-                <ul class="sub" {{ $aside->displayBlock(['activity']) }}>
+                <ul class="sub" {{ $aside->displayBlock(['activity', 'activity/create']) }}>
                     <li><a href="/admin/activity">活动列表</a></li>
                     <li><a href="/admin/activity/create">添加活动</a></li>
                 </ul>

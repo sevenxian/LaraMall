@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\CargoRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\GoodsLabelRepository;
 use App\Repositories\GoodsRepository;
 use App\Repositories\RelGoodsLabelRepository;
 use Illuminate\Http\Request;
+use App\Tools\Common;
 
 class GoodsController extends Controller
 {
@@ -52,6 +54,14 @@ class GoodsController extends Controller
     protected $relGL;
 
     /**
+     * 货品操作表
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $cargo;
+
+    /**
      * GoodsController constructor.
      * @param GoodsRepository $goods
      * @param GoodsLabelRepository $goodsLabel
@@ -63,7 +73,8 @@ class GoodsController extends Controller
         GoodsRepository $goods,
         GoodsLabelRepository $goodsLabel,
         CategoryRepository $category,
-        RelGoodsLabelRepository $relGoodsLabelRepository
+        RelGoodsLabelRepository $relGoodsLabelRepository,
+        CargoRepository $cargoRepository
     )
     {
         // 注入商品操作类
@@ -76,6 +87,8 @@ class GoodsController extends Controller
         $this->disk = \Storage::disk('qiniu');
         // 商品标签关联操作类
         $this->relGL = $relGoodsLabelRepository;
+        // 货品操作类
+        $this->cargo = $cargoRepository;
     }
 
     /**
@@ -239,6 +252,41 @@ class GoodsController extends Controller
         //
     }
 
+    public function getGoodsDetail(Request $request)
+    {
+        $req = $request->all();
+
+        // 获取商品信息
+        $goods = $this->goods->find(['id' => $req['goods_id']]);
+        if(!$goods){
+            return responseMsg('商品不存在', 404);
+        }
+        
+        // 获取家谱树
+        $categorys = $this->category->select()->toArray();
+        $goods->goodsCategory = array_reverse(Common::tree($categorys, $goods->category_id));
+        
+        // 获取一级分类
+        $goods->lv1s = $this->category->select(['level' => 1])->toArray();
+
+        // 获取二级分类
+        $goods->lv2s = $this->category->select(['pid' => $goods->goodsCategory[0]['id']])->toArray();
+
+        // 获取三级分类
+        $goods->lv3s = $this->category->select(['pid' => $goods->goodsCategory[1]['id']])->toArray();
+
+        // 获取商品标签
+        $goods->goodsLabelIds = $this->relGL->lists(['goods_id' => $goods->id], ['goods_label_id'])->toArray();
+
+        // 获取分类下面的商品标签
+        $goods->goodsLabels = $this->goodsLabel->select(['category_id' => $goods->category_id])->toArray();
+
+        // 获取商品下面是否有货品，如果有货品则不能修改商品规格
+        $goods->cargo = $this->cargo->find(['goods_id' => $req['goods_id']]);
+
+        return responseMsg($goods);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -247,7 +295,14 @@ class GoodsController extends Controller
      */
     public function edit($id)
     {
-        //
+        // 获取商品信息
+        $goods = $this->goods->find(['id' => $id]);
+
+        if(!$goods){
+            return responseMsg('商品不存在', 404);
+        }
+        
+        return view('admin.goods.edit', compact('goods'));
     }
 
     /**
@@ -259,7 +314,52 @@ class GoodsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $req = $request->all();
+        // 获取原商品标签
+        $goodsLables = $this->relGL->lists(['goods_id' => $id], ['goods_label_id'])->toArray();
+        
+        // 获取现在拥有的商品标签与原商品标签的交集
+        if(!isset($req['goods_label'])){
+            $req['goods_label'] = [];
+        }
+        $intersect = array_intersect($req['goods_label'], $goodsLables);
+        $diff = array_diff($req['goods_label'], $intersect);
+
+        // 组合商品表中需要的数据
+        $param['category_id'] = $req['level3'];
+        $param['goods_title'] = $req['goods_title'];
+        $param['goods_original'] = json_encode($req['goods_original']);
+        $param['goods_info'] = $req['goods_info'];
+
+        try{
+            \DB::beginTransaction();
+            // 向商品表中新增记录
+            $this->goods->update(['id' => $id], $param);
+
+            // 修改货品对应的分类
+            $this->cargo->update(['goods_id' => $id], ['category_id' => $req['level3']]);
+
+            // 先删除原商品标签
+            if($intersect){
+                $this->relGL->deleteWhereNotIn(['goods_id' => $id], $intersect);
+            }
+
+            // 向商品标签关联表中新增记录
+            if($diff){
+                foreach($diff as $val){
+                    $arr['goods_id'] = $id;
+                    $arr['goods_label_id'] = $val;
+                    $this->relGL->insert($arr);
+                }
+            }
+
+            \DB::commit();
+            return responseMsg('商品修改成功');
+        }catch (\Exception $e){
+            \DB::rollback();
+            dd($e->getMessage());
+            return responseMsg('商品修改失败', 400);
+        }
     }
 
     /**

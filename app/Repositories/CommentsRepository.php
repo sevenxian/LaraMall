@@ -16,7 +16,7 @@ class CommentsRepository
     public function __construct(Comment $comment)
     {
         $this->model = $comment;
-        $this->perPage = 1;
+        $this->perPage = 20;
     }
 
     /**
@@ -42,7 +42,7 @@ class CommentsRepository
      * @return mixed
      * @author zhangyuchao
      */
-    public function commentPaging(array $where,$page,$perPage = 1)
+    public function commentPaging(array $where,$page,$perPage = 20)
     {
 
         return $this->model->where($where)->orderBy('created_at', 'desc')->forPage($page,$perPage)->get();

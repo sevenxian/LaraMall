@@ -177,7 +177,7 @@ class ShoppingCartController extends Controller
                     $cart = $this->cart->find(['user_id' => $itemArr[4], 'cargo_id' => $itemArr[5]])->toArray();
                     \Redis::hmset($this->hashShoppingCart . $cart['user_id'] . ':' . $cart['cargo_id'], ['user_id' => $cart['user_id'], 'cargo_id' => $cart['cargo_id'], 'shopping_number' => $cart['shopping_number'], 'price' => $cart['price']]);
                 }
-
+                
                 // 获取货品信息
                 $cargo = \Redis::hgetall($this->hashCargoInfo.$cart['cargo_id']);
 

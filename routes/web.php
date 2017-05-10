@@ -192,6 +192,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('addGoodsLabel', 'GoodsController@addGoodsLabel');
         // 上传商品图片
         Route::post('goodsImgUpload', 'GoodsController@goodsImgUpload');
+        // 获取商品详细信息
+        Route::post('getGoodsDetail', 'GoodsController@getGoodsDetail');
+        // 修改商品
+        Route::post('updateGoods/{id}', 'GoodsController@update');
 
         // 货品管理
         Route::resource('cargo', 'CargoController');
@@ -225,6 +229,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::resource('activity', 'ActivityController');
         // 获取活动列表
         Route::post('activityList', 'ActivityController@activityList');
+        // 获取某一个活动信息
+        Route::post('findActivity', 'ActivityController@findActivity');
+        // 修改一个活动
+        Route::post('updateActivity/{id}', 'ActivityController@update');
+        // 删除一个活动
+        Route::post('deleteActivity/{id}', 'ActivityController@destroy');
 
         // 权限块
         Route::resource('acl', 'AclController');
