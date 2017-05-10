@@ -42,7 +42,7 @@ new Vue({
                 sweetAlert("操作失败!", "时长不能为空!", "error");
                 return;
             }
-
+            
             // 构造一个包含Form表单数据的FormData对象，需要在创建FormData对象时指定表单的元素
             var fd = new FormData($(e.target).parents('form')[0]);
             // 添加请求

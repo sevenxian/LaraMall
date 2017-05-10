@@ -16,17 +16,37 @@ new Vue({
             lv3s: [],                   // 存储三级分类数据
             goods_title: '',            // 商品标题
             goodsLabels: [],            // 存储商品标签
+            goodsLabelIds: [],          // 存储商品标签ID
             goodsLabel: '',             // 商品标签
-            goodsImgs: [1],             // 商品图片个数
+            goodsImgs: [],              // 商品图片个数
+            goods: '',                  // 商品信息
+            goodsCategory: '',          // 商品分类
+            cargo: [],                  // 存储货品信息
         }
     },
-    // 第一次执行
+    // 第一次执行，初始化数据
     mounted(){
-        // 获取一级分类
-        axios.post('/admin/getCategory', {level: 1}).then(response => {
-            this.lv1s = response.data.ResultData;
+        axios.post('/admin/getGoodsDetail', {goods_id: goods_id}).then(response => {
+            console.log(response);
+            if (response.data.ServerNo != 200) {
+                sweetAlert("操作失败!", response.data.ResultData, "error");
+                return;
+            }
+            this.goods = response.data.ResultData;
+            this.goodsCategory = response.data.ResultData.goodsCategory;
+            this.level1 = this.goodsCategory[0].id;
+            this.level2 = this.goodsCategory[1].id;
+            this.level3 = this.goodsCategory[2].id;
+            this.lv1s = response.data.ResultData.lv1s;
+            this.lv2s = response.data.ResultData.lv2s;
+            this.lv3s = response.data.ResultData.lv3s;
+            this.goods_title = response.data.ResultData.goods_title;
+            this.goodsLabels = response.data.ResultData.goodsLabels;
+            this.goodsLabelIds = response.data.ResultData.goodsLabelIds;
+            this.goodsImgs = JSON.parse(response.data.ResultData.goods_original);
+            this.cargo = response.data.ResultData.cargo;
         }).catch(error => {
-            sweetAlert("请求失败!", "分类获取失败!", "error");
+            sweetAlert("请求失败!", response.request.statusText, "error");
         });
     },
     // 计算属性
@@ -39,60 +59,84 @@ new Vue({
     // 方法定义
     methods: {
         // 获取二级分类
-        lv1(){
-            layer.load(2);
-            axios.post('/admin/getCategory', {pid: this.level1}).then(response => {
-                layer.closeAll();
-                this.lv2s = response.data.ResultData;
-                // 初始化二级分类和三级分类
-                this.level2 = '';
-                this.level3 = '';
-                this.lv3s = [];
-            }).catch(error => {
-                layer.closeAll();
-                sweetAlert("请求失败!", "分类获取失败!", "error");
-            });
-        },
-        // 获取三级分类
-        lv2(){
-            if (this.level2) {
+        lv1(e){
+            this.level1 = e.target.value;
+            this.goodsCategory = [];
+            $('#level2 option').attr('selected', false);
+            $('#level3 option').attr('selected', false);
+            if(this.level1 != -1){
                 layer.load(2);
-                axios.post('/admin/getCategory', {pid: this.level2}).then(response => {
+                axios.post('/admin/getCategory', {pid: this.level1}).then(response => {
                     layer.closeAll();
-                    this.lv3s = response.data.ResultData;
-                    // 初始化三级分类
+                    this.lv2s = response.data.ResultData;
+                    // 初始化二级分类和三级分类
+                    this.level2 = '';
                     this.level3 = '';
+                    this.lv3s = [];
+                    this.goodsLabels = [];
                 }).catch(error => {
                     layer.closeAll();
-                    sweetAlert("请求失败!", "分类获取失败!", "error");
+                    sweetAlert("请求失败!", response.request.statusText, "error");
                 });
+            }else{
+                this.goodsLabels = [];
+            }
+        },
+        // 获取三级分类
+        lv2(e){
+            this.level2 = e.target.value;
+            this.goodsCategory = [];
+            $('#level3 option').attr('selected', false);
+            if(this.level2 != -1){
+                if (this.level2) {
+                    layer.load(2);
+                    axios.post('/admin/getCategory', {pid: this.level2}).then(response => {
+                        layer.closeAll();
+                        this.lv3s = response.data.ResultData;
+                        // 初始化三级分类
+                        this.level3 = '';
+                        this.goodsLabels = [];
+                    }).catch(error => {
+                        layer.closeAll();
+                        sweetAlert("请求失败!", response.request.statusText, "error");
+                    });
+                }
+            }else{
+                this.goodsLabels = [];
             }
         },
         // 获取分类下的商品标签
-        lv3(){
-            if (this.level3) {
-                layer.load(2);
-                axios.post('/admin/getGoodsLabel', {category_id: this.level3}).then(response => {
-                    layer.closeAll();
-                    this.goodsLabels = response.data.ResultData;
-                }).catch(error => {
-                    layer.closeAll();
-                    sweetAlert("请求失败!", "商品标签获取失败!", "error");
-                });
+        lv3(e){
+            this.level3 = e.target.value;
+            if(this.level3 != -1){
+                if (this.level3) {
+                    layer.load(2);
+                    axios.post('/admin/getGoodsLabel', {category_id: this.level3}).then(response => {
+                        layer.closeAll();
+                        this.goodsLabels = response.data.ResultData;
+                    }).catch(error => {
+                        layer.closeAll();
+                        sweetAlert("请求失败!", "商品标签获取失败!", "error");
+                    });
+                }
+            }else{
+                this.goodsLabels = [];
             }
         },
         // 选择商品标签
         selectLabel(e){
             e.preventDefault();
-            // 样式切换
-            if ($(e.target).hasClass('c_on')) {
-                $(e.target).removeClass('c_on').addClass('c_off');
-                // 取消选中复选框
-                $(e.target).find('input').attr('checked', false);
-            } else {
-                $(e.target).removeClass('c_off').addClass('c_on');
-                // 选中单选按钮
-                $(e.target).find('input').attr('checked', true);
+            if(e.target.tagName == 'LABEL'){
+                if ($(e.target).hasClass('c_on')) {
+                    // 样式切换
+                    $(e.target).removeClass('c_on').addClass('c_off');
+                    // 取消选中复选框
+                    $(e.target).find('input')[0].checked = false;
+                } else {
+                    $(e.target).removeClass('c_off').addClass('c_on');
+                    // 选中单选按钮
+                    $(e.target).find('input')[0].checked = true;
+                }
             }
         },
         // 添加商品标签
@@ -130,7 +174,7 @@ new Vue({
             });
         },
         // 添加商品操作
-        addGoods(e){
+        updateGoods(e){
             // 前端验证
             $('#goods').bootstrapValidator('validate');
             // 判断是否选择了分类
@@ -153,7 +197,7 @@ new Vue({
             // 构造一个包含Form表单数据的FormData对象，需要在创建FormData对象时指定表单的元素
             var fd = new FormData($(e.target).parents('form')[0]);
             // 添加请求
-            axios.post('/admin/goods', fd).then(response => {
+            axios.post('/admin/updateGoods/'+goods_id, fd).then(response => {
                 console.log(response);
                 // 添加商品失败的情况
                 if (response.data.ServerNo != 200) {
@@ -222,6 +266,15 @@ new Vue({
                     sweetAlert("操作失败!", response.request.statusText, "error");
                 });
             });
+        },
+        // 判断数组中是否存在某个值
+        inArray(v,arr){
+            for(var i in arr){
+                if(arr[i] == v){
+                    return true;
+                }
+            }
+            return false;
         }
     }
 });

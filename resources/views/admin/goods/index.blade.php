@@ -45,8 +45,7 @@
                                     </td>
                                     <td>
                                         <a :href="'/admin/addCargo/'+item.id" class="btn btn-success btn-xs"><i class="icon-plus"></i></a>
-                                        <button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button>
-                                        <button class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
+                                        <a :href="'/admin/goods/'+item.id+'/edit'" class="btn btn-primary btn-xs"><i class="icon-pencil"></i></a>
                                     </td>
                                 </tr>
                                 <tr v-if="!isData"><td colspan="5" class="text-center">暂无数据</td></tr>

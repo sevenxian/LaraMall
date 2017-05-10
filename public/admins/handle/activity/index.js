@@ -16,7 +16,12 @@ new Vue({
             offset: 4,                      // 页码偏移量
             activitys: [],                  // 活动列表
             per_page: 10,                   // 一页显示的数据
-            search: {}                      // 搜索条件
+            search: {},                     // 搜索条件
+            name: '',                       // 活动名称
+            desc: '',                       // 活动描述
+            type: '',                       // 活动类型
+            length: '',                     // 活动时长
+            activity: ''                    // 存储某一个活动信息
         }
     },
     // 第一次执行
@@ -110,8 +115,69 @@ new Vue({
             }
             this.fetchDatas(this.pagination.current_page);
         },
+        // 修改活动界面
+        modActivity(e){
+            var aid = $(e.target).data('aid');
+            layer.load(2);
+            $('#updateActivity').data('index', $(e.target).data('index'));
+            axios.post('/admin/findActivity', {id: aid}).then(response => {
+                console.log(response);
+                // 判断请求结果
+                if(response.data.ServerNo != 200){
+                    sweetAlert("请求失败!", response.data.ResultData, "error");
+                    return;
+                }
+                // 响应式更新数据
+                this.activity = response.data.ResultData;
+                layer.closeAll('loading');
+            }).catch(error => {
+                sweetAlert("请求失败!", response.request.statusText, "error");
+            });
+        },
+        // 修改活动操作
+        update(e){
+            layer.load(2);
+            var index = $(e.target).data('index');
+
+            // 构造一个包含Form表单数据的FormData对象，需要在创建FormData对象时指定表单的元素
+            var fd = new FormData($(e.target).parents('form')[0]);
+            // 添加请求
+            axios.post('/admin/updateActivity/' + $(e.target).data('aid'), fd).then(response => {
+                console.log(response);
+                // 添加活动失败的情况
+                if (response.data.ServerNo != 200) {
+                    sweetAlert("操作失败!", response.data.ResultData, "error");
+                    return;
+                }
+                // 更新活动列表中修改后的数据
+                this.$set(this.activitys, index, response.data.ResultData);
+                // 隐藏模态框
+                $('#myModal-1').modal('hide');
+                layer.closeAll('loading');
+            }).catch(error => {  // 请求失败的情况
+                sweetAlert("操作失败!", response.request.statusText, "error");
+            });
+        },
+        // 删除活动
+        deleteActivity(e){
+            var index = $(e.target).data('index');
+            // 删除请求
+            axios({method: 'delete', url:'/admin/activity/' + $(e.target).data('aid')}).then(response => {
+                console.log(response);
+                // 添加活动失败的情况
+                if (response.data.ServerNo != 200) {
+                    sweetAlert("操作失败!", response.data.ResultData, "error");
+                    return;
+                }
+                // 前端删除
+                this.activitys.splice(index, 1);
+                sweetAlert("操作成功!", response.data.ResultData, "success");
+            }).catch(error => {  // 请求失败的情况
+                sweetAlert("操作失败!", response.request.statusText, "error");
+            });
+        },
         // 将PHP时间戳转换成日期格式
-        timeConvert(time){
+        timeConvert(time, flag = true){
             var date = new Date(parseInt(time)*1000);
             var year = date.getFullYear();
             var month = (date.getMonth()+1) < 10 ? '0'+(date.getMonth()+1) : (date.getMonth()+1);
@@ -120,6 +186,9 @@ new Vue({
             var minutes = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes();
             var seconds = date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds();
             var time = year+'-'+month+'-'+today+' '+hour+':'+minutes+':'+seconds;
+            if(!flag){
+                var time = year+'-'+month+'-'+today+' '+hour+':'+minutes;
+            }
             return time;
         }
     }

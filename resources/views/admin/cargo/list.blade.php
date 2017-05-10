@@ -34,7 +34,7 @@
                                 <tr v-for="item in cargo">
                                     <td>@{{ item.id }}</td>
                                     <td><img :src="'{{ env('QINIU_DOMAIN') }}'+item.cargo_cover+'?imageView2/1/w/60/h/60'" alt="" width="60px"></td>
-                                    <td>@{{ item.cargo_name }}</td>
+                                    <td><a :href="'/home/goodsDetail/'+item.id" target="_blank">@{{ item.cargo_name }}</a></td>
                                     <td>@{{ item.cargo_price }}</td>
                                     <td>@{{ item.cargo_discount }}</td>
                                     <td>
@@ -49,7 +49,6 @@
                                         <a href="#myModal-1" data-toggle="modal" :data-cid="item.id" class="btn btn-success btn-xs" title="选择推荐位" @click="getRecommend"><i class="icon-plus" :data-cid="item.id"></i></a>
                                         <a href="#myModal-2" data-toggle="modal" :data-cid="item.id" class="btn btn-warning btn-xs" title="做活动" @click="getActivity"><i class="icon-plus" :data-cid="item.id"></i></a>
                                         <button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button>
-                                        <button class="btn btn-danger btn-xs"><i class="icon-trash "></i></button>
                                     </td>
                                 </tr>
                                 <tr v-if="!isData"><td colspan="10" class="text-center">暂无数据</td></tr>

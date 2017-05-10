@@ -26,4 +26,16 @@ class RelGoodsLabelRepository
     {
         $this->model = $relGL;
     }
+
+    /**
+     * 删除商品标签
+     *
+     * @param $where
+     * @param $ids
+     * @author zhulinjie
+     */
+    public function deleteWhereNotIn($where, $ids)
+    {
+        $this->model->where($where)->whereNotIn('goods_label_id', $ids)->delete();
+    }
 }
