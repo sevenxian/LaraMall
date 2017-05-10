@@ -51,6 +51,8 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::get('goodsList/{category_id}', 'GoodsController@goodsList');
     // 商品详情页
     Route::get('goodsDetail/{cargo_id}', 'GoodsController@goodsDetail');
+    // 立即抢购
+    Route::post('toSnapUp', 'GoodsController@toSnapUp');
     // 获取货品ID
     Route::post('getCargoId', 'GoodsController@getCargoId');
     // 分类

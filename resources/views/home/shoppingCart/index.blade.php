@@ -16,6 +16,7 @@
 
 @section('coreJs')
     <script type="text/javascript" src="/js/jquery.js"></script>
+    <script src="/layer/layer.js"></script>
 @stop
 
 @section('header')
@@ -67,32 +68,35 @@
                             @foreach($data as $value)
                                 <ul class="item-content clearfix">
                                     <li class="td td-chk">
-                                        <div class="cart-checkbox ">
+                                        <div class="cart-checkbox">
                                             <input class="check" id="J_CheckBox_170769542747" name="items"
-                                                   type="checkbox" checked="checked" value="{{ $value['id'] }}">
+                                                   type="checkbox" checked="checked" value="{{ $value['id'] }}"/>
                                             <label for="J_CheckBox_170769542747"></label>
                                         </div>
                                     </li>
                                     <li class="td td-item">
                                         <div class="item-pic">
-                                            <a href="#" target="_blank" data-title="{{ $value['cargo_name'] }}"
-                                               class="J_MakePoint" data-point="tbcart.8.12">
+                                            <a href="/home/goodsDetail/{{ $value['id'] }}" target="_blank"
+                                               data-title="{{ $value['cargo_name'] }}" class="J_MakePoint"
+                                               data-point="tbcart.8.12">
                                                 <img src="{{ env('QINIU_DOMAIN') }}{{ $value['cargo_cover'] }}?imageView2/1/w/80/h/80"
-                                                     class="itempic J_ItemImg"></a>
+                                                     class="itempic J_ItemImg">
+                                            </a>
                                         </div>
                                         <div class="item-info">
                                             <div class="item-basic-info">
-                                                <a href="#" target="_blank" title="{{ $value['cargo_name'] }}"
-                                                   class="item-title J_MakePoint"
-                                                   data-point="tbcart.8.11">{{ $value['cargo_name'] }}</a>
+                                                <a href="/home/goodsDetail/{{ $value['id'] }}" target="_blank"
+                                                   title="{{ $value['cargo_name'] }}" class="item-title J_MakePoint"
+                                                   data-point="tbcart.8.11">{{ str_limit($value['cargo_name'], 70, '...') }}</a>
                                             </div>
                                         </div>
                                     </li>
                                     <li class="td td-info">
-                                        <div class="item-props item-props-can" style="text-align: left">
+                                        <div class="item-props item-props-can"
+                                             style="text-align: left; padding-left: 20px;">
                                             @if(!empty($value['label']))
                                                 @foreach($value['label'] as $k => $v)
-                                                    <span class="sku-line">{{ $v['label_name'] }}
+                                                    <span class="sku-line">{{ str_replace('选择', '', $v['label_name']) }}
                                                         ：{{ $v['attr_name'] }}</span><br>
                                                 @endforeach
                                             @endif
@@ -103,11 +107,8 @@
                                         <div class="item-price price-promo-promo">
                                             <div class="price-content">
                                                 <div class="price-line">
-                                                    <em class="price-original">{{ $value['cargo_price'] }}</em>
-                                                </div>
-                                                <div class="price-line">
                                                     <em class="J_Price price-now"
-                                                        tabindex="0">{{ $value['cargo_discount'] }}</em>
+                                                        tabindex="0">{{ $value['price'] }}</em>
                                                 </div>
                                             </div>
                                         </div>
@@ -122,23 +123,28 @@
                                                            data-default-number="{{ $value['shopping_number'] }}"
                                                            style="width:30px;"/>
                                                     <input class="add am-btn" name="" type="button" value="+"/>
-                                                    <div style="color:red" class="message">@if($value['shopping_number'] > $value['inventory'])
-                                                            已缺货 @else 有货 @endif</div>
+                                                    <div style="color:#ccc;" class="message">
+                                                        @if($value['inventory'] == 0)
+                                                            无货
+                                                        @else
+                                                            有货
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </li>
                                     <li class="td td-sum">
                                         <div class="td-inner">
-                                            <em tabindex="0"
-                                                class="J_ItemSum number" data-default-price="{{ $value['shopping_number']*$value['cargo_discount'] }}">{{ $value['shopping_number']*$value['cargo_discount'] }}</em>
+                                            <em tabindex="0" class="J_ItemSum number"
+                                                data-default-price="{{ $value['shopping_number']*$value['price'] }}">{{ $value['shopping_number']*$value['price'] }}
+                                                .00</em>
                                         </div>
                                     </li>
                                     <li class="td td-op">
                                         <div class="td-inner">
-                                            <a title="收藏" class="btn-fav" href="#">
-                                                收藏</a>
-                                            <a href="javascript:;" data-point-url="#" data-cargo-id="{{ $value['id'] }}"
+                                            <a href="javascript:;" data-point-url="#"
+                                               data-cargo-id="{{ $value['cargo_id'] }}"
                                                class="delete">
                                                 删除</a>
                                         </div>
@@ -147,7 +153,7 @@
                             @endforeach
                         </div>
                     @else
-                        <div style="width:100%;text-align: center;margin-top:150px">
+                        <div style="text-align: center; padding: 50px 0;">
                             <a href="{{ url('/') }}" style="color: red;">购物车空空的哦~，去看看心仪的商品吧~</a>
                         </div>
                     @endif
@@ -189,9 +195,8 @@
                 </div>
 
             </div>
-
-            @include('home.public.footer')
         @endif
+        @include('home.public.footer')
     </div>
 
     <!--操作页面-->
@@ -256,18 +261,17 @@
 @stop
 @section('customJs')
     <script src="/js/check.js"></script>
-    <script src="/layer/layer.js"></script>
     <script>
         // 获取总数量元素
         var totalNumberObj = $('#J_SelectedItemsCount');
         // 获取总价格元素
         var totalPriceObj = $('#J_Total');
-        // 初始化总数量
-        var totalPrice = 0;
         // 初始化总价格
+        var totalPrice = 0;
+        // 初始化总数量
         var totalNumber = 0;
         // 进入页面显示总价格总数量
-        getData($("input[name='items']"),totalPrice,totalNumber);
+        getData($("input[name='items']"), totalPrice, totalNumber);
 
         // 购物车全部选中或者全部清除
         $('#J_SelectAllCbx2').click(function () {
@@ -279,18 +283,18 @@
             // 判断选中或者不选中
             if ($(this).attr('checked')) {
                 // 便利购物车数据
-                getData(obj,totalPrice,totalNumber);
-
+                getData(obj, totalPrice, totalNumber);
             } else {
                 // 把货品从购物车删除
                 $.each(obj, function (key, value) {
                     $(value).attr('checked', false);
-                })
+                });
                 // 把数据填充到页面
                 $('#J_SelectedItemsCount').html(totalNumber);
                 $('#J_Total').html(totalPrice);
             }
-        })
+        });
+
         // 选定指定货品计算总价及数量
         $("input[name='items']").click(function () {
             layer.load(2);
@@ -310,8 +314,9 @@
                 // 计算货品价格
                 totalPriceObj.html(totalPriceObj.html() - parseInt(price));
             }
-           layer.closeAll();
+            layer.closeAll();
         });
+
         // 删除单条商品
         $('.delete').click(function () {
             layer.load(2);
@@ -320,17 +325,23 @@
             var data = new Array(obj.attr('data-cargo-id'));
             sendAjax({'cargoId': data}, '/home/delShoppingCart', function (response) {
                 if (response.ServerNo == 200) {
-                    // 获取当前选中货品数量
-                    var number = obj.parents('.item-content').find('.text_box').val();
-                    // 获取当前选中货品的总价格
-                    var price = obj.parents('.item-content').find('.J_ItemSum').html();
-                    totalNumberObj.html(totalNumberObj.html() - number)
-                    totalPriceObj.html(totalPriceObj.html() - price);
-                    obj.parents('.item-content').hide();
+                    if (response.ResultData == 0) {
+                        $('.bundle-main').html('<div style="text-align: center; padding: 50px 0;"><a href="{{ url('/') }}" style="color: red;">购物车空空的哦~，去看看心仪的商品吧~</a> </div>');
+                        $('.float-bar-wrapper').remove();
+                    } else {
+                        // 获取当前选中货品数量
+                        var number = obj.parents('.item-content').find('.text_box').val();
+                        // 获取当前选中货品的总价格
+                        var price = obj.parents('.item-content').find('.J_ItemSum').html();
+                        totalNumberObj.html(totalNumberObj.html() - number);
+                        totalPriceObj.html(totalPriceObj.html() - price);
+                        obj.parents('.item-content').hide();
+                    }
                 }
             });
             layer.closeAll();
         });
+
         // 删除选中的商品
         $('#del').click(function () {
             layer.load(2);
@@ -340,121 +351,183 @@
                 if (value.checked) {
                     param[key] = $(value).val();
                 }
-            })
+            });
             sendAjax({'cargoId': param}, '/home/delShoppingCart', function (response) {
                 if (response.ServerNo == 200) {
-                    obj.parents('.item-content').hide();
+                    $('.bundle-main').html('<div style="text-align: center; padding: 50px 0;"><a href="{{ url('/') }}" style="color: red;">购物车空空的哦~，去看看心仪的商品吧~</a> </div>');
+                    $('.float-bar-wrapper').remove();
                 }
             });
             layer.closeAll();
         });
+
         // 数量加加
         $('.add').click(function () {
             layer.load(2);
             var obj = $(this);
             // 获取商品单价
             var price = parseInt(obj.parents('.item-content').find('.J_Price').html());
+
             // 获取点击后的数量进行库存查询
-            var number = parseInt(obj.parents('.item-content').find('.text_box').val())+1;
+            var number = parseInt(obj.parents('.item-content').find('.text_box').val()) + 1;
+
             // 总数量
             var totalNumber = parseInt($('#J_SelectedItemsCount').html());
             var totalPrice = parseInt($('#J_Total').html());
+
             // 初始化查询参数
-            var data ={
-                'cargoId':obj.parents('.item-content').find('.check').val(),
-                'number': number,
+            var data = {
+                cargoId: obj.parents('.item-content').find('.check').val(),
+                number: number
             };
 
-            // 查询货品数量是否充足
+            // 新增
             sendAjax(data, '/home/checkShoppingCart', function (response) {
-                layer.closeAll();
+                console.log();
                 if (response.ServerNo == 200) {
+                    var data = response.ResultData;
                     // 改变信息提示
                     obj.parents('.item-content').find('.message').html('有货');
+                    // 单价
+                    obj.parents('.item-content').find('.J_Price').html(data.price);
                     // 金额
-                    obj.parents('.item-content').find('.J_ItemSum').html(price*number);
+                    obj.parents('.item-content').find('.J_ItemSum').html(data.price * number + '.00');
                     // 总数量
-                    $('#J_SelectedItemsCount').html(totalNumber+1);
+                    $('#J_SelectedItemsCount').html(totalNumber + 1);
                     // 总金额
-                    $('#J_Total').html(totalPrice+price);
-                }else{
-                    // 无货显示信息
-                    obj.parents('.item-content').find('.message').html('已无货');
+                    getData($("input[name='items']"), 0, 0);
+                    // 超过促销数量不再享受优惠
+                    if (number > data.promotion_number) {
+                        layer.alert('购买超过' + data.promotion_number + '件时,不再享受优惠！');
+                    }
+                } else if(response.ServerNo == 410){
+                    layer.alert(response.ResultData);
                     // 显示原本数量
-                    obj.parents('.item-content').find('.text_box').val(number-1)
-
+                    obj.parents('.item-content').find('.text_box').val(200);
+                } else if(response.ServerNo == 412){
+                    layer.alert('商品数量不能超过'+response.ResultData);
+                    // 显示原本数量
+                    obj.parents('.item-content').find('.text_box').val(response.ResultData);
+                } else if(response.ServerNo == 414){
+                    layer.alert(response.ResultData);
+                    // 显示原本数量
+                    obj.parents('.item-content').find('.text_box').val(0);
+                } else {
+                    layer.alert(response.ResultData);
+                    // 显示原本数量
+                    obj.parents('.item-content').find('.text_box').val(number - 1);
                 }
-            })
+                layer.closeAll('loading');
+            });
         });
+
         // 数量减减
         $('.min').click(function () {
-            layer.load(2);
             var obj = $(this);
             // 获取商品单价
             var price = parseInt(obj.parents('.item-content').find('.J_Price').html());
             // 获取数量
             var number = parseInt(obj.parents('.item-content').find('.text_box').val());
-            if( number > 1){
+            if(number == 0){
+                return;
+            }
+
+            layer.load(2);
+
+            // 初始化查询参数
+            var data = {
+                cargoId: obj.parents('.item-content').find('.check').val(),
+                number: number - 1
+            };
+
+            if (number > 1) {
                 // 总数量
                 var totalNumber = parseInt($('#J_SelectedItemsCount').html());
                 // 总价格
-                var totalPrice = parseInt($('#J_Total').html());
-                // 计算价格
-                obj.parents('.item-content').find('.J_ItemSum').html(price*(number-1));
-                // 计算总价格
-                $('#J_Total').html(totalPrice-price);
-                // 计算总数量
-                $('#J_SelectedItemsCount').html(totalNumber-1);
-
+                var totalPrice = parseInt($('#J_Total').html())
+                // 删减
+                sendAjax(data, '/home/checkShoppingCart', function (response) {
+                    if (response.ServerNo == 200) {
+                        var data = response.ResultData;
+                        // 单价
+                        obj.parents('.item-content').find('.J_Price').html(data.price);
+                        // 计算价格
+                        obj.parents('.item-content').find('.J_ItemSum').html(data.price * (number - 1) + '.00');
+                        // 计算总数量
+                        $('#J_SelectedItemsCount').html(totalNumber - 1);
+                        // 总金额
+                        getData($("input[name='items']"), 0, 0);
+                        // 超过促销数量不再享受优惠
+                        if ((number - 1) > data.promotion_number) {
+                            layer.alert('购买超过' + data.promotion_number + '件时,不再享受优惠！');
+                        }
+                    } else {
+                        layer.alert(response.ResultData);
+                        // 显示原本数量
+                        obj.parents('.item-content').find('.text_box').val(number + 1);
+                    }
+                    layer.closeAll('loading');
+                });
             } else {
-                obj.parents('.item-content').find('.text_box').val(2);
-                obj.parents('.item-content').find('.J_ItemSum').html(price);
+                obj.parents('.sl').find('.text_box').val(2);
+                layer.closeAll('loading');
             }
-
-            layer.closeAll();
-
         });
+
         // 随意填写数量
-        $('.text_box').change(function () {
+        $('.text_box').on('blur', function () {
             layer.load(2);
             var obj = $(this);
 
             // 获取点击后的数量进行库存查询
             var number = parseInt(obj.parents('.item-content').find('.text_box').val());
-            // 限制输入最大值
-//            if(number > 200) {
-//                return obj.parents('.item-content').find('.message').html('最多可选200件');
-//            }
-            var price = parseInt(obj.parents('.item-content').find('.J_Price').html());
-            // 总数量
-            var totalNumber = 0;
-            var totalPrice = 0;
 
             // 初始化查询参数
-            var data ={
-                'cargoId':obj.parents('.item-content').find('.check').val(),
+            var data = {
+                'cargoId': obj.parents('.item-content').find('.check').val(),
                 'number': number,
             };
 
             // 查询货品数量是否充足
             sendAjax(data, '/home/checkShoppingCart', function (response) {
+                console.log(response);
                 if (response.ServerNo == 200) {
+                    var data = response.ResultData;
                     // 改变信息提示
                     obj.parents('.item-content').find('.message').html('有货');
-                    // 金额
-                    obj.parents('.item-content').find('.J_ItemSum').html(price*number);
-                }else{
-                    // 无货显示信息
-                    obj.parents('.item-content').find('.message').html('已无货');
-                    obj.parents('.item-content').find('.check').attr('checked',false);
-
+                    // 单价
+                    obj.parents('.item-content').find('.J_Price').html(data.price);
+                    // 计算价格
+                    obj.parents('.item-content').find('.J_ItemSum').html(data.price * number + '.00');
+                    // 总金额
+                    getData($("input[name='items']"), 0, 0);
+                    // 超过促销数量不再享受优惠
+                    if (number > data.promotion_number) {
+                        layer.alert('购买超过' + data.promotion_number + '件时,不再享受优惠！');
+                    }
+                } else if(response.ServerNo == 410){
+                    layer.alert(response.ResultData);
+                    // 显示原本数量
+                    obj.parents('.item-content').find('.text_box').val(200);
+                } else if(response.ServerNo == 412){
+                    layer.alert('商品数量不能超过'+response.ResultData);
+                    // 显示原本数量
+                    obj.parents('.item-content').find('.text_box').val(response.ResultData);
+                } else if(response.ServerNo == 414){
+                    layer.alert(response.ResultData);
+                    // 显示原本数量
+                    obj.parents('.item-content').find('.text_box').val(0);
+                } else {
+                    layer.alert(response.ResultData);
+                    // 显示原本数量
+                    obj.parents('.item-content').find('.text_box').val(number);
                 }
+                layer.closeAll('loading');
             });
-            getData($("input[name='items']"),totalPrice,totalNumber);
-            layer.closeAll();
         });
+
         // 页面初始化以及全部选中函数
-        function getData(obj,totalPrice,totalNumber){
+        function getData(obj, totalPrice, totalNumber) {
             // 便利购物车数据
             $.each(obj, function (key, value) {
                 // 把货品全部添加到购物车
@@ -468,26 +541,25 @@
             totalNumberObj.html(totalNumber);
             totalPriceObj.html(totalPrice);
         }
-        // 更新购物车数据
-        $('#J_Go').click(function(){
 
+        // 更新购物车数据
+        $('#J_Go').click(function () {
             var cargo_id = '';
             var shopping_number = '';
             $.each($("input[name='items']"), function (key, value) {
                 // 把货品全部添加到购物车
-                if($(value).attr('checked')){
-                    shopping_number += $(value).parents('.item-content').find('.text_box').val()+',';
-                    cargo_id +=$(value).parents('.item-content').find('.check').val()+',';
+                if ($(value).attr('checked')) {
+                    shopping_number += $(value).parents('.item-content').find('.text_box').val() + ',';
+                    cargo_id += $(value).parents('.item-content').find('.check').val() + ',';
                 }
             });
 
-            if(!cargo_id || !shopping_number){
+            if (!cargo_id || !shopping_number) {
                 return layer.msg('没有选择宝贝，无法结算');
             }
 
-           // console.log(shopping_number.substring(0,shopping_number.Length-1));
             // 拆分数组
-            window.location.href = '/home/order/create?cargo_id='+cargo_id.substring(0,cargo_id.length-1)+'&shopping_number='+shopping_number.substring(0,shopping_number.length-1);
+            location.href = '/home/order/create?cargo_id=' + cargo_id.substring(0, cargo_id.length - 1) + '&shopping_number=' + shopping_number.substring(0, shopping_number.length - 1);
         });
     </script>
 @stop
