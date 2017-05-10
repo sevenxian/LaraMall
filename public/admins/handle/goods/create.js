@@ -193,6 +193,7 @@ new Vue({
                 var fd = new FormData();
                 // 获取表单上传控件
                 var file = this.files[0];
+
                 // 允许上传的图片格式
                 var allowType = ['image/jpeg', 'image/png', 'image/gif'];
 
