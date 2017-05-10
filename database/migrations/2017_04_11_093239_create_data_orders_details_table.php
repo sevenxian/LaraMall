@@ -24,7 +24,7 @@ class CreateDataOrdersDetailsTable extends Migration
             $table->decimal('cargo_price',11,2)->comment('货品价格');
             $table->tinyInteger('return_status')->default(1)->comment('退货状态: 1 不退货 2:退货');
             $table->tinyInteger('comment_status')->default(1)->comment('评论状态: 1 未评论 2:已评论');
-            $table->integer('addtime',11)->comment('添加时间');
+            $table->integer('addtime')->comment('添加时间');
             $table->tinyInteger('del_status')->default(1)->comment('自定义软删除 1正常 2 删除');
 
         });
