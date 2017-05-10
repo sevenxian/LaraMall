@@ -16,7 +16,7 @@ class RelGoodsLabelRepository
      * @var RelGoodsLabel
      * @author zhulinjie
      */
-    protected $relGL;
+    protected $model;
 
     /**
      * RelGoodsLabelRepository constructor.

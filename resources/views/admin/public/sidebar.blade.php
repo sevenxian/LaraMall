@@ -28,8 +28,8 @@ s
                     <span class="arrow {{ $aside->openTag(['classification']) }}"></span>
                 </a>
                 <ul class="sub" {{ $aside->displayBlock(['classification']) }}>
-                    <li><a class="icon-align-center" href="{{ route('classification.index') }}"> 分类列表</a></li>
-                    <li><a class=" icon-indent-left" href="{{ route('classification.create') }}"> 添加分类</a></li>
+                    <li><a href="{{ route('classification.index') }}"> 分类列表</a></li>
+                    <li><a href="{{ route('classification.create') }}"> 添加分类</a></li>
                 </ul>
             </li>
 
@@ -40,8 +40,8 @@ s
                     <span class="arrow {{ $aside->openTag(['categoryLabel']) }}"></span>
                 </a>
                 <ul class="sub" {{ $aside->displayBlock(['categoryLabel']) }}>
-                    <li><a class="icon-align-center" href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>
-                    <li><a class=" icon-indent-left" href=""> 添加分类</a></li>
+                    <li><a href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>
+                    <li><a href=""> 添加分类</a></li>
                 </ul>
             </li>
 
@@ -54,6 +54,7 @@ s
                 <ul class="sub" {{ $aside->displayBlock(['goods', 'cargoList']) }}>
                     <li><a href="/admin/goods">商品列表</a></li>
                     <li><a href="/admin/goods/create">添加商品</a></li>
+                    <li><a href="/admin/cargoActivity">活动列表</a></li>
                 </ul>
             </li>
             <li class="sub-menu {{ $aside->openTag(['order']) }}">
@@ -62,12 +63,25 @@ s
                     <span>订单管理</span>
                 </a>
             </li>
+
+            <li class="sub-menu {{ $aside->openTag(['activity']) }}">
+                <a href="javascript:;" class="">
+                    <i class="icon-glass"></i>
+                    <span>活动管理</span>
+                    <span class="arrow {{ $aside->openTag(['activity']) }}"></span>
+                </a>
+                <ul class="sub" {{ $aside->displayBlock(['activity']) }}>
+                    <li><a href="/admin/activity">活动列表</a></li>
+                    <li><a href="/admin/activity/create">添加活动</a></li>
+                </ul>
+            </li>
             <li>
                 <a class="" href="login.html">
                     <i class="icon-user"></i>
                     <span>评论管理</span>
                 </a>
             </li>
+
             <li>
                 <a class="" href="login.html">
                     <i class="icon-user"></i>
@@ -87,9 +101,9 @@ s
                     <span class="arrow {{ $aside->openTag(['acl', 'permission']) }}"></span>
                 </a>
                 <ul class="sub" {{ $aside->displayBlock(['acl', 'permission']) }}>
-                    <li><a class="icon-male" href="{{ route('acl.index') }}"> 角色列表</a></li>
-                    <li><a class="icon-plus-sign" href="{{ route('acl.create') }}"> 添加角色</a></li>
-                    <li><a class="icon-plus-sign" href="{{ route('permission.create') }}"> 添加权限</a></li>
+                    <li><a href="{{ route('acl.index') }}"> 角色列表</a></li>
+                    <li><a href="{{ route('acl.create') }}"> 添加角色</a></li>
+                    <li><a href="{{ route('permission.create') }}"> 添加权限</a></li>
                 </ul>
             </li>
 
@@ -100,23 +114,23 @@ s
                     <span class="arrow {{ $aside->openTag(['recommend']) }}"></span>
                 </a>
                 <ul class="sub" {{ $aside->displayBlock(['recommend']) }}>
-                    <li><a class="icon-barcode" href="{{ route('recommend.index') }}"> 推荐位列表</a></li>
-                    <li><a class="icon-plus-sign" href="{{ route('recommend.create') }}"> 添加推荐位</a></li>
+                    <li><a href="{{ route('recommend.index') }}"> 推荐位列表</a></li>
+                    <li><a href="{{ route('recommend.create') }}"> 添加推荐位</a></li>
                 </ul>
             </li>
 
-            <li>
-                <a class="" href="login.html">
-                    <i class="icon-user"></i>
-                    <span>售后管理</span>
-                </a>
-            </li>
-            <li>
-                <a class="" href="login.html">
-                    <i class="icon-user"></i>
-                    <span>缓存管理</span>
-                </a>
-            </li>
+            {{--<li>--}}
+                {{--<a class="" href="login.html">--}}
+                    {{--<i class="icon-user"></i>--}}
+                    {{--<span>售后管理</span>--}}
+                {{--</a>--}}
+            {{--</li>--}}
+            {{--<li>--}}
+                {{--<a class="" href="login.html">--}}
+                    {{--<i class="icon-user"></i>--}}
+                    {{--<span>缓存管理</span>--}}
+                {{--</a>--}}
+            {{--</li>--}}
         </ul>
         <!-- sidebar menu end-->
     </div>

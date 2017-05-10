@@ -51,6 +51,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::get('goodsList/{category_id}', 'GoodsController@goodsList');
     // 商品详情页
     Route::get('goodsDetail/{cargo_id}', 'GoodsController@goodsDetail');
+    // 异步获取商品评论信息
+    Route::post('goodsDetails/comments', 'GoodsController@comments');
+    // 立即抢购
+    Route::post('toSnapUp', 'GoodsController@toSnapUp');
     // 获取货品ID
     Route::post('getCargoId', 'GoodsController@getCargoId');
     // 分类
@@ -114,10 +118,12 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::resource('order', 'OrderController');
         // 订单 查询订单状态
         Route::post('order/rotation', 'OrderController@rotation');
-        // 用户订单列表
+        // 订单 用户订单列表
         Route::get('orders/{order_status}', 'OrderController@index');
-
-
+        // 订单 点击收货
+        Route::get('orders/receiptGoods', 'OrderController@receiptGoods');
+        // 商品评论
+        Route::resource('comments', 'CommentsController');
         // 退出登录
         Route::get('logout', 'UserController@logout');
 
@@ -207,6 +213,18 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('getRecommend', 'CargoController@getRecommend');
         // 选择推荐位
         Route::post('selectRecommend', 'CargoController@selectRecommend');
+
+        // 对货品做活动
+        Route::resource('cargoActivity', 'CargoActivityController');
+        // 获取所有活动，暂时只做秒杀活动
+        Route::post('getActivity', 'CargoActivityController@getActivity');
+        // 获取在做活动的货品列表
+        Route::post('cargoActivityList', 'CargoActivityController@cargoActivityList');
+        
+        // 活动管理
+        Route::resource('activity', 'ActivityController');
+        // 获取活动列表
+        Route::post('activityList', 'ActivityController@activityList');
 
         // 权限块
         Route::resource('acl', 'AclController');

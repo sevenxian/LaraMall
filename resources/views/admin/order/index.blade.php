@@ -56,7 +56,7 @@
                                 <td width="10%"><font><font>@{{ data.commodity_number * data.cargo_price }}元</font></font></td>
                                 <td>
                                     <button v-if="data.order_status ==1" class="btn btn-danger btn-xs">待付款</button>
-                                    <button v-else-if="data.order_status ==2" class="btn btn-info btn-xs"  @click="sendGoods(data.id,index)" onmouseover="$(this).html('点击发货')" onmouseout="$(this).html('待发货')">待发货</button>
+                                    <button v-else-if="data.order_status ==2" class="btn btn-info btn-xs status"  @click="sendGoods(data.id,index,'status')"  onmouseover="$(this).html('点击发货')" onmouseout="$(this).html('待发货')">待发货</button>
                                     <button v-else-if="data.order_status ==3" class="btn btn-warning btn-xs">待收货</button>
                                     <button v-else-if="data.order_status ==4" class="btn btn-primary btn-xs">待评价</button>
                                     <button v-else-if="data.order_status ==5" class="btn btn-success btn-xs">已完成</button>

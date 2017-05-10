@@ -45,3 +45,21 @@ define('LIST_SHOPPING_CART_INFO_','LIST:SHOPPING:CART:INFO:');
  */
 define('STRING_CARGO_STANDARD_', 'STRING:CARGO:STANDARD:');
 
+/**
+ * 存储一场活动中的某个货品被抢购的数量
+ *
+ * KEY = STRING:ACTIVITY:CARGO:NUM:活动ID:货品ID
+ * VALUE = 一场活动中的某个货品被抢购的数量
+ * @author zhulinjie
+ */
+define('STRING_ACTIVITY_CARGO_NUM_', 'STRING:ACTIVITY:CARGO:NUM:');
+
+/**
+ * 存储一场活动中的某个货品被抢购的信息
+ *
+ * KEY = SADD:ACTIVITY:PURCHASE:INFOMATION:活动ID:货品ID
+ * VALUE = 一场活动中的某个货品被抢购的信息
+ * @author zhulinjie
+ */
+define('SADD_ACTIVITY_PURCHASE_INFOMATION_', 'SADD:ACTIVITY:PURCHASE:INFOMATION:');
+

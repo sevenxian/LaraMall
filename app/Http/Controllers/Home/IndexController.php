@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\ActivityRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\RecommendRepository;
 use App\Tools\Common;
@@ -23,6 +24,12 @@ class IndexController extends Controller
     protected $category;
 
     /**
+     * @var ActivityRepository
+     * @author zhulinjie
+     */
+    protected $activity;
+
+    /**
      * IndexController constructor.
      * @param RecommendRepository $recommend
      * @param CategoryRepository $categoryRepository
@@ -30,11 +37,13 @@ class IndexController extends Controller
     public function __construct
     (
         RecommendRepository $recommend,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        ActivityRepository $activityRepository
     )
     {
         $this->recommend = $recommend;
         $this->category = $categoryRepository;
+        $this->activity = $activityRepository;
     }
 
     /**
@@ -54,13 +63,17 @@ class IndexController extends Controller
             }
         }
 
+        // 获取最近的一次活动
+        $currentTimestamp = time();
+        $activity = $this->activity->activities($currentTimestamp);
+        
         // 获取楼层和楼层下面得商品
         $recommends = $this->recommend->recommendWithGoods();
 
-//        return $categorys;
+        $data['categorys'] = $categorys;
+        $data['activity'] = $activity;
+        $data['recommends'] = $recommends;
 
-//        dd($recommends->toArray());
-
-        return view('home.index', compact('recommends'), compact('categorys'));
+        return view('home.index', compact('data'));
     }
 }

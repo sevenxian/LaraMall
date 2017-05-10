@@ -34,4 +34,15 @@ class Cargo extends Model
     {
         return $this->belongsTo(Goods::class, 'goods_id');
     }
+
+    /**
+     * 多对多关联关系 / 一个货品可以在多个活动中
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @author zhulinjie
+     */
+    public function activitys()
+    {
+        return $this->belongsToMany(Activity::class, 'rel_goods_activitys', 'cargo_id', 'activity_id')->withTimestamps();
+    }
 }

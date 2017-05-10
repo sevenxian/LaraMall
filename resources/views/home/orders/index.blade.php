@@ -83,7 +83,7 @@
                                                 <div class="order-left">
                                                     @if(!empty($val['orderDetails']))
                                                     @foreach($val['orderDetails'] as $item)
-                                                    <ul class="item-list">
+                                                    <ul class="item-list" data-orderDetails-id="{{$item['id']}}">
                                                         <li class="td td-item">
                                                             <div class="item-pic">
                                                                 <a href="#" class="J_MakePoint">
@@ -115,19 +115,44 @@
                                                                 <span>×</span>{{ $item['commodity_number'] }}
                                                             </div>
                                                         </li>
+
                                                         <li class="td td-operation">
                                                             <div class="item-operation">
 
                                                             </div>
                                                         </li>
+                                                        @if($val['order']['pay_status'] ==2)
+                                                        <li class="td td-operation">
+                                                            <div class="item-operation">
+                                                                <span>{{ $item['commodity_number']*$item['cargo_price'] }}</span>
+                                                            </div>
+                                                        </li>
+
+                                                        <li class="td td-change" style="float:right;margin-top:12px">
+                                                            <div class="am-btn am-btn-danger">
+                                                                @if($item['order_status'] ==2)
+                                                                    <p class="Mystatus orderStatus" data-status="{{$item['order_status']}}">等待发货</p>
+                                                                @elseif($item['order_status'] ==3)
+                                                                    <p class="Mystatus orderStatus" data-status="{{$item['order_status']}}" data-message="点击收货" onmouseover="$(this).html($(this).attr('data-message'))" onmouseout="$(this).html('等待收货')">等待收货</p>
+                                                                @elseif($item['order_status'] ==4)
+                                                                    <p class="Mystatus orderStatus" data-status="{{$item['order_status']}}" data-message="点击评价" onmouseover="$(this).html($(this).attr('data-message'))" onmouseout="$(this).html('等待评价')">等待评价</p>
+                                                                @elseif($item['order_status'] ==5)
+                                                                    <p class="Mystatus orderStatus" data-status="{{$item['order_status']}}" data-message="点击删除" onmouseover="$(this).html($(this).attr('data-message'))" onmouseout="$(this).html('交易完成')">交易完成</p>
+                                                                @endif
+                                                            </div>
+                                                        </li>
+                                                        @endif
+
                                                     </ul>
                                                     @endforeach
                                                     @endif
 
                                                 </div>
+                                                @if($val['order']['pay_status'] !=2)
+                                                @inject('goods', 'App\Presenters\ShoppingCartPresenter')
                                                 <div class="order-right">
                                                     <li class="td td-amount">
-                                                        <div class="item-amount">合计:{{ $val['order']['total_amount'] }}</div>
+                                                        <div class="item-amount">合计:{{ $goods->totalPrice($val['orderDetails']) }}</div>
                                                     </li>
                                                     <div class="move-right">
                                                         <li class="td td-status">
@@ -139,8 +164,6 @@
                                                             <div class="am-btn am-btn-danger anniu">
                                                                 @if($val['order']['pay_status'] ==1)
                                                                     <p class="Mystatus">等待支付</p>
-                                                                @elseif($val['order']['pay_status'] ==2)
-                                                                    <p class="Mystatus">交易成功</p>
                                                                 @else
                                                                     <p class="Mystatus">交易关闭</p>
                                                                 @endif
@@ -148,6 +171,7 @@
                                                         </li>
                                                     </div>
                                                 </div>
+                                                @endif
                                             </div>
                                         </div>
 
@@ -179,9 +203,49 @@
     </div>
 @stop
 @section('customJs')
+    <script src="{{ asset('/js/check.js') }}"></script>
     <script>
         $('.order_status').click(function(){
             location.href="/home/orders/"+$(this).attr('data-status');
-        })
+        });
+        var data = {
+            '_token':"{{ csrf_token() }}",
+            'order_status':'',
+            'orderDetailsId':'',
+            '_method':''
+        }
+        $('.orderStatus').click(function(){
+
+            var obj = this;
+            var status = $(this).attr('data-status');
+            if(status ==2) {
+                layer.msg('商家暂未发货');
+                return false;
+            }
+
+            var orderDetailsId =$(this).parents('.item-list').attr('data-orderDetails-id');
+            if(status==3){
+                data.order_status=4;
+                data._method='PUT';
+                sendAjax(data,'/home/order/'+orderDetailsId,function(response){
+                    if(response.ServerNo == 200){
+                        layer.msg('确认成功');
+                        $(obj).parents('.item-list').hide();
+                    }else{
+                        layer.msg('操作失败');
+                    }
+                });
+            }else if(status ==4){
+                location.href="/home/comments/create?orderDetailsId="+orderDetailsId;
+            }else if(status == 5){
+                data.order_status=4;
+                sendAjax('data','',function(res){
+
+                });
+            }else {
+
+            }
+
+        });
     </script>
 @stop

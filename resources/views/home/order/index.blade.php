@@ -130,7 +130,7 @@
                                         <div class="item-props">
                                             @if(!empty($value['label']))
                                                 @foreach($value['label'] as $v)
-                                                <span class="sku-line">{{ $v['label_name'] }}:{{ $v['attr_name'] }}</span>
+                                                <span class="sku-line">{{ $v['label_name'] }}:{{ $v['attr_name'] }}</span><br>
                                                 @endforeach
                                             @endif
                                         </div>
@@ -140,7 +140,10 @@
                                             <div class="price-content">
                                                 <div class="price-content">
                                                     <div class="price-line">
-                                                        <em class="J_Price price-now" tabindex="0">{{ $value['cargo_price'] }}</em>
+                                                        <em class="price-original">{{ $value['cargo_price'] }}</em>
+                                                    </div>
+                                                    <div class="price-line">
+                                                        <em class="J_Price price-now" tabindex="0">{{ $value['price'] }}</em>
                                                     </div>
                                                 </div>
                                             </div>
@@ -165,12 +168,12 @@
                                 </li>
                                 <li class="td td-sum">
                                     <div class="td-inner">
-                                        <em tabindex="0" class="J_ItemSum number">{{ $value['shopping_number'] * $value['cargo_price'] }}</em>
+                                        <em tabindex="0" class="J_ItemSum number">{{ $value['shopping_number'] * $value['price'] }}</em>
                                     </div>
                                 </li>
                                 <li class="td td-oplist">
                                     <div class="td-inner">
-                                        0
+                                        {{ $value['shopping_number'] * $value['cargo_price'] - $value['shopping_number'] * $value['price'] }}
                                     </div>
                                 </li>
 

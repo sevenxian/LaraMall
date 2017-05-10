@@ -16,7 +16,7 @@ class GoodsLabelRepository
      * @var
      * @author zhulinjie
      */
-    protected $GoodsLabel;
+    protected $model;
 
     /**
      * GoodsLabelRepository constructor.
@@ -25,17 +25,5 @@ class GoodsLabelRepository
     public function __construct(GoodsLabel $goodsLabel)
     {
         $this->model = $goodsLabel;
-    }
-
-    /**
-     * 根据ID查找商品 标签
-     *
-     * @param $where
-     * @return mixed
-     * @author zhangyuchao
-     */
-    public function getOneLabel($where)
-    {
-        return $this->goodsLabel->where($where)->first();
     }
 }

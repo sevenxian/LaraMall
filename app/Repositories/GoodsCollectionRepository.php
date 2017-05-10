@@ -44,7 +44,7 @@ class GoodsCollectionRepository
     {
         return $this->goodsCollection->destroy($id);
     }
-
+    
     /**
      * 计算货品收藏数量
      *

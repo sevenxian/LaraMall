@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Repositories\ActivityRepository;
 use App\Repositories\AddressRepository;
 use App\Repositories\CargoRepository;
 use App\Repositories\GoodsAttributeRepository;
 use App\Repositories\GoodsLabelRepository;
 use App\Repositories\OrderDetailsRepository;
 use App\Repositories\OrdersRepository;
+use App\Repositories\RelGoodsActivityRepository;
 use App\Tools\Common;
 use App\Tools\LogOperation;
 use Carbon\Carbon;
@@ -74,7 +76,18 @@ class OrderController extends Controller
      * @var OrderDetailsRepository
      */
     protected $orderDetails;
-
+    /**
+     * @var ActivityRepository
+     */
+    protected $activity;
+    /**
+     * @var ActivityRepository
+     */
+    protected $relGoodsActivity;
+    /**
+     * @var string
+     */
+    protected $hashCargoInfo;
 
     public function __construct
     (
@@ -85,12 +98,15 @@ class OrderController extends Controller
         AddressRepository $addressRepository,
         OrdersRepository $ordersRepository,
         LogOperation $logOperation,
-        OrderDetailsRepository $orderDetailsRepository
+        OrderDetailsRepository $orderDetailsRepository,
+        ActivityRepository $activityRepository,
+        RelGoodsActivityRepository $relGoodsActivityRepository
 
     )
     {
         $this->hashShoppingCart = HASH_SHOPPING_CART_INFO_;
         $this->listShoppingCart = LIST_SHOPPING_CART_INFO_;
+        $this->hashCargoInfo = HASH_CARGO_INFO_;
         $this->cargo = $cargoRepository;
         $this->goodsLabel = $goodsLabelRepository;
         $this->goodsAttr = $goodsAttributeRepository;
@@ -98,6 +114,8 @@ class OrderController extends Controller
         $this->order = $ordersRepository;
         $this->log = $logOperation;
         $this->orderDetails = $orderDetailsRepository;
+        $this->activity = $activityRepository;
+        $this->relGoodsActivity = $relGoodsActivityRepository;
     }
 
     /**
@@ -105,52 +123,56 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request,$status)
+    public function index(Request $request, $status)
     {
 
         $where['user_id'] = \Session::get('user')->user_id;
-        if(!empty($status)) {
+        if (!empty($status)) {
             $where['order_status'] = $status;
         }
-        dd($this->order->a()->toArray());
         // 根据状态查询订单副表，并对其进行分页
-        $orderDetails = $this->orderDetails->getListPage($where,1);
+        $result = $this->orderDetails->getListPage($where, 10);
         // 初始化返回数组
         $data = [];
-        $result = $this->order->paging($where,1);
-        if(!empty($result)) {
+        if (!empty($result)) {
             $requestArray = $result->toArray();
-            foreach ($requestArray['data'] as $item){
-                // 获取订单主表信息
-                $orderDetails = $this->orderDetails->getList(['order_guid' => $item['guid']]);
-                if(!empty($orderDetails)) {
-                    $orderDetails = $orderDetails->toArray();
-                    foreach ($orderDetails as $key =>$detail) {
-                        $labels = json_decode($detail['cargo_message']['cargo_ids'], 1);
-                        foreach ($labels as $k => $v) {
-                            // 查询商品标签
-                            $label = $this->goodsLabel->find(['id' => $k]);
-                            // 查询商品标签值
-                            $attr = $this->goodsAttr->find(['id' => $v]);
-                            // 拼装货品信息
-                            if (!empty($label) && !empty($attr)) {
-                                $orderDetails[$key]['label'][$v] = [
-                                    'label_name' => $label->goods_label_name,
-                                    'attr_name' => $attr->goods_label_name
-                                ];
+            foreach ($requestArray['data'] as $item) {
 
-                            }
+                $labels = json_decode($item['cargo_message']['cargo_ids'], 1);
+                foreach ($labels as $k => $v) {
+                    // 查询商品标签
+                    $label = $this->goodsLabel->find(['id' => $k]);
+                    // 查询商品标签值
+                    $attr = $this->goodsAttr->find(['id' => $v]);
+                    // 拼装货品信息
+                    if (!empty($label) && !empty($attr)) {
+                        $item['label'][$v] = [
+                            'label_name' => $label->goods_label_name,
+                            'attr_name' => $attr->goods_label_name
+                        ];
+
+                    }
+                }
+                // 获取订单主表信息
+                $order = $this->order->find(['guid' => $item['order_guid']]);
+                if (!empty($order)) {
+                    $data[$item['order_guid']]['order'] = $order->toArray();
+                    $messages = json_decode($order->goods_message,1);
+
+                    foreach ($messages as $message){
+                        if($item['cargo_id'] == $message['id']) {
+                            unset($message['id']);
+                            $item = array_merge($item,$message);
                         }
                     }
-                    $data[$item['guid']]['orderDetails'][] = $orderDetails;
+
                 }
 
-                $data[$item['guid']]['order'][] = $item;
+                $data[$item['order_guid']]['orderDetails'][] = $item;
             }
 
         }
-
-        return view('home.orders.index',['data' => $data,'page'=>$result]);
+        return view('home.orders.index', ['data' => $data, 'page' => $result]);
     }
 
     /**
@@ -162,14 +184,19 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
+
         // 获取用户ID
         $userId = \Session::get('user')->user_id;
         // 获取货品ID
         $cargoIds = explode(',', $request['cargo_id']);
         // 组装商品信息
         $data = [];
+        // 便利购物车选中的商品
         foreach ($cargoIds as $key => $item) {
-            $cargo = \Redis::hGetAll($this->hashShoppingCart . $userId . ':' . $item);
+            // 读取缓存中购物车数据 不存在从数据库中读取
+            $cart = \Redis::hGetAll($this->hashShoppingCart . $userId . ':' . $item);
+            // 读取缓存中商品数据 不存在从数据库中读取
+            $cargo = \Redis::hGetAll($this->hashCargoInfo . $item);
             // 获取商品标签
             if (!empty($cargo['cargo_ids'])) {
                 // 商品标签转为数组
@@ -190,13 +217,7 @@ class OrderController extends Controller
                     }
                 }
             }
-
-            // 填写购买数量
-            $cargo['shopping_number'] = explode(',', $request['shopping_number'])[$key];
-
-            // 组装返回数据
-            $data['goods'][] = $cargo;
-
+            $data['goods'][] = array_merge($cart, $cargo);
         }
         // 获取用户收货地址
         $address = $this->address->select(['user_id' => $userId]);
@@ -238,49 +259,47 @@ class OrderController extends Controller
         $orderData['address_message'] = json_encode($address->toArray());// 收货地址
         // 获取单个货品做准备
         $cargoes = json_decode($request['goods_message'], 1);
-        $addtime = time();
+        $time = time();
+        // 获取正在进行的活动
+        $activity = $this->activity->ongoingActivities($time);
         foreach ($cargoes as $key => $item) {
-            $cargo = \Redis::hGetAll($this->hashShoppingCart . $userId . ':' . $item['cargo_id']);
-            if (empty($cargo)) {
-                // 查询数据库
-                $cargo = $this->cargo->find(['id' => $item['cargo_id']]);
-                // 判断是否存在该商品
-                if (empty($cargo)) {
-                    // 记录log日志
-                    // 不存在 跳出本次循环
-                    continue;
-                }
-                $cargo = $cargo->toArray();
-                $cargo['shopping_number'] = $item['shopping_number'];
-                \Redis::hSet($this->hashShoppingCart . $userId . ':' . $item['cargo_id'],$cargo);
-            }
+
+            $cart = \Redis::hGetAll($this->hashShoppingCart . $userId . ':' . $item['cargo_id']);
+            $cargo = \Redis::hGetAll($this->hashCargoInfo. $item['cargo_id']);
             // 判断是否存在库存
-            if($cargo['inventory'] != 0){
+            $tmp = array_merge($cart,$cargo);
+            if (empty($tmp['inventory'])) {
                 // 判断购买数量是否已经超出库存
-                if($cargo['inventory'] < $item['shopping_number']){
-                    $item['shopping_number'] = $cargo['inventory'];
+                if ($tmp['inventory'] < $tmp['shopping_number']) {
+                    $tmp['shopping_number'] = $tmp['inventory'];
                 }
                 // 组装订单详情表数据
                 $orderDetailsData[$key]['user_id'] = $userId;            // 购买用户
-                $orderDetailsData[$key]['cargo_id'] = $cargo['id'];       // 货品ID
-                $orderDetailsData[$key]['goods_id'] = $cargo['goods_id']; // 商品ID
+                $orderDetailsData[$key]['cargo_id'] = $tmp['id'];       // 货品ID
+                $orderDetailsData[$key]['goods_id'] = $tmp['goods_id']; // 商品ID
                 $orderDetailsData[$key]['order_guid'] = $orderData['guid'];// 订单ID
-                $orderDetailsData[$key]['cargo_price'] = $cargo['cargo_price']; // 货品价格
-                $orderDetailsData[$key]['commodity_number'] = $item['shopping_number']; // 购买数量
-                $orderDetailsData[$key]['addtime'] = $addtime; // 设置下单时间
+                $orderDetailsData[$key]['cargo_price'] = $tmp['price']; // 货品价格
+                $orderDetailsData[$key]['commodity_number'] = $tmp['shopping_number']; // 购买数量
+                $orderDetailsData[$key]['addtime'] = $time; // 设置下单时间
+                // 记录商品进行的活动
+                $cargoActivity ='';
+                if ($activity) {
+                    $cargoActivity = $this->relGoodsActivity->find(['cargo_id' => $tmp['id'], 'activity_id' => $activity->id]);
+                }
                 // 购买商品记录
                 $goodsMessage[$key] = [
-                    'id' => $cargo['id'],
-                    'cargo_price' => $cargo['cargo_price'],
-                    'shopping_number' => $item['shopping_number'],
-                    'cargo_title' => $item['cargo_title']
+                    'id' => $tmp['id'],
+                    'cargo_price' => $tmp['price'],
+                    'shopping_number' => $tmp['shopping_number'],
+                    'cargo_title' => $tmp['cargo_name'],
+                    'cargo_activity' => empty($cargoActivity)?'':$activity->id
                 ];
                 // 计算订单总金额
-                $total += $cargo['cargo_price'] * $item['shopping_number'];
+                $total += $tmp['price'] * $tmp['shopping_number'];
             }
         }
         // 判断 订单中是否存在货品
-        if(empty($orderDetailsData)) {
+        if (empty($orderDetailsData)) {
             // 返回
             return responseMsg('订单内不存在商品或商品已售罄', 400);
         }
@@ -305,17 +324,20 @@ class OrderController extends Controller
             // 减去库存
             foreach ($orderDetailsData as $item) {
                 // 从缓存中读取库存
-                $inventory = \Redis::hget($this->hashShoppingCart . $userId . ':' . $item['cargo_id'],'inventory');
+                $inventory = \Redis::hget($this->hashCargoInfo . $item['cargo_id'], 'inventory');
                 // 现有库存
-                $number = $inventory-$item['commodity_number'];
-                // 修改库存
-                $cargoResult = $this->cargo->update(['id' => $item['cargo_id']],['inventory' =>$number]);
-                // 不成功抛出异常
-                if(empty($cargoResult)) {
-                    throw new Exception(config('log.systemLog')[18]);
+                if($inventory>=1){
+                    $number = $inventory - $item['commodity_number'];
+                    // 修改库存
+                    $cargoResult = $this->cargo->update(['id' => $item['cargo_id']], ['inventory' => $number]);
+                    // 不成功抛出异常
+                    if (empty($cargoResult)) {
+                        throw new Exception(config('log.systemLog')[18]);
+                    }
+                    // 修改缓存数据
+                    \Redis::hSet($this->hashCargoInfo. $item['cargo_id'], 'inventory', $number);
                 }
-                // 修改缓存数据
-                \Redis::hSet($this->hashShoppingCart . $userId . ':' . $item['cargo_id'],'inventory',$number);
+
             }
             $result = $this->payType($orderData['pay_type'], $goodsMessage, $total, $orderData['guid']);
             if (empty($result)) {
@@ -381,7 +403,11 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $result = $this->orderDetails->update(['id'=>$id],['order_status'=>$request['order_status']]);
+        if(!empty($result)) {
+            return responseMsg('收货成功');
+        }
+        return responseMsg('失败',400);
     }
 
     /**
@@ -646,19 +672,19 @@ class OrderController extends Controller
         // 查询订单数据
         $orderResult = $this->order->find(['guid' => $guid]);
         // 判断订单是否为空
-        if(empty($orderResult)) {
+        if (empty($orderResult)) {
             // 组装数据
-            $logMessage = Common::logMessageForInside(\Session::get('user')->user_id,config('log.systemLog')[17] );
+            $logMessage = Common::logMessageForInside(\Session::get('user')->user_id, config('log.systemLog')[17]);
             // 写入log日志
             $this->log->writeSystemLog($logMessage);
             // 返回状态  数据丢失
-            return responseMsg('',410);
+            return responseMsg('', 410);
         }
-        if($orderResult->pay_status ==2) {
+        if ($orderResult->pay_status == 2) {
             // 正常 已支付
-            return responseMsg($orderResult,200);
+            return responseMsg($orderResult, 200);
         }
         // 还未支付
-        return responseMsg('',400);
+        return responseMsg('', 400);
     }
 }

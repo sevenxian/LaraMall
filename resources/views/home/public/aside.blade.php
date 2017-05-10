@@ -26,7 +26,7 @@
             <a href="javascript:;">我的小窝</a>
             <ul>
                 <li><a href="{{ url('/home/GoodsCollection') }}">商品收藏</a></li>
-                <li><a href="#">商品评价</a></li>
+                <li><a href="{{ url('/home/comments') }}">商品评价</a></li>
             </ul>
         </li>
     </ul>

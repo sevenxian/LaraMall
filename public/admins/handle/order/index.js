@@ -123,15 +123,18 @@ new Vue({
             });
         },
         // 发货
-        sendGoods(id,index) {
+        sendGoods(id,index,status) {
             layer.load(2);
             var data = {
                 'id':id,
                 '_token':token
-            }
+            };
+
             axios.post('/admin/order/sendGoods', data).then(response => {
                 if(response.data.ServerNo == 200){
+
                     this.datas[index].order_status=3;
+                    $('.status').html('待收货');
                 }else{
                     sweetAlert("请求失败!", "获取收货地址信息失败!", "error");
                 }

@@ -36,8 +36,10 @@ class ShoppingCartPresenter
         // 初始化总价格
         $price = 0;
         // 计算总价格
+        //dd($data);
         foreach ($data as $item) {
-            $price += $item['shopping_number'] * $item['cargo_discount'];
+            $item['price'] = empty($item['price'])?$item['cargo_price']:$item['price'];
+            $price += $item['shopping_number'] * $item['price'];
         }
         // 返回
         return $price;

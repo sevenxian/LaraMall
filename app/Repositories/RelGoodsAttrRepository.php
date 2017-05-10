@@ -16,7 +16,7 @@ class RelGoodsAttrRepository
      * @var RelGoodsAttr
      * @author zhulinjie
      */
-    protected $relGoodsAttr;
+    protected $model;
 
     /**
      * RelGoodsAttrRepository constructor.

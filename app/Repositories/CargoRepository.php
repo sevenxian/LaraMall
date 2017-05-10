@@ -25,7 +25,7 @@ class CargoRepository
      * @var Cargo
      * @author zhulinjie
      */
-    protected $cargo;
+    protected $model;
 
     /**
      * CargoRepository constructor.
