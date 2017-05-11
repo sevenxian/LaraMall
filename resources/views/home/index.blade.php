@@ -317,6 +317,7 @@
         @if($data['activity'])
             // 获取距离活动开始的秒数或者距离活动结束的秒数
             var intDiff = parseInt('{{ $HomeIndexPresenter->diffSeconds($data['activity']->start_timestamp, $data['activity']->length) }}');
+            var activityLength = parseInt('{{ $data['activity']->length }}') * 60;
         @endif
     </script>
     <script type="text/javascript " src="/handle/index.js"></script>

@@ -218,7 +218,7 @@ class GoodsController extends Controller
         if ($activity) {
             $activity->cargoActivity = $this->relGoodsActivity->find(['cargo_id' => $cargo->id, 'activity_id' => $activity->id]);
         }
-        
+
         // 先判断当前商品拥有多少种规格
         $standards = $this->relGoodsLabel->select(['goods_id' => $cargo->goods_id], 'goods_label_id')->toArray();
 
@@ -226,39 +226,97 @@ class GoodsController extends Controller
         $cids = [];
         if (count($standards) == 1) {
             $cids = $this->cargo->lists(['goods_id' => $cargo->goods_id], ['cargo_ids'])->toArray();
-            // 多种规格的情况
+        // 多种规格的情况
         } else if (count($standards) > 1) {
+            // 获取当前货品规格并转换格式
             $cargo_ids = json_decode($cargo->cargo_ids, 1);
-            foreach ($cargo_ids as $k => $v) {
-                $cids = array_unique(array_merge($cids, $this->cargo->lists(['cargo_ids->' . $k => $v], ['cargo_ids'])->toArray()));
+            $tmp = [];
+            foreach($cargo_ids as $k => $v){
+                $tmp[] = $k.':'.$v;
+            }
+            $cargo_ids = $tmp;
+
+            /**
+             * array:3 [▼
+             *     0 => "1:1"
+             *     1 => "2:6"
+             *     2 => "3:11"
+             * ]
+             */
+//            dd($cargo_ids);
+
+            // 货品规格两两排列组合
+            $tmp = [];
+            for($i=0; $i<count($cargo_ids); $i++){
+                for($j=$i+1; $j<count($cargo_ids); $j++){
+                    $tmp[] = $cargo_ids[$i].'@'.$cargo_ids[$j];
+                }
+            }
+            $cargo_ids = $tmp;
+
+            /**
+             * array:3 [▼
+             *     0 => "1:1@2:6"
+             *     1 => "1:1@3:11"
+             *     2 => "2:6@3:11"
+             * ]
+             */
+//            dd($cargo_ids);
+
+            // 获取满足所有组合条件的货品规格
+            foreach ($cargo_ids as $val) {
+                $val = explode('@', $val);
+                // 组合查询条件
+                foreach($val as $v){
+                    $v = explode(':', $v);
+                    $where['cargo_ids->'.$v[0]] = $v[1];
+                }
+                /**
+                 * array:2 [▼
+                 *     "cargo_ids->1" => "1"
+                 *     "cargo_ids->2" => "6"
+                 * ]
+                 */
+//                dd($where);
+
+                // 获取满足条件的货品（只取规格字段）
+//                $cids[] = $this->cargo->lists($where, ['cargo_ids'])->toArray();
+                $cids = array_unique(array_merge($cids, $this->cargo->lists(['cargo_ids->' . $v[0] => $v[1]], ['cargo_ids'])->toArray()));
             }
         }
 
         /**
-         * array:3 [▼
-         * 0 => "{"1": "2", "2": "3"}"
-         * 1 => "{"1": "2", "2": "4"}"
-         * 2 => "{"1": "1", "2": "3"}"
+         * array:5 [▼
+         *     0 => "{"1": "1", "2": "6", "3": "8"}"
+         *     1 => "{"1": "1", "2": "6", "3": "9"}"
+         *     2 => "{"1": "1", "2": "6", "3": "10"}"
+         *     3 => "{"1": "1", "2": "6", "3": "11"}"
+         *     4 => "{"1": "1", "2": "7", "3": "11"}"
          * ]
          */
 //        dd($cids);
 
         // 转换格式
+        $tmp = [];
         foreach ($cids as $val) {
             foreach (json_decode($val, 1) as $k => $v) {
                 $tmp[] = $k . ':' . $v;
             }
         }
+        $cids = array_unique($tmp);
 
         /**
-         * array:4 [▼
-         * 0 => "1:2"
-         * 1 => "2:3"
-         * 3 => "2:4"
-         * 4 => "1:1"
+         * array:7 [▼
+         *     0 => "1:1"
+         *     1 => "2:6"
+         *     2 => "3:8"
+         *     5 => "3:9"
+         *     8 => "3:10"
+         *     11 => "3:11"
+         *     13 => "2:7"
          * ]
          */
-        $cids = array_unique($tmp);
+//        dd($cids);
 
         // 查找家谱树
         $tree = array_reverse($this->tree($category->toArray(), $cargo->category_id));
@@ -336,7 +394,7 @@ class GoodsController extends Controller
         if (!$cargo) {
             return responseMsg('该货品不存在', 404);
         }
-
+        
         return responseMsg($cargo->id);
     }
 

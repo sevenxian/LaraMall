@@ -31,9 +31,9 @@ class ActivityRepository
      */
     public function activities($currentTimestamp)
     {
-        return $this->model->where('end_timestamp', '>', $currentTimestamp)->first();
+        return $this->model->where('end_timestamp', '>', $currentTimestamp)->orderBy('start_timestamp')->first();
     }
-
+    
     /**
      * 获取正在进行的活动
      *
