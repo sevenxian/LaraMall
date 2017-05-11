@@ -157,7 +157,11 @@
                                             <strong>{{ $cargo->cargo_price }}</strong>
                                         </p>
                                         <p class="number fl">
-                                            <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">收藏</a><span class="count">1231</span>
+                                       {{--     @inject('GoodsConcern', 'App\Presenters\GoodsConcernPresenter')--}}
+                                           {{-- <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">收藏</a><span class="count">@if(empty($GoodsConcern->setconcern())) 0 @else
+                                                    {{$GoodsConcern->setconcern()}}
+                                                @endif</span>--}}
+                                            <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">收藏</a><span class="count">{{count($cargo->goodscollection->toArray())}}</span>
                                         </p>
                                     </div>
                                 </li>
@@ -268,11 +272,17 @@
              'cargo_id':$(this).attr('data-cargo-id'),
                 '_token':"{{ csrf_token() }}",
              'user_id':''
-            }
+            };
             sendAjax(data,'/home/GoodsCollection',function(response){
                 if(response.ServerNo == 200){
                     obj.next().html(response.ResultData);
                     obj.html('已关注');
+                }else if(response.ServerNo == 300){
+                    obj.next().html(response.ResultData);
+                    obj.html('收藏');
+                }else{
+                    obj.next().html(response.ResultData);
+                    obj.html('操作失败');
                 }
             })
         })
