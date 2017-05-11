@@ -16,6 +16,7 @@ class AsidePresenter
 
         $data = explode('/',\Request::path());
         if (in_array($data[1], $path)) {
+
             return 'open active';
         }
     }

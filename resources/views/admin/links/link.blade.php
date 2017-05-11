@@ -41,7 +41,8 @@
                                 <td><font><font>@{{ data.name }}</font></font></td>
                                 <td v-if=" data.type == 1"><font><font>图片 </font></font></td>
                                 <td v-else><font><font>文字</font></font></td>
-                                <td><font><font><img src="data.image" alt="" width="80" height="30" ></font></font></td>
+                                <td v-if=" data.type == 1"><font><font><img :src="'{{ env("QINIU_DOMAIN") }}'+data.image" alt="" width="80" height="50" ></font></font></td>
+                                <td v-if=" data.type == 2"><font><font>@{{ data.name }}</font></font></td>
                                 <td><font><font>@{{ data.url }}</font></font></td>
                                 <td>
                                     <button @click="getAdminId(data.id,data)" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updatePassword" data-whatever="@getbootstrap"  >修改</button>
@@ -61,7 +62,7 @@
                                     <h4 class="modal-title" id="exampleModalLabel">添加友情链接</h4>
                                 </div>
                                 <div class="modal-body " id='FriendLink'>
-                                    <form class="userForm"  @submit.prevent="sub($event)">
+                                    <form class="userForm linkList"  @submit.prevent="sub($event)" onsubmit ="return false" >
                                         {{ csrf_field() }}
                                         <div class="form-group">
                                             <label for="recipient-name" class="control-label">链接名称:</label>
@@ -73,12 +74,9 @@
                                         </div>
                                         <div class="form-group" v-if="type==1">
                                                 <div class="col-lg-13">
-                                                    {{--<label for="img">--}}
-                                                        {{----}}
-                                                    {{--</label>--}}
-                                                    <img width="100px" class="img-responsive" id="img_img" @click="upload" src="https://dn-phphub.qbox.me/uploads/images/201704/11/4430/U0ctyGJUV7.png">
-                                                    <input id="img" style="display: none" type="file" class="form-control" name="image">
-                                                    <input type="hidden" name="image">
+                                                    <img width="100px" class="img-responsive img_img" id="img_img" @click="upload" src="https://dn-phphub.qbox.me/uploads/images/201704/11/4430/U0ctyGJUV7.png">
+                                                    <input class="img" style="display: none" type="file" class="form-control" >
+                                                    <input type="hidden" name="image" class="image_img">
                                                 </div>
                                             </div>
                                         <div class="form-group">
@@ -111,7 +109,9 @@
                                             <input type="text" class="form-control" id="name" name="name" :value="link.name">
                                         </div>
                                         <div class="form-group">
-                                            <img src="link.image" alt="" width="120" height="50" >  <input type="file" name="image" id="image" name="image"/>
+                                            <img class="img-responsive img_img" id="img_img" @click="upload" :src="'{{ env("QINIU_DOMAIN") }}'+link.image" alt="" width="100"  >
+                                            <input class="img" style="display: none" type="file"  class="form-control"/>
+                                            <input type="hidden" name="image" class="image_img">
                                         </div>
                                         <div>
                                             <label for="message-text" class="control-label">链接地址:</label>
@@ -133,8 +133,13 @@
     </section>
 @stop
 @section('customJs')
+    <!-- 定义七牛 -->
+    <script> var QINIU_DOMAIN = '{{ env("QINIU_DOMAIN") }}';</script>
     <!--定义token-->
     <script> var token = "{{ csrf_token() }}" </script>
     <!-- 获取列表页js -->
     <script src="{{ asset('admins/handle/link/index.js') }}"></script>
+    <!-- 表单验证js -->
+    {{--<script src="{{ asset('admins/handle/link/link_validation.js') }}"></script>--}}
+
 @stop

@@ -1,5 +1,5 @@
 /**
- * 分页获取友情链接
+ * 友情链接列表
  * @author wutao
  */
 var linkListVue = new Vue({
@@ -14,13 +14,14 @@ var linkListVue = new Vue({
                 to: 0, // 当前页码最后一栏数据是数据库第几条
                 current_page: 1 // 当前页
             },
-            adminId: '',
+            adminId: '',   //id
             offset: 4, // 页码偏移量
             datas: [], // 页码内容
             search: {'value': ''}, // 搜索条件
-            per_page: 5, // 一页显示的数据
-            link: '',
-            type: 1,
+            per_page: 8, // 一页显示的数据
+            link: '',    //表单传来要修改的数据
+            type: 1,  //默认选中图片
+            //接收修改完的数据
             insert: {
                 'id':'',
                 'name':'',
@@ -67,7 +68,6 @@ var linkListVue = new Vue({
         }
 
     },
-    // 删除方法定义
     methods: {
         // 获取页码数据
         fetchDatas(page) {
@@ -77,12 +77,15 @@ var linkListVue = new Vue({
                 where: this.search, // 搜索条件
                 perPage: this.per_page, // 页面展示的数据
             };
-            // 请求数据
+            // 请求列表页数据
             axios.post('/admin/linkList', data).then(response => {
                 if(response.data.ServerNo == 200){
                     this.datas = response.data.ResultData.data;
                     this.pagination = response.data.ResultData;
                     layer.closeAll();
+                }else{
+                    layer.closeAll();
+                    sweetAlert("请求失败!", "", "success");
                 }
             }).catch(error => {
                 // layer 加载层关闭
@@ -105,11 +108,15 @@ var linkListVue = new Vue({
         searchLists() {
             this.fetchDatas(this.pagination.current_page);
         },
-        // 获取友情链接ID
+        // 获取友情链接ID和要修改的数据
         getAdminId(id,data) {
             this.adminId = id;
-           this.link = data;
+            this.link = data;
         },
+        /**
+         *删除友情链接
+         *@author wutao
+         */
         // 删除友情链接操作
         deleteAdmin(id,index) {
             axios.post('/admin/friendLink/'+id,{'_method':'delete'}).then(response => {
@@ -118,6 +125,7 @@ var linkListVue = new Vue({
                     this.datas.splice(index,1)
                     layer.closeAll();
                     sweetAlert("删除成功!", "", "success");
+                    window.location.href="/admin/friendLink";
                 }else{
                     layer.closeAll();
                     sweetAlert("删除失败!", "", "success");
@@ -130,23 +138,47 @@ var linkListVue = new Vue({
         },
         //上传图片方法
         upload(e) {
+            //当上传文件时会触发img中的click事件
             $(e.target).next().trigger('click');
             //给图片绑定onchange事件
-            $('#img').on('change',function() {
+            $('.img').on('change',function() {
                 //获取控件中的文件
                 var obj = this;
                 var formData = new FormData();
-                formData.append('image', this.files[0]);
-                //formData.append('_token', $('#token').val());
+                var file = this.files[0];
+                // 允许上传的图片格式
+                var allowType = ['image/jpeg', 'image/png', 'image/gif'];
+
+                // 检测上传图片格式是否合法
+                if($.inArray(file.type, allowType) == -1){
+                    sweetAlert("操作失败!", "图片格式有误，请上传jpg、png、gif格式的图片!", "error");
+                    return;
+                }
+                formData.append('image', file);
                 //发送参数
                 axios.post('/admin/linkPhoto', formData).then(response => {
+                    console.log(response.data.ServerNo);
                     //判断返回结果
-                    if(response.data.ServerNo==200) {
-                        $('#img_img').attr('src','http://oa3kxwz8k.bkt.clouddn.com/' + response.data.ResultData);
+                    if(response.data.ServerNo != 200) {
+                        sweetAlert('操作失败!', response.data.ResultData, 'error');
+                        return;
                     }
+                        var data = response.data.ResultData;
+                        //设置图片src属性，用于显示图片
+                        $('.img_img').attr('src',QINIU_DOMAIN + response.data.ResultData);
+                        // 将返回图片路径名设置到隐藏文本框中，用于提交到数据库
+                        $(e.target).nextAll('.image_img').val(data);
+                        // 删除事件，防止事件累加导致一次上传多个文件的问题
+                        $(obj).off('change')
+                }).catch(error =>{
+                         sweetAlert('操作失败!',error,'error');
                 });
             });
         },
+        /**
+         * 添加友情链接
+         * @author wutao
+          */
         //添加定义方法
         sub() {
             // FormData支援把 Form 元素丟進去
@@ -155,10 +187,11 @@ var linkListVue = new Vue({
             axios.post('/admin/friendLink', formData).then(response => {
                 // 判断返回结果
                 if(response.data.ServerNo == 200){
-                    console.log(response.data);
                     // 信息提示
                     layer.closeAll();
                     sweetAlert('添加完成','', "success");
+                    //window.location.href="/admin/friendLink";
+                    window.setTimeout("window.location='/admin/friendLink'",2000);
                 }else{
                     // 添加失败信息提示
                     layer.closeAll();
@@ -170,6 +203,11 @@ var linkListVue = new Vue({
                 sweetAlert("网络请求失败!", '', "error");
             });
         },
+        /**
+         * 修改友情链接
+          * @param event
+         * @author wutao
+         */
         //修改定义方法
         linkUpdate(event) {
             // 获取友情链接ID
@@ -183,6 +221,8 @@ var linkListVue = new Vue({
                     // 信息提示
                     layer.closeAll();
                     sweetAlert('修改成功','', "success");
+                    //window.location.href="/admin/friendLink";
+                    window.setTimeout("window.location='/admin/friendLink'",2000);
                 }else{
                     // 添加失败信息提示
                     layer.closeAll();
