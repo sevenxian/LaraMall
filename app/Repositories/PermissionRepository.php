@@ -16,7 +16,7 @@ class PermissionRepository
      * @var Permission
      * @author Luoyan
      */
-    protected $permission;
+    protected $model;
 
     /**
      * RoleRepository constructor.

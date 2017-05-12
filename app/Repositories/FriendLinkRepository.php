@@ -15,7 +15,7 @@ class FriendLinkRepository
      * @var FriendLink
      * @author wutao
      */
-    protected $friendLink;
+    protected $model;
 
     /**
      * 模型注入
@@ -27,5 +27,10 @@ class FriendLinkRepository
     public function __construct(FriendLink $friendLink)
     {
         $this->model = $friendLink;
+    }
+
+    public function select(array $where = [], $fieldName = 'id', $direction = 'asc')
+    {
+        return $this->model->where($where)->orderBy($fieldName, $direction)->get();
     }
 }

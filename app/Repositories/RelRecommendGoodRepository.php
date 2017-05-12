@@ -11,24 +11,20 @@ use App\Model\RelRecommendGood;
 class RelRecommendGoodRepository
 {
     use BaseRepository;
-    
-    protected $relRG;
 
+    /**
+     * @var
+     * @author zhulinjie
+     */
+    protected $model;
+
+    /**
+     * RelRecommendGoodRepository constructor.
+     * @param RelRecommendGood $recommendGood
+     */
     public function __construct(RelRecommendGood $recommendGood)
     {
         $this->model = $recommendGood;
-    }
-
-    /**
-     * 新增一条数据
-     * 
-     * @param $data
-     * @return static
-     * @author zhulinjie
-     */
-    public function addRelRecommendGoods($data)
-    {
-        return $this->relRG->create($data);
     }
 
     /**
@@ -41,6 +37,6 @@ class RelRecommendGoodRepository
      */
     public function whereNotInRecommendIds($cargo_id, array $data)
     {
-        return $this->relRG->where('cargo_id', $cargo_id)->whereNotIn('recommend_id', $data)->delete();
+        return $this->model->where('cargo_id', $cargo_id)->whereNotIn('recommend_id', $data)->delete();
     }
 }

@@ -24,7 +24,7 @@ class CategoryAttributeRepository
      * @var CategoryAttribute
      * @author zhulinjie
      */
-    protected $categoryAttrbute;
+    protected $model;
 
     public function __construct(CategoryAttribute $categoryAttribute)
     {

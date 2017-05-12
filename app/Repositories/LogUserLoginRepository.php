@@ -10,10 +10,11 @@ use App\Model\LogUserLogin;
  */
 class LogUserLoginRepository
 {
+    use BaseRepository;
     /**
      * @var LogUserLogin
      */
-    protected $logUserLogin;
+    protected $model;
 
     /**
      * LogUserLoginRepository constructor.
@@ -22,18 +23,7 @@ class LogUserLoginRepository
      */
     public function __construct(LogUserLogin $logUserLogin)
     {
-        $this->logUserLogin = $logUserLogin;
+        $this->model = $logUserLogin;
     }
 
-    /**
-     * 添加一条用户登录日志
-     *
-     * @param $param
-     * @return static
-     * @author zhangyuchao
-     */
-    public function addOneUserLoginData($param)
-    {
-        return $this->logUserLogin->create($param);
-    }
 }

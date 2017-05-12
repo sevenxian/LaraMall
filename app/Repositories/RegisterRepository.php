@@ -10,11 +10,11 @@ use App\Model\UserRegister;
  */
 class RegisterRepository
 {
-
+    use BaseRepository;
     /**
      * @var UserRegister
      */
-    protected $userRegister;
+    protected $model;
 
     /**
      * 注入用户注册model
@@ -25,45 +25,21 @@ class RegisterRepository
      */
     public function __construct(UserRegister $userRegister)
     {
-        $this->userRegister = $userRegister;
+        $this->model = $userRegister;
     }
 
     /**
-     * 向注册源数据表添加一条数据
+     * 分页获取用户列表数据
      *
-     * @param array $param
-     * @return static
+     * @param $where
+     * @param $perPage
      * @author zhangyuchao
      */
-    public function createOneUser(array $param)
+    public function userList($where,$perPage)
     {
-        return $this->userRegister->create($param);
+       return $this->model->where($where)->with('message')->orderBy('created_at','desc')->paginate($perPage);
     }
 
-    /**
-     * 根据条件查找单挑数据
-     *
-     * @param array $where
-     * @return mixed
-     * @author zhangyuchao
-     */
-    public function findOneUser(array $where)
-    {
-        return $this->userRegister->where($where)->first();
-    }
 
-    /**
-     * 获取用户列表
-     *
-     * @param array $where
-     * @param int $perPage
-     * @return mixed
-     * @author zhangyuchao
-     */
-    public function getUserList(array $where, $perPage = 20)
-    {
-       return $this->userRegister->where($where)->orderBy('created_at', 'desc')->with('message')->paginate($perPage);
-
-    }
 
 }

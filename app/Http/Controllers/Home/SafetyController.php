@@ -109,7 +109,7 @@ class SafetyController extends Controller
             return back()->withErrors('新密码中不可以存在空格');
         }
         // 更新密码
-        $indexUserLoginResult = $this->indexUserLogin->updateUserManner(['user_id' => $user->user_id], ['password' => bcrypt($newPassword)]);
+        $indexUserLoginResult = $this->indexUserLogin->update(['user_id' => $user->user_id], ['password' => bcrypt($newPassword)]);
 
         // 判断是否更新成功
         if (empty($indexUserLoginResult)) {
@@ -232,7 +232,7 @@ class SafetyController extends Controller
             return responseMsg('验证码已发送', 400);
         }
         // 检查登录账号是否重复
-        $indexUserResult = $this->indexUserLogin->findOneUserManner(['login_name' => $request['login_name']]);
+        $indexUserResult = $this->indexUserLogin->find(['login_name' => $request['login_name']]);
         // 判断绑定类型
         if ($request['sendType'] == 1) {
             // 根据绑定类型 返回错误信息
@@ -293,7 +293,7 @@ class SafetyController extends Controller
             \DB::beginTransaction();
             // 用户登录索引变  1 更新 2 新添加
             if ($request['bindStatus'] == 1) {
-                $userLoginResult = $this->indexUserLogin->updateUserManner(
+                $userLoginResult = $this->indexUserLogin->update(
                     ['user_id' => $user->id],
                     ['login_name' => $request['loginName']]
                 );
@@ -304,13 +304,13 @@ class SafetyController extends Controller
                     'user_id' => $user->user_id,
                     'last_login_ip' => request()->ip(),
                 ];
-                $userLoginResult = $this->indexUserLogin->createOneUserManner($param);
+                $userLoginResult = $this->indexUserLogin->insert($param);
             }
             if (empty($userLoginResult)) {
                 throw new Exception(config('log.systemLog')[7]);
             }
             // 更新用户基本信息表
-            $userInfoResult = $this->userInfo->updateOneUser(['user_id' => $user->user_id], $userInfoParam);
+            $userInfoResult = $this->userInfo->update(['user_id' => $user->user_id], $userInfoParam);
             if (empty($userInfoResult)) {
 
                 throw new Exception(config('log.systemLog')[8]);
@@ -352,7 +352,7 @@ class SafetyController extends Controller
             // 返回错误信息
             return responseMsg('邮件已发送', 400);
         }
-        $IndexUserLoginResult = $this->indexUserLogin->findOneUserManner(['login_name' => $request['email']]);
+        $IndexUserLoginResult = $this->indexUserLogin->find(['login_name' => $request['email']]);
         if (!empty($IndexUserLoginResult)) {
             return responseMsg('电子邮箱已使用');
         }
@@ -398,12 +398,12 @@ class SafetyController extends Controller
                 'user_id' => $user->user_id,
                 'last_login_ip' => request()->ip(),
             ];
-            $userLoginResult = $this->indexUserLogin->createOneUserManner($param);
+            $userLoginResult = $this->indexUserLogin->insert($param);
             if (empty($userLoginResult)) {
                 throw new Exception(config('log.systemLog')[7]);
             }
             // 更新用户基本信息表
-            $userInfoResult = $this->userInfo->updateOneUser(['user_id' => $user->user_id], ['email' => $request['email']]);
+            $userInfoResult = $this->userInfo->update(['user_id' => $user->user_id], ['email' => $request['email']]);
             if (empty($userInfoResult)) {
 
                 throw new Exception(config('log.systemLog')[8]);
@@ -447,7 +447,7 @@ class SafetyController extends Controller
     {
         unset($request['_token']);
         // 更新实名认证信息
-        $userInfoResult = $this->userInfo->updateOneUser(['user_id' => \Session::get('userInfo')->user_id], $request->all());
+        $userInfoResult = $this->userInfo->update(['user_id' => \Session::get('userInfo')->user_id], $request->all());
         // 判断是否更新成功
         if (!empty($userInfoResult)) {
             // 成功保存session

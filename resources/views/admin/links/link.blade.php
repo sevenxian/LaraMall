@@ -109,7 +109,7 @@
                                             <input type="text" class="form-control" id="name" name="name" :value="link.name">
                                         </div>
                                         <div class="form-group">
-                                            <img class="img-responsive img_img" id="img_img" @click="upload" :src="'{{ env("QINIU_DOMAIN") }}'+link.image" alt="" width="100"  >
+                                            <img v-if=" link.type == 1" class="img-responsive img_img" id="img_img" @click="upload" :src="'{{ env("QINIU_DOMAIN") }}'+link.image" alt="" width="100"  >
                                             <input class="img" style="display: none" type="file"  class="form-control"/>
                                             <input type="hidden" name="image" class="image_img">
                                         </div>

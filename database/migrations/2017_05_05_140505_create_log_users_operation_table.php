@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLogUsersOptionsTable extends Migration
+class CreateLogUsersOperationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateLogUsersOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('log_users_options', function (Blueprint $table) {
+        Schema::create('log_users_operation', function (Blueprint $table) {
             $table->increments('id')->comment('用户操作日志表');
-            $table->integer('user_id')->index()->comment('用户ID');
+            $table->integer('operation_id')->index()->comment('用户ID');
             $table->ipAddress('login_ip')->comment('登录IP');
             $table->string('events')->comment('操作事件 (路由与参数)');
             $table->text('content')->comment('操作内容');
@@ -31,6 +31,6 @@ class CreateLogUsersOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('log_users_options');
+        Schema::dropIfExists('log_users_operation');
     }
 }

@@ -7,10 +7,12 @@ use App\Model\ShoppingCart;
 
 class ShoppingCartRepositories
 {
+    use BaseRepository;
+    
     /**
      * @var ShoppingCart
      */
-    protected $shoppingCart;
+    protected $model;
 
     /**
      * 注入
@@ -20,11 +22,6 @@ class ShoppingCartRepositories
      */
     public function __construct(ShoppingCart $shoppingCart)
     {
-        $this->shoppingCart = $shoppingCart;
-    }
-
-    public function createCargoForCart($param)
-    {
-        return $this->shoppingCart->create($param);
+        $this->model = $shoppingCart;
     }
 }

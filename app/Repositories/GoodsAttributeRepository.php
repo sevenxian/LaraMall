@@ -24,7 +24,7 @@ class GoodsAttributeRepository
      * @var
      * @author zhulinjie
      */
-    protected $GoodsAttrbute;
+    protected $model;
 
     /**
      * GoodsAttributeRepository constructor.

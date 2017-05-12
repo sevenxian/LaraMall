@@ -15,9 +15,10 @@ class CreateDataShoppingCartTable extends Migration
     {
         Schema::create('data_shopping_cart', function (Blueprint $table) {
             $table->increments('id')->comment('购物车表');
-            $table->integer('user_id')->comment('用户ID');
-            $table->integer('cargo_id')->comment('货品ID');
-            $table->integer('shopping_number')->comment('货品数量');
+            $table->integer('user_id')->index()->comment('用户ID');
+            $table->integer('cargo_id')->index()->comment('货品ID');
+            $table->smallInteger('shopping_number')->comment('货品数量');
+            $table->decimal('price')->comment('价格');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
         });

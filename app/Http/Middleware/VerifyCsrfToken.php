@@ -15,5 +15,8 @@ class VerifyCsrfToken extends BaseVerifier
         //
         '/home/addToShoppingCart',
         '/home/delShoppingCart',
+        '/home/checkShoppingCart',
+        '/home/order/aliPayNotify',
+        '/home/order/wechatNotify'
     ];
 }

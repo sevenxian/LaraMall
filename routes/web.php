@@ -51,13 +51,22 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::get('goodsList/{category_id}', 'GoodsController@goodsList');
     // 商品详情页
     Route::get('goodsDetail/{cargo_id}', 'GoodsController@goodsDetail');
+    // 异步获取商品评论信息
+    Route::post('goodsDetails/comments', 'GoodsController@comments');
+    // 立即抢购
+    Route::post('toSnapUp', 'GoodsController@toSnapUp');
     // 获取货品ID
     Route::post('getCargoId', 'GoodsController@getCargoId');
     // 分类
     Route::get('sort', 'GoodsController@sort')->name('home.sort');
     // 验证邮箱路由
     Route::get('safety/checkEmail', 'SafetyController@checkEmail');
-
+    // 支付宝同步回调
+    Route::get('order/aliPayCogradient', 'OrderController@aliPayCogradient');
+    // 支付宝异步回调
+    Route::post('order/aliPayNotify', 'OrderController@aliPayNotify');
+    // 微信异步回调
+    Route::post('order/wechatNotify', 'OrderController@wechatNotify');
     Route::group(['middleware' => 'member'], function () {
         // 购物车
         Route::get('goods/shopCart', 'GoodsController@shopCart')->name('home.goods.shopCart');
@@ -103,7 +112,18 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::post('addToShoppingCart', 'ShoppingCartController@store');
         // 购物车 删除商品
         Route::post('delShoppingCart', 'ShoppingCartController@destroy');
-
+        // 查询购物车 库存
+        Route::post('checkShoppingCart', 'ShoppingCartController@checkShoppingCart');
+        // 订单
+        Route::resource('order', 'OrderController');
+        // 订单 查询订单状态
+        Route::post('order/rotation', 'OrderController@rotation');
+        // 订单 用户订单列表
+        Route::get('orders/{order_status}', 'OrderController@index');
+        // 订单 点击收货
+        Route::get('orders/receiptGoods', 'OrderController@receiptGoods');
+        // 商品评论
+        Route::resource('comments', 'CommentsController');
         // 退出登录
         Route::get('logout', 'UserController@logout');
 
@@ -172,6 +192,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('addGoodsLabel', 'GoodsController@addGoodsLabel');
         // 上传商品图片
         Route::post('goodsImgUpload', 'GoodsController@goodsImgUpload');
+        // 获取商品详细信息
+        Route::post('getGoodsDetail', 'GoodsController@getGoodsDetail');
+        // 修改商品
+        Route::post('updateGoods/{id}', 'GoodsController@update');
 
         // 货品管理
         Route::resource('cargo', 'CargoController');
@@ -194,6 +218,24 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         // 选择推荐位
         Route::post('selectRecommend', 'CargoController@selectRecommend');
 
+        // 对货品做活动
+        Route::resource('cargoActivity', 'CargoActivityController');
+        // 获取所有活动，暂时只做秒杀活动
+        Route::post('getActivity', 'CargoActivityController@getActivity');
+        // 获取在做活动的货品列表
+        Route::post('cargoActivityList', 'CargoActivityController@cargoActivityList');
+        
+        // 活动管理
+        Route::resource('activity', 'ActivityController');
+        // 获取活动列表
+        Route::post('activityList', 'ActivityController@activityList');
+        // 获取某一个活动信息
+        Route::post('findActivity', 'ActivityController@findActivity');
+        // 修改一个活动
+        Route::post('updateActivity/{id}', 'ActivityController@update');
+        // 删除一个活动
+        Route::post('deleteActivity/{id}', 'ActivityController@destroy');
+
         // 权限块
         Route::resource('acl', 'AclController');
         // 角色列表
@@ -214,6 +256,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('recommend/update/{id}', 'RecommendController@update');
         // 推荐位管理
         Route::resource('recommend', 'RecommendController');
+
         // 友情链接管理
         Route::resource('friendLink','FriendLinkController');
         //友情链接管理列表
@@ -222,6 +265,16 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('linkUpdate','FriendLinkController@update');
         // 友情链接图片上传
         Route::post('linkPhoto','FriendLinkController@fileDo');
+
+        // 订单管理
+        Route::resource('order', 'OrderController');
+        // 获取订单列表
+        Route::post('orderList', 'OrderController@orderList');
+        // 获取订单收货地址
+        Route::post('orderAddress', 'OrderController@orderAddress');
+        // 点击发货
+        Route::post('order/sendGoods', 'OrderController@sendGoods');
+
 
     });
 });

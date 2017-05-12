@@ -15,7 +15,7 @@ class IndexGoodsRepository
     /**
      * @var IndexGoods
      */
-    protected $indexGoods;
+    protected $model;
 
     /**
      * IndexGoodsRepository constructor.

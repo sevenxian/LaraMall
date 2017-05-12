@@ -2,8 +2,8 @@
 
 namespace App\Tools;
 
-
 use Naux\Mail\SendCloudTemplate;
+use Ramsey\Uuid\Uuid;
 
 class Common
 {
@@ -108,5 +108,44 @@ class Common
         });
 
         return true;
+    }
+
+    /**
+     * 获取uuid
+     *
+     * @return string
+     * @author zhangyuchao
+     */
+    public static function getUuid()
+    {
+        //生成uuid
+        $temp = Uuid::uuid1();
+        $uuid = $temp->getHex();
+
+        return $uuid;
+    }
+
+    /**
+     * 查找家谱树
+     * 
+     * @param $arr
+     * @param $id
+     * @return array
+     * @author zhulinjie
+     */
+    public static function tree($arr, $id)
+    {
+        $tree = array();
+        while ($id != 0) {
+            foreach ($arr as $v) {
+                if ($v['id'] == $id) {
+                    $tree[] = $v;
+
+                    $id = $v['pid'];
+                    break;
+                }
+            }
+        }
+        return $tree;
     }
 }

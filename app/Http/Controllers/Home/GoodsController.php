@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\ActivityRepository;
 use App\Repositories\CargoRepository;
 use App\Repositories\CategoryAttributeRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\CommentsRepository;
 use App\Repositories\GoodsRepository;
+use App\Repositories\RelGoodsActivityRepository;
 use App\Repositories\RelGoodsLabelRepository;
 use App\Repositories\RelLabelCargoRepository;
+use App\Repositories\UserInfoRepository;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -63,10 +67,41 @@ class GoodsController extends Controller
     protected $relLabelCargo;
 
     /**
+     * 活动操作类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $activity;
+
+    /**
+     * 商品活动关联操作类
+     *
+     * @var
+     * @author zhulinjie
+     */
+    protected $relGoodsActivity;
+    /**
+     * @var CommentsRepository
+     */
+    protected $comment;
+    /**
+     * @var UserInfoRepository
+     */
+    protected $userInfo;
+
+    /**
      * GoodsController constructor.
      * @param CargoRepository $cargoRepository
      * @param CategoryRepository $categoryRepository
      * @param GoodsRepository $goodsRepository
+     * @param RelGoodsLabelRepository $relGoodsLabelRepository
+     * @param CategoryAttributeRepository $categoryAttributeRepository
+     * @param RelLabelCargoRepository $relLabelCargoRepository
+     * @param ActivityRepository $activityRepository
+     * @param RelGoodsActivityRepository $relGoodsActivityRepository
+     * @param CommentsRepository $commentsRepository
+     * @param UserInfoRepository $userInfoRepository
      */
     public function __construct
     (
@@ -75,7 +110,11 @@ class GoodsController extends Controller
         GoodsRepository $goodsRepository,
         RelGoodsLabelRepository $relGoodsLabelRepository,
         CategoryAttributeRepository $categoryAttributeRepository,
-        RelLabelCargoRepository $relLabelCargoRepository
+        RelLabelCargoRepository $relLabelCargoRepository,
+        ActivityRepository $activityRepository,
+        RelGoodsActivityRepository $relGoodsActivityRepository,
+        CommentsRepository $commentsRepository,
+        UserInfoRepository $userInfoRepository
     )
     {
         // 注入货品操作类
@@ -90,6 +129,14 @@ class GoodsController extends Controller
         $this->categoryAttr = $categoryAttributeRepository;
         // 分类标签值与货品关联表
         $this->relLabelCargo = $relLabelCargoRepository;
+        // 注入活动操作类
+        $this->activity = $activityRepository;
+        // 商品活动操作类
+        $this->relGoodsActivity = $relGoodsActivityRepository;
+        // 评论
+        $this->comment = $commentsRepository;
+        // 用户详情
+        $this->userInfo = $userInfoRepository;
     }
 
     /**
@@ -114,7 +161,7 @@ class GoodsController extends Controller
             $data['ev'] = [];
         }
 
-        if(!empty($data['ev'])){
+        if (!empty($data['ev'])) {
             // 当前页
             $page = isset($req['page']) ? $req['page'] : 1;
             // 拼装查询条件
@@ -126,15 +173,15 @@ class GoodsController extends Controller
             $cargoIds = $this->relLabelCargo->lists($where, ['cargo_id'])->toArray();
             $cargos = $this->cargo->selectWhereIn('id', $cargoIds);
             $cargos = new LengthAwarePaginator($cargos->forPage($page, PAGENUM), count($cargos), PAGENUM);
-            $cargos->setPath(''.$category_id);
-        }else{
+            $cargos->setPath('' . $category_id);
+        } else {
             // 获取货品列表
             $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM);
         }
-        
+
         // 获取分类标签信息
         $labelInfo = $this->category->find(['id' => $category_id])->labels;
-        
+
         // 分类标签ID/名称配对
         $labels = $labelInfo->pluck('category_label_name', 'id')->toArray();
 
@@ -165,14 +212,21 @@ class GoodsController extends Controller
         // 获取货品信息
         $cargo = $this->cargo->find(['id' => $cargo_id]);
 
+        // 获取正在进行的活动
+        $currentTimestamp = time();
+        $activity = $this->activity->ongoingActivities($currentTimestamp);
+        if ($activity) {
+            $activity->cargoActivity = $this->relGoodsActivity->find(['cargo_id' => $cargo->id, 'activity_id' => $activity->id]);
+        }
+        
         // 先判断当前商品拥有多少种规格
-        $standards = $this->relGoodsLabel->select(['goods_id' => $cargo->goods_id], 'created_at')->toArray();
+        $standards = $this->relGoodsLabel->select(['goods_id' => $cargo->goods_id], 'goods_label_id')->toArray();
 
         // 只有一种规格的情况
         $cids = [];
         if (count($standards) == 1) {
             $cids = $this->cargo->lists(['goods_id' => $cargo->goods_id], ['cargo_ids'])->toArray();
-        // 多种规格的情况
+            // 多种规格的情况
         } else if (count($standards) > 1) {
             $cargo_ids = json_decode($cargo->cargo_ids, 1);
             foreach ($cargo_ids as $k => $v) {
@@ -217,8 +271,38 @@ class GoodsController extends Controller
         $data['tree'] = $tree;
         $data['goods'] = $goods;
         $data['cids'] = $cids;
-
+        $data['activity'] = $activity;
+        // 统计好评
+        $data['star']['good'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 1]);
+        // 统计中评
+        $data['star']['almost'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 2]);
+        // 统计差评
+        $data['star']['bad'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 3]);
         return view('home.goods.detail', compact('data'));
+    }
+
+    /**
+     * 立即抢购
+     *
+     * @param Request $request
+     * @author zhulinjie
+     */
+    public function toSnapUp(Request $request)
+    {
+        $req = $request->all();
+
+        $cargoActivity = $this->relGoodsActivity->find(['activity_id' => $req['activity_id'], 'cargo_id' => $req['cargo_id']]);
+
+        if (!\Redis::get(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'])) {
+            // 抢购的数量超出用来做活动的商品数量
+            if($req['number'] >= $cargoActivity->number){
+                \Redis::set(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $cargoActivity->number);
+            }else{
+                \Redis::set(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $req['number']);
+            }
+        }
+
+        \Redis::incrBy(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $req['number']);
     }
 
     /**
@@ -231,7 +315,6 @@ class GoodsController extends Controller
     public function getCargoId(Request $request)
     {
         $data = $request->all();
-
         // 判断货品ID在redis中是否存在
         $cargo_ids = md5(json_encode($data));
         if (\Redis::get(STRING_CARGO_STANDARD_ . $cargo_ids)) {
@@ -278,7 +361,7 @@ class GoodsController extends Controller
     {
         return view('home.goods.sort');
     }
-
+    
     /**
      * 查找家谱树
      *
@@ -301,5 +384,36 @@ class GoodsController extends Controller
             }
         }
         return $tree;
+    }
+
+    public function comments(Request $request)
+    {
+        // 初始化分页数据
+        $page = empty($request['page'])?1:$request['page'];
+        // 拼装查询条件
+        $where['cargo_id'] = $request['cargo_id'];
+        // 增加指定的查询条件
+        if(!empty($request['star'])) {
+            $where['star'] = $request['star'];
+        }
+        // 获取评论数据
+       $data = $this->comment->commentPaging($where,$page);
+        if(!empty($data)) {
+            // 便利评论数据
+            foreach ($data as $item) {
+                // 根据用户ID获取用户信息
+                $user = $this->userInfo->find(['user_id' => $item->user_id],['nickname','avatar']);
+                // 对用户名进行一次处理
+                $user->nickname = substr_replace($user->nickname,'*******',1,5);
+                // 重新组装函数
+                $item->user = $user;
+            }
+            // 获取分页总数
+            $totalPage =ceil($this->comment->getPage($where));
+            // 返回数据
+            return responseMsg(['data' => $data,'totalPage' => $totalPage]);
+        }
+        return responseMsg('',400);
+
     }
 }

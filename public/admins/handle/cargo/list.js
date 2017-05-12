@@ -18,6 +18,9 @@ new Vue({
             recommends: [],                 // 存储所有的推荐位
             recommendIds: [],               // 存储一个货品对应的推荐位的所有ID
             cargo_id: '',                   // 货品ID
+            activitys: [],                  // 所有活动
+            promotion_price: '',            // 促销价
+            number: '',                     // 促销数量
         }
     },
     // 第一次执行
@@ -142,6 +145,62 @@ new Vue({
                 str += recommends[i].recommend_name + ' ';
             }
             return $.trim(str);
+        },
+        // 获取所有活动，暂时只做秒杀活动
+        getActivity(e){
+            this.cargo_id = $(e.target).data('cid');
+            // {cargo_id: this.cargo_id}
+            axios.post('/admin/getActivity').then(response => {
+                console.log(response);
+                // 判断请求结果
+                if(response.data.ServerNo != 200){
+                    sweetAlert("请求失败!", response.data.ResultData, "error");
+                }
+                this.activitys = response.data.ResultData;
+            }).catch(error => {
+                sweetAlert("请求失败!", response.request.statusText, "error");
+            });
+        },
+        // 做活动操作
+        activity(){
+            // 前端验证
+            $('#activity').bootstrapValidator('validate');
+            // 促销价不能为空
+            if(!this.promotion_price){
+                sweetAlert("操作失败!", "促销价不能为空!", "error");
+                return;
+            }
+            // 数量不能为空
+            if(!this.number){
+                sweetAlert("操作失败!", "数量不能为空!", "error");
+                return;
+            }
+            // 构造一个包含Form表单数据的FormData对象，需要在创建FormData对象时指定表单的元素
+            var fd = new FormData($('#activity')[0]);
+            // 做活动操作
+            axios.post('/admin/cargoActivity', fd).then(response => {
+                console.log(response);
+                // 失败的情况
+                if (response.data.ServerNo != 200) {
+                    sweetAlert("操作失败!", response.data.ResultData, "error");
+                    return;
+                }
+                // 成功的情况
+                swal({
+                    title: '操作成功',
+                    text: response.data.ResultData,
+                    type: 'success'
+                }, function(isConfirm){
+                    if(isConfirm){
+                        // 500毫秒以后跳转到货品列表页
+                        setTimeout(function () {
+                            location.href="/admin/cargoList/" + goods_id;
+                        }, 500);
+                    }
+                });
+            }).catch(error => {  // 请求失败的情况
+                sweetAlert("操作失败!", response.request.statusText, "error");
+            });
         },
         // 判断数组中是否存在某个值
         inArray(recommendId){

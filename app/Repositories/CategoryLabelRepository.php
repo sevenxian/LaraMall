@@ -18,7 +18,7 @@ class CategoryLabelRepository
      * @var CategoryLabel
      * @author Luoyan
      */
-    protected $categoryLabel;
+    protected $model;
 
     /**
      * 模型注入
