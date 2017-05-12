@@ -267,6 +267,7 @@ class GoodsController extends Controller
             foreach ($cargo_ids as $val) {
                 $val = explode('@', $val);
                 // 组合查询条件
+                $where = [];
                 foreach($val as $v){
                     $v = explode(':', $v);
                     $where['cargo_ids->'.$v[0]] = $v[1];
@@ -277,11 +278,10 @@ class GoodsController extends Controller
                  *     "cargo_ids->2" => "6"
                  * ]
                  */
-//                dd($where);
-
                 // 获取满足条件的货品（只取规格字段）
+//                $w[] = $where;
 //                $cids[] = $this->cargo->lists($where, ['cargo_ids'])->toArray();
-                $cids = array_unique(array_merge($cids, $this->cargo->lists(['cargo_ids->' . $v[0] => $v[1]], ['cargo_ids'])->toArray()));
+                $cids = array_unique(array_merge($cids, $this->cargo->lists($where, ['cargo_ids'])->toArray()));
             }
         }
 
