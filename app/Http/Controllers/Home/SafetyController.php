@@ -360,7 +360,8 @@ class SafetyController extends Controller
             'name' => \Session::get('userInfo')->nickname,
             'token' => 'email=' . $request['email'] . '&token=' . md5($request['email'])
         ];
-        Common::email('bing_email', $data, $request['email']);
+        //Common::sendEmail('bing_email', $data, $request['email']);
+        $this->codeSnippet->sendCodeForEmail('bing_email',  $request['email'],$data);
         \Redis::sEtex(STRING_USER_VERIFY_CODE_ . $request['email'], 86400, md5($request['email']));
         return responseMsg('邮件已发送,请注意查收');
 

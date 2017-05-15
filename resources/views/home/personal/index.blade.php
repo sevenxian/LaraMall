@@ -30,7 +30,7 @@
                                 <div class="m-baseinfo">
                                     <a href="javascript:;">
 
-                                        <img src="@if(empty(\Session::get('userInfo')->avatar))/images/getAvatar.do.jpg @else {{ \Session::get('userInfo')->avatar }}  @endif">
+                                        <img src="@if(empty(\Session::get('userInfo')->avatar))/images/getAvatar.do.jpg @else {{ env('QINIU_DOMAIN') }}{{ \Session::get('userInfo')->avatar }}  @endif">
                                     </a>
                                     <em class="s-name">{{ \Session::get('userInfo')->nickname }}<span class="vip1"></span></em>
 

@@ -172,6 +172,7 @@ class OrderController extends Controller
             }
 
         }
+        //dd($data);
         return view('home.orders.index', ['data' => $data, 'page' => $result]);
     }
 
@@ -268,7 +269,8 @@ class OrderController extends Controller
             $cargo = \Redis::hGetAll($this->hashCargoInfo. $item['cargo_id']);
             // 判断是否存在库存
             $tmp = array_merge($cart,$cargo);
-            if (empty($tmp['inventory'])) {
+
+            if (!empty($tmp['inventory'])) {
                 // 判断购买数量是否已经超出库存
                 if ($tmp['inventory'] < $tmp['shopping_number']) {
                     $tmp['shopping_number'] = $tmp['inventory'];
@@ -686,5 +688,39 @@ class OrderController extends Controller
         }
         // 还未支付
         return responseMsg('', 400);
+    }
+
+    /**
+     * 再次支付
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhangyuchao
+     */
+    public function againPay(Request $request)
+    {
+        // 判断订单ID
+        if(empty($request['order_id'])) {
+            return responseMsg('非法操作',400);
+        }
+        $orderResult = $this->order->find(['id' => $request['order_id']]);
+
+        // 判断订单 是否存在
+        if(empty($orderResult)) {
+            return responseMsg('支付失败',400);
+        }
+        // 获取订单内 商品信息
+        $goods = json_decode($orderResult->goods_message,1);
+        // 判断商品库存 略过
+        // 调用支付方法
+        $result = $this->payType($orderResult->pay_type, $goods, $orderResult->total_amount, $orderResult->guid);
+        //
+        if(!empty($result)) {
+
+            return responseMsg($result);
+        }
+
+        return responseMsg('支付失败',400);
+
     }
 }

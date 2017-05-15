@@ -76,7 +76,7 @@ s
                 </ul>
             </li>
             <li>
-                <a class="" href="login.html">
+                <a class="" href="{{ url('/admin/comments')}}">
                     <i class="icon-user"></i>
                     <span>评论管理</span>
                 </a>

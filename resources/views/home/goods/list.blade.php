@@ -16,6 +16,7 @@
 
 @section('coreJs')
     <script type="text/javascript" src="/basic/js/jquery-1.7.min.js"></script>
+    <script src="/layer/layer.js"></script>
 @stop
 
 @section('header')
@@ -35,16 +36,18 @@
                 <div class="long-title"><span class="all-goods">全部分类</span></div>
                 <div class="nav-cont">
                     <ul>
-                        <li class="index"><a href="/home/index">首页</a></li>
-                        <li class="qc"><a href="#">闪购</a></li>
-                        <li class="qc"><a href="#">限时抢</a></li>
-                        <li class="qc"><a href="#">团购</a></li>
-                        <li class="qc last"><a href="#">大包装</a></li>
+                        <li class="index"><a href="{{ url('/home/index') }}">首页</a></li>
+                        <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">闪购</a></li>
+                        <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">限时抢</a></li>
+                        <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">团购</a></li>
+                        <li class="qc last"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">大包装</a></li>
                     </ul>
+                    @if(false)
                     <div class="nav-extra">
                         <i class="am-icon-user-secret am-icon-md nav-user"></i><b></b>我的福利
                         <i class="am-icon-angle-right" style="padding-left: 10px;"></i>
                     </div>
+                    @endif
                 </div>
             </div>
 
@@ -221,28 +224,7 @@
                     @endif
                 </div>
             </div>
-            <div class="footer">
-                <div class="footer-hd">
-                    <p>
-                        <a href="#">恒望科技</a>
-                        <b>|</b>
-                        <a href="#">商城首页</a>
-                        <b>|</b>
-                        <a href="#">支付宝</a>
-                        <b>|</b>
-                        <a href="#">物流</a>
-                    </p>
-                </div>
-                <div class="footer-bd">
-                    <p>
-                        <a href="#">关于恒望</a>
-                        <a href="#">合作伙伴</a>
-                        <a href="#">联系我们</a>
-                        <a href="#">网站地图</a>
-                        <em>© 2015-2025 Hengwang.com 版权所有</em>
-                    </p>
-                </div>
-            </div>
+            @include('home.public.footer')
         </div>
 
     </div>

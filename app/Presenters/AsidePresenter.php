@@ -15,6 +15,9 @@ class AsidePresenter
     {
 
         $data = explode('/',\Request::path());
+        if(count($data) == 1) {
+            $data[1] = 'index';
+        }
         if (in_array($data[1], $path)) {
             return 'open active';
         }
@@ -29,8 +32,12 @@ class AsidePresenter
      */
     public function displayBlock(array $path)
     {
+
         $data = explode('/',\Request::path());
-        if (in_array($data[1], $path)) {
+        if(count($data) == 1) {
+            $data[1] = 'index';
+        }
+        if (in_array($data[1], $path) || count($data) == 1) {
             return 'style=display:block;overflow:hidden;';
         }
     }

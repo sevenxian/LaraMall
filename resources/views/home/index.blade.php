@@ -44,15 +44,17 @@
             <div class="nav-cont">
                 <ul>
                     <li class="index"><a href="/home/index">首页</a></li>
-                    <li class="qc"><a href="#">闪购</a></li>
-                    <li class="qc"><a href="#">限时抢</a></li>
-                    <li class="qc"><a href="#">团购</a></li>
-                    <li class="qc last"><a href="#">大包装</a></li>
+                    <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">闪购</a></li>
+                    <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">限时抢</a></li>
+                    <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">团购</a></li>
+                    <li class="qc last"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">大包装</a></li>
                 </ul>
+                @if(false)
                 <div class="nav-extra">
                     <i class="am-icon-user-secret am-icon-md nav-user"></i><b></b>我的福利
                     <i class="am-icon-angle-right" style="padding-left: 10px;"></i>
                 </div>
+                @endif
             </div>
 
             <!--侧边导航 -->
@@ -141,7 +143,7 @@
                     </a>
                 </div>
             </div>
-
+            @if(false)
             <!--走马灯 -->
             <div class="marqueen">
                 <span class="marqueen-title">商城头条</span>
@@ -190,6 +192,7 @@
                 </div>
             </div>
             <div class="clear"></div>
+           @endif
         </div>
         <script type="text/javascript">
             if ($(window).width() < 640) {
