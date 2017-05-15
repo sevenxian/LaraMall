@@ -164,7 +164,22 @@
                                            {{-- <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">收藏</a><span class="count">@if(empty($GoodsConcern->setconcern())) 0 @else
                                                     {{$GoodsConcern->setconcern()}}
                                                 @endif</span>--}}
-                                            <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">收藏</a><span class="count">{{count($cargo->goodscollection->toArray())}}</span>
+
+                                            <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">
+
+                                                @if(!empty($cargo->goodscollection->toArray()) && !empty(\Session::get('user')->user_id))
+                                                    @foreach($cargo->goodscollection as $item)
+                                                        @if($cargo->id == $item->cargo_id)
+                                                            已收藏
+                                                        @else
+                                                            收藏
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                        收藏
+                                                @endif
+                                            </a>
+                                            <span class="count">{{count($cargo->goodscollection->toArray())}}</span>
                                         </p>
                                     </div>
                                 </li>
@@ -248,7 +263,7 @@
     <script type="text/javascript" src="/js/check.js"></script>
     <script>
         $('.collection').click(function () {
-
+            layer.load(2);
             var obj = $(this);
             var data={
              'cargo_id':$(this).attr('data-cargo-id'),
@@ -256,15 +271,17 @@
              'user_id':''
             };
             sendAjax(data,'/home/GoodsCollection',function(response){
+                layer.closeAll();
                 if(response.ServerNo == 200){
                     obj.next().html(response.ResultData);
-                    obj.html('已关注');
+                    obj.html('已收藏');
                 }else if(response.ServerNo == 300){
                     obj.next().html(response.ResultData);
                     obj.html('收藏');
+                }else if(response.ServerNo == 401){
+                    layer.msg('登录之后才可以收藏,去登陆吧~');
                 }else{
-                    obj.next().html(response.ResultData);
-                    obj.html('操作失败');
+                    layer.msg('收藏失败');
                 }
             })
         })

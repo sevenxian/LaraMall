@@ -210,9 +210,6 @@ class GoodsController extends Controller
         $data['labels'] = $labels;
         $data['attrs'] = $attrs;
 
-        //每种货品的收藏数量
-
-
         return view('home.goods.list', compact('data'));
     }
 

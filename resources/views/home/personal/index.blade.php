@@ -51,13 +51,34 @@
                                 <a class="i-load-more-item-shadow" href="order.html">全部订单</a>
                             </div>
                             <ul>
-                                <li><a href="order.html"><i><img src="/images/pay.png"/></i><span>待付款</span></a></li>
-                                <li><a href="order.html"><i><img src="/images/send.png"/></i><span>待发货<em
-                                                    class="m-num">1</em></span></a></li>
-                                <li><a href="order.html"><i><img src="/images/receive.png"/></i><span>待收货</span></a></li>
-                                <li><a href="order.html"><i><img src="/images/comment.png"/></i><span>待评价<em
-                                                    class="m-num">3</em></span></a></li>
-                                <li><a href="change.html"><i><img src="/images/refund.png"/></i><span>退换货</span></a></li>
+                                <li style="width:25%">
+                                    <a href="{{ url('home/orders/1') }}"><i><img src="/images/pay.png"/></i>
+                                        <span>待付款
+                                        <em class="m-num">{{ count($orderStatus['payment']) }}</em>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li style="width:25%">
+                                    <a href="{{ url('home/orders/2') }}"><i><img src="/images/send.png"/></i>
+                                        <span>待发货
+                                            <em class="m-num">{{ $orderStatus['delivery'] }}</em>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li style="width:25%">
+                                    <a href="{{ url('home/orders/3') }}"><i><img src="/images/receive.png"/></i>
+                                        <span>待收货
+                                            <em class="m-num">{{ $orderStatus['recipient'] }}</em>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li style="width:25%">
+                                    <a href="{{ url('home/orders/4') }}"><i><img src="/images/comment.png"/></i>
+                                        <span>待评价
+                                            <em class="m-num">{{ $orderStatus['comment'] }}</em>
+                                        </span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         <!--九宫格-->

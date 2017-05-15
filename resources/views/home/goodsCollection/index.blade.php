@@ -42,16 +42,16 @@
                                 <div class="s-item">
 
                                     <div class="s-pic">
-                                        <a href="#" class="s-pic-link">
+                                        <a href="{{ url('home/goodsDetail') }}/{{ $item['cargo_id'] }}" class="s-pic-link">
                                             <img src="{{ env('QINIU_DOMAIN') }}{{ $item['cargo_cover'] }}" alt="{{ $item['cargo_name'] }}" title="{{ $item['cargo_name'] }}" class="s-pic-img s-guess-item-img">
                                             @if($item['cargo_status'] == 3)<span class="tip-title">已下架</span>@endif
                                         </a>
                                     </div>
                                     <div class="s-info">
-                                        <div class="s-title"><a href="#" title="{{ $item['cargo_name'] }}">{{ $item['cargo_name'] }}</a>
+                                        <div class="s-title"><a href="{{ url('home/goodsDetail') }}/{{ $item['cargo_id'] }}" title="{{ $item['cargo_name'] }}">{{ $item['cargo_name'] }}</a>
                                         </div>
                                         <div class="s-price-box">
-                                            <span class="s-price"><em class="s-price-sign">¥</em><em class="s-value">{{ $item['cargo_discount'] }}</em></span>
+                                            <span class="s-price"><em class="s-price-sign">¥</em><em class="s-value">{{ $item['cargo_price'] }}</em></span>
                                             <span class="s-history-price"><em class="s-price-sign">¥</em><em class="s-value">{{ $item['cargo_price'] }}</em></span>
                                         </div>
                                         <div class="s-extra-box">
@@ -60,7 +60,13 @@
                                         </div>
                                     </div>
                                     <div class="s-tp">
-                                        <span class="ui-btn-loading-before">找相似</span>
+                                        <span class="ui-btn-loading-before">
+                                            @if(!empty($item['category_attr_id']))
+                                            <a href="{{ url('/home/goodsList') }}/{{ $item['category_id'] }}?ev={{ $item['category_attr_id'] }}"  style="color:#fff">找相似</a>
+                                            @else
+                                                <a href="{{ url('/home/goodsList') }}/{{ $item['category_id'] }}"  style="color:#fff">找相似</a>
+                                            @endif
+                                        </span>
                                         <i class="am-icon-shopping-cart"></i>
                                         <span class="ui-btn-loading-before buy" data-cargoId="{{ $item['cargo_id'] }}">加入购物车</span>
                                     </div>
@@ -93,27 +99,38 @@
     <script type="text/javascript" src="/js/check.js"></script>
     <script>
         $('.del').click(function () {
-
+            layer.load(2);
             var obj = $(this);
             var data={
                 'cargo_id':$(this).attr('data-id'),
                 '_token':"{{ csrf_token() }}",
             }
             sendAjax(data,'/home/GoodsCollection',function(response){
-                if(response.ServerNo == 200){
+                layer.closeAll();
+                if(response.ServerNo == 300){
+                    layer.msg('移除成功~');
                     obj.parents('.s-item-wrap').hide();
+                }else{
+                    layer.msg('移除失败~');
                 }
             })
         })
         $('.buy').click(function(){
+            layer.load(2);
             var data = {
                 "cargo_id":$(this).attr('data-cargoId')
             }
 
             sendAjax(data,'/home/addToShoppingCart',function(response){
+                layer.closeAll();
                 if(response.ServerNo == 200){
                     var number=parseInt($('#J_MiniCartNum').html())+parseInt(response.ResultData);
                     $('#J_MiniCartNum').html(number)
+                    layer.msg('成功加入购物车~');
+                }else if(response.ServerNo == 414){
+                    layer.msg(response.ResultData);
+                }else{
+                    layer.msg('加入购物车失败了~');
                 }
             })
         })

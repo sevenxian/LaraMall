@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Repositories\CargoRepository;
 use App\Repositories\GoodsCollectionRepository;
+use App\Repositories\OrderDetailsRepository;
 use App\Repositories\RelLabelCargoRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,18 +20,22 @@ class PersonalController extends Controller
 
     protected $relLabelCargo;
 
+    protected $orderDetails;
+
 
     public function __construct
     (
         GoodsCollectionRepository $collectionRepository,
         CargoRepository $cargoRepository,
-        RelLabelCargoRepository $relLabelCargoRepository
+        RelLabelCargoRepository $relLabelCargoRepository,
+        OrderDetailsRepository $orderDetailsRepository
 
     )
     {
         $this->goodsCollection = $collectionRepository;
         $this->cargo = $cargoRepository;
         $this->relLabelCargo = $relLabelCargoRepository;
+        $this->orderDetails = $orderDetailsRepository;
     }
 
     /**
@@ -68,10 +73,42 @@ class PersonalController extends Controller
                     // 相似
                     $data[$key]['category_attr_id'] = $this->relLabelCargo->find(['cargo_id' => $value->cargo_id]);
                 }
+
+            }
+            // 获取订单状态数据
+            $orderDetails = $this->orderDetails->select(['user_id' => \Session::get('user')->user_id]);
+            // 定义新数组
+            $orderStatus = [
+                'payment' => [],
+                'delivery' => 0,
+                'recipient' => 0,
+                'comment' =>0
+            ];
+            // 判断赋值
+            if(!empty($orderDetails)){
+                foreach ($orderDetails as $key => $val) {
+
+                    switch ($val->order_status) {
+                        case 1:
+                            $orderStatus['payment'][$val->order_guid] = 1;
+                            break;
+                        case 2:
+                            $orderStatus['delivery'] += 1;
+                            break;
+                        case 3:
+                            $orderStatus['recipient'] += 1;
+                            break;
+                        case 4:
+                            $orderStatus['comment'] += 1;
+                            break;
+                    }
+                }
+
             }
 
+
         }
-        return view('home.personal.index',['data' => $data,'page' => $result]);
+        return view('home.personal.index',['data' => $data,'page' => $result,'orderStatus'=>$orderStatus]);
 
     }
     
