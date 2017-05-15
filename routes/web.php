@@ -67,6 +67,8 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::post('order/aliPayNotify', 'OrderController@aliPayNotify');
     // 微信异步回调
     Route::post('order/wechatNotify', 'OrderController@wechatNotify');
+    // 商品收藏
+    Route::resource('GoodsCollection', 'GoodsCollectionController');
     Route::group(['middleware' => 'member'], function () {
         // 购物车
         Route::get('goods/shopCart', 'GoodsController@shopCart')->name('home.goods.shopCart');
@@ -104,8 +106,6 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::post('safety/handleIdCard', 'SafetyController@handleIdCard');
         // 收货地址管理
         Route::resource('address', 'AddressController');
-        // 商品收藏
-        Route::resource('GoodsCollection', 'GoodsCollectionController');
         // 购物车 购物车列表
         Route::get('shoppingCart', 'ShoppingCartController@index');
         // 购物车 加入购物车

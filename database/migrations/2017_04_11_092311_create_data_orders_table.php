@@ -21,7 +21,7 @@ class CreateDataOrdersTable extends Migration
             $table->json('address_message')->comment('json包含收货地址信息');
             $table->string('pay_transaction',64)->nullable()->comment('支付交易号');
             $table->tinyInteger('pay_type')->comment('支付方式 1:支付宝 2:微信 3:其他');
-            $table->tinyInteger('pay_status')->comment('支付状态 1:待支付 2:已支付');
+            $table->tinyInteger('pay_status')->default(1)->comment('支付状态 1:待支付 2:已支付');
             $table->decimal('total_amount',11,2)->comment('商品总金额');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');

@@ -51,16 +51,18 @@
             <div class="long-title"><span class="all-goods">全部分类</span></div>
             <div class="nav-cont">
                 <ul>
-                    <li class="index"><a href="/home/index">首页</a></li>
-                    <li class="qc"><a href="#">闪购</a></li>
-                    <li class="qc"><a href="#">限时抢</a></li>
-                    <li class="qc"><a href="#">团购</a></li>
-                    <li class="qc last"><a href="#">大包装</a></li>
+                    <li class="index"><a href="{{ url('/home/index') }}">首页</a></li>
+                    <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">闪购</a></li>
+                    <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">限时抢</a></li>
+                    <li class="qc"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">团购</a></li>
+                    <li class="qc last"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">大包装</a></li>
                 </ul>
-                <div class="nav-extra">
-                    <i class="am-icon-user-secret am-icon-md nav-user"></i><b></b>我的福利
-                    <i class="am-icon-angle-right" style="padding-left: 10px;"></i>
-                </div>
+                @if(false)
+                    <div class="nav-extra">
+                        <i class="am-icon-user-secret am-icon-md nav-user"></i><b></b>我的福利
+                        <i class="am-icon-angle-right" style="padding-left: 10px;"></i>
+                    </div>
+                @endif
             </div>
         </div>
         <ol class="am-breadcrumb am-breadcrumb-slash">
@@ -354,35 +356,6 @@
 
         <!--优惠套装-->
         <div class="match">
-            <div class="match-title">优惠套装</div>
-            <div class="match-comment">
-                <ul class="like_list">
-                    <li>
-                        <div class="s_picBox">
-                            <a class="s_pic" href="#"><img src="/images/cp.jpg"></a>
-                        </div>
-                        <a class="txt" target="_blank" href="#">萨拉米 1+1小鸡腿</a>
-                        <div class="info-box"><span class="info-box-price">¥ 29.90</span> <span
-                                    class="info-original-price">￥ 199.00</span>
-                        </div>
-                    </li>
-                    <li class="plus_icon"><i>+</i></li>
-                    <li>
-                        <div class="s_picBox">
-                            <a class="s_pic" href="#"><img src="/images/cp2.jpg"></a>
-                        </div>
-                        <a class="txt" target="_blank" href="#">ZEK 原味海苔</a>
-                        <div class="info-box"><span class="info-box-price">¥ 8.90</span> <span
-                                    class="info-original-price">￥ 299.00</span>
-                        </div>
-                    </li>
-                    <li class="plus_icon"><i>=</i></li>
-                    <li class="total_price">
-                        <p class="combo_price"><span class="c-title">套餐价:</span><span>￥35.00</span></p>
-                        <p class="save_all">共省:<span>￥463.00</span></p> <a href="#" class="buy_now">立即购买</a></li>
-                    <li class="plus_icon"><i class="am-icon-angle-right"></i></li>
-                </ul>
-            </div>
         </div>
         <div class="clear"></div>
 

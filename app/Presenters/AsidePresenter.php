@@ -41,4 +41,27 @@ class AsidePresenter
             return 'style=display:block;overflow:hidden;';
         }
     }
+
+    /**
+     * 地址三级显示
+     *
+     * @param array $path
+     * @return string
+     * @author zhangyuchao
+     */
+    public function smallOpenTag(array $path,$str)
+    {
+
+        $data = explode('/',\Request::path());
+        if($str == $data[1]) {
+            if(count($data) == 2 || count($data) > 3) {
+                $data[2] = 'index';
+            }
+            if (in_array($data[2], $path)) {
+                return 'open active';
+            }
+        }
+
+
+    }
 }

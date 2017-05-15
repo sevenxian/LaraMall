@@ -65,7 +65,16 @@ class GoodsCollectionController extends Controller
                     // 收藏数
                     $data[$key]['cargo_collection'] = $this->goodsCollection->count(['cargo_id' =>$value->cargo_id ]);
                     // 相似
-                    $data[$key]['category_attr_id'] = $this->relLabelCargo->find(['cargo_id' => $value->cargo_id]);
+                    $category_attr_id = $this->relLabelCargo->find(['cargo_id' => $value->cargo_id]);
+                    $str='';
+                    if(!empty($category_attr_id)){
+                        $tmp = json_decode($category_attr_id->category_attr_ids,1);
+                        foreach ($tmp as $k => $v)
+                        {
+                            $str .= $k.'_'.$v.'%';
+                        }
+                    }
+                    $data[$key]['category_attr_id'] = rtrim($str,'%');
                 }
             }
 
@@ -94,7 +103,7 @@ class GoodsCollectionController extends Controller
     public function store(Request $request)
     {
         // 判断是否登录
-        if(empty(\Session::get('user'))) {
+        if(empty(\Session::get('user')->user_id)) {
             return responseMsg('',401);
         }
         // 拼装参数
@@ -127,7 +136,6 @@ class GoodsCollectionController extends Controller
         }
         // 判断操作是否成功
 
-        // 失败 写入系统日志
         return responseMsg('操作失败',400);
 
     }
