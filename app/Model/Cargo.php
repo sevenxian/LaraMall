@@ -45,8 +45,7 @@ class Cargo extends Model
     {
         return $this->belongsToMany(Activity::class, 'rel_goods_activitys', 'cargo_id', 'activity_id')->withTimestamps();
     }
-
-
+    
     /**
      * 一对多关联 一个货品对应多个关注
      */

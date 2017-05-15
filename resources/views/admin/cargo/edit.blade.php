@@ -43,25 +43,25 @@
                                 <div class="form-group">
                                     <label for="cargo_name" class="col-md-1 control-label">货品名称</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="cargo_name" v-model="cargo_name" class="form-control">
+                                        <input type="text" name="cargo_name" :value="cargo.cargo_name" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="cargo_price" class="col-md-1 control-label">货品原价</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="cargo_price" v-model="cargo_price" class="form-control">
+                                        <input type="text" name="cargo_price" :value="cargo.cargo_price" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="cargo_discount" class="col-md-1 control-label">货品折扣价</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="cargo_discount" v-model="cargo_discount" class="form-control">
+                                        <input type="text" name="cargo_discount" :value="cargo.cargo_discount" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inventory" class="col-md-1 control-label">库存量</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="inventory" v-model="inventory" class="form-control">
+                                        <input type="text" name="inventory" :value="cargo.inventory" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group" v-for="(categoryLabel, index) in categoryLabels">
@@ -71,7 +71,7 @@
                                             <div class="row">
                                                 <div class="col-md-3" v-for="attribute in categoryLabel.labels">
                                                     <label class="label_radio" @click="selectLabel">
-                                                        <input :name="'categoryLabel'+categoryLabel.id" :value="attribute.id" type="radio" />@{{ attribute.attribute_name }}
+                                                        <input :name="'categoryLabel'+categoryLabel.id" :value="attribute.id" type="radio" :checked="labelCargo[categoryLabel.id] == attribute.id" />@{{ attribute.attribute_name }}
                                                     </label>
                                                 </div>
                                             </div>
@@ -93,7 +93,7 @@
                                             <div class="row">
                                                 <div class="col-md-3" v-for="attribute in goodsLabel.attrs">
                                                     <label class="label_radio" @click="selectLabel">
-                                                        <input :name="'goodsLabel'+goodsLabel.id" :value="attribute.id" type="radio" />@{{ attribute.goods_label_name }}
+                                                        <input :name="'goodsLabel'+goodsLabel.id" :value="attribute.id" type="radio" :checked="cargo_ids[goodsLabel.id] == attribute.id" />@{{ attribute.goods_label_name }}
                                                     </label>
                                                 </div>
                                             </div>
@@ -114,9 +114,10 @@
                                         <div class="row">
                                             <div class="col-xs-2 col-md-2" v-for="val in cargoImgs">
                                                 <div class="thumbnail" style="cursor: pointer;">
-                                                    <img src="/admins/img/goods_default.gif" @click="uploadCargoImg">
+                                                    <img v-if="val.indexOf('images') != -1" :src="'{{ env('QINIU_DOMAIN') }}'+val" @click="uploadCargoImg">
+                                                    <img src="/admins/img/goods_default.gif" @click="uploadCargoImg" v-else>
                                                     <input type="file" style="display: none;">
-                                                    <input type="hidden" name="cargo_original[]" class="cargo_original">
+                                                    <input type="hidden" name="cargo_original[]" class="cargo_original" :value="val">
                                                 </div>
                                             </div>
                                         </div>
@@ -131,12 +132,12 @@
                                     <label for="cargo_info" class="col-md-1 control-label">货品详情</label>
                                     <div class="col-md-11">
                                         <!-- 编辑器容器 -->
-                                        <textarea id="cargo_info" name="cargo_info" style="width: 95%; height: 300px"></textarea>
+                                        <textarea id="cargo_info" name="cargo_info" style="width: 95%; height: 300px">{!! $cargo->cargo_info !!}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-1 col-md-11">
-                                        <button type="button" class="btn btn-danger" id="validateBtn" @click="addCargo">确 定</button>
+                                        <button type="button" class="btn btn-danger" id="validateBtn" @click="updateCargo">修 改</button>
                                     </div>
                                 </div>
                             </form>
@@ -172,6 +173,8 @@
         var QINIU_DOMAIN = '{{ env("QINIU_DOMAIN") }}';
         // 商品ID
         var goods_id = '{{ $cargo->good->id }}';
+        // 货品ID
+        var cargo_id = '{{ $cargo->id }}';
     </script>
     <script src="/admins/handle/cargo/edit.js"></script>
     <!-- 页面表单验证 js -->

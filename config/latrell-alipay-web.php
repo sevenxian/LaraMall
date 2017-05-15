@@ -8,8 +8,8 @@ return [
 	'sign_type' => 'MD5',
 
 	// 服务器异步通知页面路径。
-	'notify_url' => 'http://www.laramall.com/home/order/aliPayNotify',
-
+	'notify_url' => 'http://'.$_SERVER['HTTP_HOST'].'/home/order/aliPayNotify',
+	
 	// 页面跳转同步通知页面路径。
-	'return_url' => 'http://www.laramall.com/home/order/aliPayCogradient'
+	'return_url' => 'http://'.$_SERVER['HTTP_HOST'].'/home/order/aliPayCogradient'
 ];

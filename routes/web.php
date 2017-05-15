@@ -216,6 +216,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('getRecommend', 'CargoController@getRecommend');
         // 选择推荐位
         Route::post('selectRecommend', 'CargoController@selectRecommend');
+        // 货品修改
+        Route::post('updateCargo/{id}', 'CargoController@update');
         // 对货品做活动
         Route::resource('cargoActivity', 'CargoActivityController');
         // 获取所有活动，暂时只做秒杀活动

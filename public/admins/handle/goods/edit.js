@@ -224,7 +224,7 @@ new Vue({
         // 添加商品图片
         addGoodsImg(e){
             e.preventDefault();
-            this.goodsImgs.push(this.goodsImgs.length + 1);
+            this.goodsImgs.push(this.goodsImgs.length + 1 + '');
         },
         // 上传商品图片
         uploadGoodsImg(e){

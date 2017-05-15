@@ -53,11 +53,6 @@ class ShoppingCartController extends Controller
     protected $relGoodsActivity;
 
     /**
-     * @var
-     * @author zhulinjie
-     */
-    protected $cart;
-    /**
      *
      */
     protected $hashCargoInfo;
@@ -69,7 +64,6 @@ class ShoppingCartController extends Controller
      * @param GoodsAttributeRepository $goodsAttributeRepository
      * @param ActivityRepository $activityRepository
      * @param RelGoodsActivityRepository $relGoodsActivityRepository
-     * @param ShoppingCartRepositories $shoppingCartRepositories
      */
     public function __construct
     (
@@ -77,8 +71,7 @@ class ShoppingCartController extends Controller
         GoodsLabelRepository $goodsLabelRepository,
         GoodsAttributeRepository $goodsAttributeRepository,
         ActivityRepository $activityRepository,
-        RelGoodsActivityRepository $relGoodsActivityRepository,
-        ShoppingCartRepositories $shoppingCartRepositories
+        RelGoodsActivityRepository $relGoodsActivityRepository
     )
     {
         $this->cargo = $cargoRepository;
@@ -89,7 +82,6 @@ class ShoppingCartController extends Controller
         $this->goodsAttr = $goodsAttributeRepository;
         $this->activity = $activityRepository;
         $this->relGoodsActivity = $relGoodsActivityRepository;
-        $this->cart = $shoppingCartRepositories;
     }
 
     /**

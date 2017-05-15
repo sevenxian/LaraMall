@@ -119,7 +119,8 @@
                                         <div class="row">
                                             <div class="col-xs-2 col-md-2" v-for="item in goodsImgs">
                                                 <div class="thumbnail" style="cursor: pointer;">
-                                                    <img :src="'{{ env('QINIU_DOMAIN') }}'+item" @click="uploadGoodsImg">
+                                                    <img v-if="item.indexOf('images') != -1" :src="'{{ env('QINIU_DOMAIN') }}'+item" @click="uploadGoodsImg">
+                                                    <img src="/admins/img/goods_default.gif" @click="uploadGoodsImg" v-else>
                                                     <input type="file" style="display: none;">
                                                     <input type="hidden" name="goods_original[]" class="goods_original" :value="item">
                                                 </div>

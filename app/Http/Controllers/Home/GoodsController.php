@@ -391,6 +391,7 @@ class GoodsController extends Controller
     public function getCargoId(Request $request)
     {
         $data = $request->all();
+
         // 判断货品ID在redis中是否存在
         $cargo_ids = md5(json_encode($data));
         if (\Redis::get(STRING_CARGO_STANDARD_ . $cargo_ids)) {
