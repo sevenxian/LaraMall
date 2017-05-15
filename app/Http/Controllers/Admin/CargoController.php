@@ -451,7 +451,7 @@ class CargoController extends Controller
                     }
                 }
             }
-
+            
             // 向商品索引表中新增记录
             $indexs['goods_id'] = $data['goods_id'];
             $indexs['cargo_id'] = $cargo->id;
@@ -603,16 +603,17 @@ class CargoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 编辑界面
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $cargo = $this->cargo->find(['id' => $id]);
+        return view('admin.cargo.edit', compact('cargo'));
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
