@@ -29,6 +29,12 @@ class FriendLinkRepository
         $this->model = $friendLink;
     }
 
+    /**
+     * @param array $where
+     * @param string $fieldName
+     * @param string $direction
+     * @return mixed
+     */
     public function select(array $where = [], $fieldName = 'id', $direction = 'asc')
     {
         return $this->model->where($where)->orderBy($fieldName, $direction)->get();
