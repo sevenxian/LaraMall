@@ -71,6 +71,7 @@ class ClassificationController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         // 文件处理函数
         $this->fileDo($request);
 

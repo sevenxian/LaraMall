@@ -122,6 +122,9 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::get('orders/{order_status}', 'OrderController@index');
         // 订单 点击收货
         Route::get('orders/receiptGoods', 'OrderController@receiptGoods');
+        // 订单 去付款
+        Route::post('orders/againPay', 'OrderController@againPay');
+
         // 商品评论
         Route::resource('comments', 'CommentsController');
         // 退出登录
@@ -142,7 +145,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController');
 
     // 认证后的操作路由
-    Route::group(['middleware' => 'user:admin'], function () {
+    //Route::group(['middleware' => 'user:admin'], function () {
+    Route::group([], function () {
         // 后台用户管理块
         Route::resource('subscribers', 'SubscribersController');
         // 管理员重置密码
@@ -153,13 +157,11 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::patch('syncRoles/{id}', 'AdminUserController@syncRoles');
         // 后台用户管理
         Route::resource('users', 'AdminUserController');
-
         // 后台首页
         Route::get('index', 'IndexController@index')->name('admin.index');
         Route::get('/', 'IndexController@index');
         // 用户退出登陆
         Route::any('logout', 'UserController@logout')->name('admin.logout');
-
         // 管理员重置密码
         Route::post('usersUpdate', 'AdminUserController@update');
         // 后台用户管理
@@ -168,7 +170,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::any('subscriberList', 'SubscribersController@subscriberList');
         // 重置密码
         Route::post('subscriberUpdate', 'SubscribersController@update');
-
         // 分类块
         Route::resource('classification', 'ClassificationController');
         // 修改分类内容
@@ -179,7 +180,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('classificationCreate', 'ClassificationController@categoryCreate');
         // 分类标签
         Route::resource('categoryLabel', 'CategoryLabelController');
-
         // 商品管理
         Route::resource('goods', 'GoodsController');
         // 获取商品列表数据
@@ -196,7 +196,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('getGoodsDetail', 'GoodsController@getGoodsDetail');
         // 修改商品
         Route::post('updateGoods/{id}', 'GoodsController@update');
-
         // 货品管理
         Route::resource('cargo', 'CargoController');
         // 货品添加
@@ -217,14 +216,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('getRecommend', 'CargoController@getRecommend');
         // 选择推荐位
         Route::post('selectRecommend', 'CargoController@selectRecommend');
-
         // 对货品做活动
         Route::resource('cargoActivity', 'CargoActivityController');
         // 获取所有活动，暂时只做秒杀活动
         Route::post('getActivity', 'CargoActivityController@getActivity');
         // 获取在做活动的货品列表
         Route::post('cargoActivityList', 'CargoActivityController@cargoActivityList');
-        
         // 活动管理
         Route::resource('activity', 'ActivityController');
         // 获取活动列表
@@ -235,7 +232,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('updateActivity/{id}', 'ActivityController@update');
         // 删除一个活动
         Route::post('deleteActivity/{id}', 'ActivityController@destroy');
-
         // 权限块
         Route::resource('acl', 'AclController');
         // 角色列表
@@ -249,7 +245,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::patch('syncPermission/{id}', 'AclController@syncPermissions');
         // 分类标签块
         Route::resource('categoryLabel', 'CategoryLabelController');
-
         // 推荐位列表
         Route::any('recommend/list', 'RecommendController@recommendList');
         // 修改推荐位信息
@@ -264,6 +259,23 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('orderAddress', 'OrderController@orderAddress');
         // 点击发货
         Route::post('order/sendGoods', 'OrderController@sendGoods');
+        // 评论管理
+        Route::resource('comments', 'CommentsController');
+
+
+
+
+
+        // 网站配置
+        Route::resource('basicconfig', 'BasicConfigController', ['names' => [
+            'index' => 'basicconfig.index',
+            'store' => 'basicconfig.store',
+            'create' => 'basicconfig.create',
+        ]]);
+        // 上传网站LOGO图片
+        Route::post('logoImgUpload', 'BasicConfigController@logoImgUpload');
+        /*根据id 更新网址配置信息、*/
+        Route::post('basicconfig/update/{id}', 'BasicConfigController@update');
 
 
     });

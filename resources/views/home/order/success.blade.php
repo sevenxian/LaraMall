@@ -35,8 +35,7 @@
                 </ul>
                 <div class="option">
                     <span class="info">您可以</span>
-                    <a href="" class="J_MakePoint">查看<span>已买到的宝贝</span></a>
-                    <a href="" class="J_MakePoint">查看<span>交易详情</span></a>
+                    <a href="{{ url('/home/orders/0') }}" class="J_MakePoint">查看<span>已买到的宝贝</span></a>
                 </div>
             </div>
         </div>

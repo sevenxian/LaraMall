@@ -76,22 +76,24 @@ s
                 </ul>
             </li>
             <li>
-                <a class="" href="login.html">
+                <a class="" href="{{ url('/admin/comments')}}">
                     <i class="icon-user"></i>
                     <span>评论管理</span>
                 </a>
             </li>
 
-            <li>
-                <a class="" href="login.html">
+            <li class="sub-menu {{ $aside->openTag(['basicconfig']) }}">
+                <a href="javascript:;" class="">
                     <i class="icon-user"></i>
                     <span>网站配置</span>
-                    <ul class="sub">
-                        <li><a class="" href="dynamic_table.html">基本配置</a></li>
-                        <li><a class="" href="dynamic_table.html">网站组件</a></li>
-                        <li><a class="" href="basic_table.html">友情链接</a></li>
-                    </ul>
+                    <span class="arrow {{ $aside->openTag(['basicconfig']) }}"></span>
                 </a>
+                <ul class="sub" {{ $aside->displayBlock(['basicconfig']) }}>
+                    <li><a class="" href="{{ route('basicconfig.index') }}">基本配置</a></li>
+                    <li><a class="" href="dynamic_table.html">网站组件</a></li>
+                    <li><a class="" href="basic_table.html">友情链接</a></li>
+                </ul>
+
             </li>
 
             <li class="sub-menu {{ $aside->openTag(['acl', 'permission']) }}">

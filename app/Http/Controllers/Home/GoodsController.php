@@ -13,6 +13,7 @@ use App\Repositories\RelGoodsActivityRepository;
 use App\Repositories\RelGoodsLabelRepository;
 use App\Repositories\RelLabelCargoRepository;
 use App\Repositories\UserInfoRepository;
+use App\Repositories\GoodsCollectionRepository;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -91,6 +92,13 @@ class GoodsController extends Controller
     protected $userInfo;
 
     /**
+     * 货品收藏操作类
+     *
+     * @var
+     * @author jiaohuafeng
+     */
+    protected $goodsCollection;
+    /**
      * GoodsController constructor.
      * @param CargoRepository $cargoRepository
      * @param CategoryRepository $categoryRepository
@@ -114,7 +122,8 @@ class GoodsController extends Controller
         ActivityRepository $activityRepository,
         RelGoodsActivityRepository $relGoodsActivityRepository,
         CommentsRepository $commentsRepository,
-        UserInfoRepository $userInfoRepository
+        UserInfoRepository $userInfoRepository,
+        GoodsCollectionRepository $goodsCollectionRepository
     )
     {
         // 注入货品操作类
@@ -137,6 +146,8 @@ class GoodsController extends Controller
         $this->comment = $commentsRepository;
         // 用户详情
         $this->userInfo = $userInfoRepository;
+        // 货品收藏操作类
+        $this->goodsCollection = $goodsCollectionRepository;
     }
 
     /**
@@ -147,6 +158,7 @@ class GoodsController extends Controller
      */
     public function goodsList(Request $request, $category_id)
     {
+
         $req = $request->all();
 
         // 获取标签搜索条件
@@ -172,6 +184,7 @@ class GoodsController extends Controller
             // 手动创建分页
             $cargoIds = $this->relLabelCargo->lists($where, ['cargo_id'])->toArray();
             $cargos = $this->cargo->selectWhereIn('id', $cargoIds);
+
             $cargos = new LengthAwarePaginator($cargos->forPage($page, PAGENUM), count($cargos), PAGENUM);
             $cargos->setPath('' . $category_id);
         } else {
@@ -190,10 +203,15 @@ class GoodsController extends Controller
         $attrs = $this->categoryAttr->selectByWhereIn('category_label_id', $lids)->pluck('attribute_name', 'id')->toArray();
 
         $data['category_id'] = $category_id;
+
         $data['cargos'] = $cargos;
+
         $data['labelInfo'] = $labelInfo;
         $data['labels'] = $labels;
         $data['attrs'] = $attrs;
+
+        //每种货品的收藏数量
+
 
         return view('home.goods.list', compact('data'));
     }

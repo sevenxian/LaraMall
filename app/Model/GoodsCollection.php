@@ -14,7 +14,7 @@ class GoodsCollection extends Model
      *
      * @var string
      */
-    protected $table = 'data_goods_collection';
+    protected $table = 'data_cargo_collection';
 
     /**
      * @var array
@@ -25,5 +25,13 @@ class GoodsCollection extends Model
      * @var array
      */
     protected $fillable = ['user_id', 'cargo_id'];
+
+    /**
+     * 根据货品关注获取货品。
+     */
+    public function cargo()
+    {
+        return $this->belongsTo(Cargo::class, 'cargo_id');
+    }
 
 }

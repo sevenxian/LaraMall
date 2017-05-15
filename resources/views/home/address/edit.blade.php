@@ -35,7 +35,13 @@
                                 <div class="am-fl am-cf"><strong class="am-text-danger am-text-lg">编辑收货地址</strong> /
                                     <small>Edit&nbsp;address</small>
                                 </div>
+
+                                @if(count(explode('?',request()->server()['HTTP_REFERER']))>1)
+                                    {{ \Session::set('checkoutUrl', request()->server()['HTTP_REFERER']) }}
+                                    <a href="{{ request()->server()['HTTP_REFERER'] }}" class="am-btn am-btn-danger" style="float:right">返回</a>
+                                @endif
                             </div>
+
                             <hr/>
 
                             <div class="am-u-md-12 am-u-lg-8" style="margin-top: 20px;">

@@ -15,7 +15,7 @@ class CreateLogUsersOperationTable extends Migration
     {
         Schema::create('log_users_operation', function (Blueprint $table) {
             $table->increments('id')->comment('用户操作日志表');
-            $table->integer('operation_id')->index()->comment('用户ID');
+            $table->integer('operator_id')->index()->comment('用户ID');
             $table->ipAddress('login_ip')->comment('登录IP');
             $table->string('events')->comment('操作事件 (路由与参数)');
             $table->text('content')->comment('操作内容');
