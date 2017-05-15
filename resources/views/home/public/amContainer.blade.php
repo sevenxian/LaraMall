@@ -31,7 +31,7 @@
         </div>
         <div class="topMessage favorite">
             <div class="menu-hd">
-                <a href="{{ url('home/GoodsCollection') }}" target="_top"><i class="am-icon-heart am-icon-fw"></i><span>收藏夹</span></a>
+                <a href="{{ url('/home/GoodsCollection') }}" target="_top"><i class="am-icon-heart am-icon-fw"></i><span>收藏夹</span></a>
             </div>
         </div>
         @if(!empty(\Session::get('user')))

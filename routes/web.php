@@ -145,7 +145,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController');
 
     // 认证后的操作路由
-    Route::group(['middleware' => 'user:admin'], function () {
+    //Route::group(['middleware' => 'user:admin'], function () {
+    Route::group([], function () {
         // 后台用户管理块
         Route::resource('subscribers', 'SubscribersController');
         // 管理员重置密码
@@ -260,6 +261,21 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('order/sendGoods', 'OrderController@sendGoods');
         // 评论管理
         Route::resource('comments', 'CommentsController');
+
+
+
+
+
+        // 网站配置
+        Route::resource('basicconfig', 'BasicConfigController', ['names' => [
+            'index' => 'basicconfig.index',
+            'store' => 'basicconfig.store',
+            'create' => 'basicconfig.create',
+        ]]);
+        // 上传网站LOGO图片
+        Route::post('logoImgUpload', 'BasicConfigController@logoImgUpload');
+        /*根据id 更新网址配置信息、*/
+        Route::post('basicconfig/update/{id}', 'BasicConfigController@update');
 
 
     });

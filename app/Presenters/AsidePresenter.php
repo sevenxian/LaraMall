@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+
 class AsidePresenter
 {
     /**
@@ -13,7 +14,6 @@ class AsidePresenter
      */
     public function openTag(array $path)
     {
-
         $data = explode('/',\Request::path());
         if(count($data) == 1) {
             $data[1] = 'index';

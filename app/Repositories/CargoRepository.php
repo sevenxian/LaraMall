@@ -48,4 +48,31 @@ class CargoRepository
     public function selectWhereIn($fields, array $ids, array $where = []){
         return $this->model->where($where)->whereIn($fields, $ids)->get();
     }
+
+    /**
+     * 通过where获取多条数据
+     *
+     * @param $fields
+     * @param array $ids
+     * @param array $where
+     * @return mixed
+     * @author jiaohuafeng
+     */
+    public function selectWhere(array $where = []){
+        return $this->model->where($where)->get();
+    }
+
+    /**
+     * 通过货品ID获取跟货品相关联的货品关联表的数据
+     *
+     * @param $fields
+     * @param array $ids
+     * @param array $where
+     * @return mixed
+     * @author jiaohuafeng
+     */
+    public function getCargoCollection(array $where = []){
+        return $this->model->find($where)->goodscollection();
+    }
+
 }
