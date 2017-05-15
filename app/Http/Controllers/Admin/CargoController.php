@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendReminderEmail;
 use App\Repositories\ActivityRepository;
 use App\Repositories\CargoRepository;
 use App\Repositories\CategoryAttributeRepository;
@@ -480,6 +481,12 @@ class CargoController extends Controller
      */
     public function cargoList($id)
     {
+        $cargoes = $this->cargo->select();
+        
+//        foreach ($cargoes as $cargo){
+//            $this->dispatch(new SendReminderEmail($cargo));
+//        }
+        
         return view('admin.cargo.list', compact('id'));
     }
 

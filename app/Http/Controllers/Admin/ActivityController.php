@@ -75,9 +75,13 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        return view('admin.activity.create');
+        // 获取最近的一次活动
+        $currentTimestamp = time();
+        // 要等上一场活动结束以后才可以添加下一场活动
+        $activity = $this->activity->activities($currentTimestamp);
+        return view('admin.activity.create', compact('activity'));
     }
-
+    
     /**
      * 获取某一个活动信息
      *
