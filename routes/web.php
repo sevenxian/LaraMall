@@ -49,12 +49,12 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::post('doLogin', 'UserController@doLogin');
     // 商品列表页
     Route::get('goodsList/{category_id}', 'GoodsController@goodsList');
+    // 商品搜索页
+    Route::get('search', 'GoodsController@search');
     // 商品详情页
     Route::get('goodsDetail/{cargo_id}', 'GoodsController@goodsDetail');
     // 异步获取商品评论信息
     Route::post('goodsDetails/comments', 'GoodsController@comments');
-    // 立即抢购
-    Route::post('toSnapUp', 'GoodsController@toSnapUp');
     // 获取货品ID
     Route::post('getCargoId', 'GoodsController@getCargoId');
     // 分类
