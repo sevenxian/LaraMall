@@ -4,7 +4,7 @@
  */
 var userListVue = new Vue({
     // 绑定元素
-    el: '.userList',
+    el: '#userList',
     // 响应式参数
     data() {
         return {

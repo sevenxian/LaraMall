@@ -4,7 +4,7 @@
  */
 new Vue({
     // 绑定元素
-    el: '.main-content',
+    el: '#main-content',
     // 响应式参数
     data() {
         return {
