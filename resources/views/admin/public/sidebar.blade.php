@@ -12,7 +12,7 @@ s
             </li>
             <li class="sub-menu {{ $aside->openTag(['users','subscribers']) }}">
                 <a href="javascript:;" class="">
-                    <i class="icon-book"></i>
+                    <i class="icon-user"></i>
                     <span>用户管理</span>
                     <span class="arrow {{ $aside->openTag(['users','subscribers']) }}"></span>
                 </a>
@@ -33,21 +33,21 @@ s
                 </ul>
             </li>
 
-            <li class="sub-menu {{ $aside->openTag(['categoryLabel']) }}">
-                <a href="javascript:;" class="">
-                    <i class="icon-th"></i>
-                    <span>标签管理</span>
-                    <span class="arrow {{ $aside->openTag(['categoryLabel']) }}"></span>
-                </a>
-                <ul class="sub" {{ $aside->displayBlock(['categoryLabel']) }}>
-                    <li><a href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>
-                    <li><a href=""> 添加分类</a></li>
-                </ul>
-            </li>
+            {{--<li class="sub-menu {{ $aside->openTag(['categoryLabel']) }}">--}}
+                {{--<a href="javascript:;" class="">--}}
+                    {{--<i class="icon-th"></i>--}}
+                    {{--<span>标签管理</span>--}}
+                    {{--<span class="arrow {{ $aside->openTag(['categoryLabel']) }}"></span>--}}
+                {{--</a>--}}
+                {{--<ul class="sub" {{ $aside->displayBlock(['categoryLabel']) }}>--}}
+                    {{--<li><a href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>--}}
+                    {{--<li><a href=""> 添加分类</a></li>--}}
+                {{--</ul>--}}
+            {{--</li>--}}
 
             <li class="sub-menu {{ $aside->openTag(['goods', 'cargoList', 'cargoActivity']) }}">
                 <a href="javascript:;" class="">
-                    <i class="icon-glass"></i>
+                    <i class="icon-folder-open"></i>
                     <span>商品管理</span>
                     <span class="arrow {{ $aside->openTag(['goods', 'cargoList', 'cargoActivity']) }}"></span>
                 </a>
@@ -59,7 +59,7 @@ s
             </li>
             <li class="sub-menu {{ $aside->openTag(['order']) }}">
                 <a class="" href="{{ url('/admin/order') }}">
-                    <i class="icon-user"></i>
+                    <i class=" icon-film"></i>
                     <span>订单管理</span>
                 </a>
             </li>
@@ -77,14 +77,14 @@ s
             </li>
             <li>
                 <a class="" href="{{ url('/admin/comments')}}">
-                    <i class="icon-user"></i>
+                    <i class=" icon-group"></i>
                     <span>评论管理</span>
                 </a>
             </li>
 
             <li class="sub-menu {{ $aside->openTag(['basicconfig']) }}">
                 <a href="javascript:;" class="">
-                    <i class="icon-user"></i>
+                    <i class=" icon-gears"></i>
                     <span>网站配置</span>
                     <span class="arrow {{ $aside->openTag(['basicconfig']) }}"></span>
                 </a>
@@ -98,7 +98,7 @@ s
 
             <li class="sub-menu {{ $aside->openTag(['acl', 'permission']) }}">
                 <a href="javascript:;" class="">
-                    <i class="icon-user-md"></i>
+                    <i class="icon-lock"></i>
                     <span>权限管理</span>
                     <span class="arrow {{ $aside->openTag(['acl', 'permission']) }}"></span>
                 </a>

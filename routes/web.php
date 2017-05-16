@@ -147,6 +147,11 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     // 认证后的操作路由
     //Route::group(['middleware' => 'user:admin'], function () {
     Route::group([], function () {
+        Route::get('/', 'IndexController@index');
+        // 后台首页
+        Route::get('index', 'IndexController@index')->name('admin.index');
+        Route::post('index/count', 'IndexController@count');
+
         // 后台用户管理块
         Route::resource('subscribers', 'SubscribersController');
         // 管理员重置密码
@@ -157,9 +162,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::patch('syncRoles/{id}', 'AdminUserController@syncRoles');
         // 后台用户管理
         Route::resource('users', 'AdminUserController');
-        // 后台首页
-        Route::get('index', 'IndexController@index')->name('admin.index');
-        Route::get('/', 'IndexController@index');
         // 用户退出登陆
         Route::any('logout', 'UserController@logout')->name('admin.logout');
         // 管理员重置密码
@@ -263,6 +265,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('order/sendGoods', 'OrderController@sendGoods');
         // 评论管理
         Route::resource('comments', 'CommentsController');
+        // 获取评论列表
+        Route::any('commentList', 'CommentsController@commentList');
 
 
 

@@ -239,15 +239,23 @@
             }else if(status ==4){
                 location.href="/home/comments/create?orderDetailsId="+orderDetailsId;
             }else if(status == 5){
-                data.order_status=4;
-                sendAjax('data','',function(res){
-
+                data.order_status=status;
+                data._method='delete';
+                sendAjax(data,'/home/order/'+orderDetailsId,function(response){
+                    if(response.ServerNo == 200){
+                        layer.msg('删除成功');
+                        $(obj).parents('.item-list').hide();
+                    }else{
+                        layer.msg('删除失败');
+                    }
                 });
             }else {
 
             }
 
         });
+
+
 
         // 再次支付
         $('.againPay').click(function(){

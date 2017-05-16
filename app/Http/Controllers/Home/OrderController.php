@@ -127,6 +127,7 @@ class OrderController extends Controller
     {
 
         $where['user_id'] = \Session::get('user')->user_id;
+        $where['del_status'] = 1;
         if (!empty($status)) {
             $where['order_status'] = $status;
         }
@@ -413,14 +414,25 @@ class OrderController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 删除订单
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhangyuchao
      */
     public function destroy($id)
     {
-        //
+        // 删除
+        $result = $this->orderDetails->update(['id'=> $id],['del_status' => 2]);
+        // 判断结果
+        if(!empty($result)) {
+            // 成功
+            return responseMsg('删除成功');
+        }
+
+        // 失败
+        return responseMsg('删除失败',400);
+
     }
 
 
