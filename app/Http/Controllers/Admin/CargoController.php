@@ -211,13 +211,27 @@ class CargoController extends Controller
         if (!$goods) {
             return responseMsg('该商品不存在', 404);
         }
-
+        
         // 获取商品标签
         $goodsLabels = $goods->labels;
-
+        
         // 获取商品标签值
         foreach ($goodsLabels as $label) {
             $label = $label->attrs;
+        }
+
+        // 获取货品信息
+        if(isset($data['cargo_id'])){
+            $cargo = $this->cargo->find(['id'=>$data['cargo_id']]);
+            if (!$cargo) {
+                return responseMsg('该货品不存在', 404);
+            }
+
+            // 货品拥有的分类标签键值对
+            $labelCargo = $this->relLabelCargo->find(['cargo_id' => $cargo->id]);
+
+            $res['cargo'] = $cargo;
+            $res['labelCargo'] = $labelCargo;
         }
 
         // 获取三级分类
@@ -237,7 +251,7 @@ class CargoController extends Controller
         if (!$lv1s) {
             return responseMsg('该分类不存在', 404);
         }
-
+        
         // 获取分类标签
         $categoryLabels = $lv3s->labels;
 
@@ -245,13 +259,13 @@ class CargoController extends Controller
         foreach ($categoryLabels as $label) {
             $label = $label->labels;
         }
-
+        
         $res['goods'] = $goods;
         $res['goodsLabels'] = $goodsLabels;
         $res['lv1s'] = $lv1s;
         $res['lv2s'] = $lv2s;
         $res['lv3s'] = $lv3s;
-
+        
         return responseMsg($res);
     }
     
@@ -430,6 +444,10 @@ class CargoController extends Controller
             // 向货品表中新增记录
             $cargo = $this->cargo->insert($param);
 
+            // 分词处理 货品标题
+            array_push($body, $this->analysis->toUnicode($cargo->cargo_name));
+            $body = array_merge($body, $this->analysis->QuickCut($cargo->cargo_name));
+
             // 分类标签值与货品关联表中新增记录
             if (!empty($categoryLabels)) {
                 $arr = [];
@@ -451,7 +469,7 @@ class CargoController extends Controller
                     }
                 }
             }
-
+            
             // 向商品索引表中新增记录
             $indexs['goods_id'] = $data['goods_id'];
             $indexs['cargo_id'] = $cargo->id;
@@ -603,14 +621,15 @@ class CargoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 编辑界面
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $cargo = $this->cargo->find(['id' => $id]);
+        return view('admin.cargo.edit', compact('cargo'));
     }
 
     /**
@@ -622,7 +641,172 @@ class CargoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+
+        // 货品标签/标签值ID键值对
+        $cargoLabels = [];
+        // 货品标签值ID集合
+        $goodsAttrIds = [];
+        // 货品标签/标签值ID键值对
+        $categoryLabels = [];
+        // 分类标签值ID集合
+        $categoryAttrIds = [];
+        foreach ($data as $key => $val) {
+            if (strpos($key, 'goodsLabel') !== false) {
+                $cargoLabels[str_replace('goodsLabel', '', $key)] = $val;
+                $goodsAttrIds[] = $val;
+            }
+            if (strpos($key, 'categoryLabel') !== false) {
+                $categoryLabels[str_replace('categoryLabel', '', $key)] = $val;
+                $categoryAttrIds[] = $val;
+            }
+        }
+        // 获取商品信息
+        $goods = $this->goods->find(['id' => $data['goods_id']]);
+        if (!$goods) {
+            return responseMsg('该商品不存在', 404);
+        }
+        
+        // 获取商品规格数量
+        $standardNum = count($goods->labels->toArray());
+
+        // 未选择商品规格或者说只选择了部分商品规格
+        if($standardNum != count($goodsAttrIds)){
+            return responseMsg('请选择商品规格', 400);
+        }
+
+        // 组合货品表中需要的数据
+        $param['category_id'] = $data['category_id'];
+        $param['goods_id'] = $data['goods_id'];
+        $param['cargo_ids'] = json_encode($cargoLabels);
+        $param['cargo_cover'] = $data['cargo_original'][0];
+        $param['inventory'] = $data['inventory'];
+        $param['cargo_price'] = $data['cargo_price'];
+        $param['cargo_name'] = $data['cargo_name'];
+        $param['cargo_discount'] = $data['cargo_discount'];
+        $param['cargo_original'] = json_encode($data['cargo_original']);
+        $param['cargo_info'] = $data['cargo_info'];
+
+        // 获取三级分类
+        $lv3s = $this->category->find(['id' => $data['category_id']]);
+        if (!$lv3s) {
+            return responseMsg('该分类不存在', 404);
+        }
+        // 分词处理 三级分类名称
+        $body[] = $this->analysis->toUnicode($lv3s->name);
+        $body = array_merge($body, $this->analysis->QuickCut($lv3s->name));
+
+        // 获取二级分类
+        $lv2s = $this->category->find(['id' => $lv3s['pid']]);
+        if (!$lv2s) {
+            return responseMsg('该分类不存在', 404);
+        }
+        // 分词处理 二级分类名称
+        array_push($body, $this->analysis->toUnicode($lv2s->name));
+        $body = array_merge($body, $this->analysis->QuickCut($lv2s->name));
+
+        // 获取一级分类
+        $lv1s = $this->category->find(['id' => $lv2s['pid']]);
+        if (!$lv1s) {
+            return responseMsg('该分类不存在', 404);
+        }
+        // 分词处理 一级分类名称
+        array_push($body, $this->analysis->toUnicode($lv1s->name));
+        $body = array_merge($body, $this->analysis->QuickCut($lv1s->name));
+
+        // 分词处理 商品标题
+        array_push($body, $this->analysis->toUnicode($goods->goods_title));
+        $body = array_merge($body, $this->analysis->QuickCut($goods->goods_title));
+
+        // 分词处理 货品名称
+        array_push($body, $this->analysis->toUnicode($param['cargo_name']));
+        $body = array_merge($body, $this->analysis->QuickCut($param['cargo_name']));
+
+        // 获取分类标签值
+        if ($categoryAttrIds) {
+            $categoryAttrs = $this->categoryAttribute->selectByWhereIn('id', $categoryAttrIds);
+            foreach ($categoryAttrs as $categoryAttr) {
+                // 分词处理 分类标签值
+                array_push($body, $this->analysis->toUnicode($categoryAttr->attribute_name));
+                $body = array_merge($body, $this->analysis->QuickCut($categoryAttr->attribute_name));
+            }
+        }
+
+        try {
+            \DB::beginTransaction();
+
+            // 修改商品标签值关联表
+            $cargo = $this->cargo->find(['id' => $id]);
+            $cargo_ids = json_decode($cargo->cargo_ids, 1);
+            $diff = array_diff($cargo_ids, $goodsAttrIds);
+            $intersect = array_intersect($goodsAttrIds, $cargo_ids);
+
+            if($intersect != $goodsAttrIds){
+                // 组合查询条件
+                foreach($cargoLabels as $k => $v){
+                    $where['cargo_ids->'.$k] = $v;
+                }
+
+                // 修改之前判断相同属性的货品是否存在，如果存在则不允许修改
+                if($this->cargo->find($where)){
+                    throw new \Exception('相同规格的货品已经存在', 400);
+                }
+            }
+
+            // 修改分类标签值与货品关联表
+            if (!empty($categoryLabels)) {
+                $arr = [];
+                $arr['category_attr_ids'] = json_encode($categoryLabels);
+                $this->relLabelCargo->update(['id' => $id], $arr);
+            }
+            
+            // 查找需要删除的商品标签值
+            $ids = [];
+            foreach ($diff as $k => $v){
+                if(!$this->cargo->find(['cargo_ids->'.$k => $v])){
+                    $ids[] = $v;
+                }
+            }
+
+            // 删除商品标签值
+            if(!empty($ids)){
+                $this->relGA->deleteWhereIn($ids);
+            }
+
+            // 新增商品标签值
+            if (!empty($goodsAttrIds)) {
+                $arr = [];
+                foreach ($goodsAttrIds as $v) {
+                    if(!in_array($v, $intersect)){
+                        $arr['goods_attr_id'] = $v;
+                        $arr['goods_id'] = $data['goods_id'];
+                        // 新增之前判断商品是否已经存在这个属性值，如果存在则不添加
+                        if(!$this->relGA->find($arr)){
+                            $this->relGA->insert($arr);
+                        }
+                    }
+                }
+            }
+
+            // 修改货品
+            $this->cargo->update(['id' => $id], $param);
+
+            // 修改商品索引表
+            $indexs['body'] = implode(' ', $body);
+            $this->indexGoods->update(['cargo_id' => $id], $indexs);
+
+            // 更新缓存
+            \Redis::hmset(HASH_CARGO_INFO_ . $id, $cargo->toArray());
+
+            \DB::commit();
+            return responseMsg('货品修改成功');
+        } catch (\Exception $e) {
+            \DB::rollback();
+            if($e->getCode() == 400){
+                return responseMsg($e->getMessage(), $e->getCode());
+            }
+            return responseMsg('货品修改失败', 400);
+        }
     }
 
     /**

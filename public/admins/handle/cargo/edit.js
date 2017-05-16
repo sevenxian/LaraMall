@@ -1,5 +1,5 @@
 /**
- * 添加货品 Vue
+ * 修改货品 Vue
  * @author zhulinjie
  */
 new Vue({
@@ -12,23 +12,22 @@ new Vue({
             lv2s: {},                // 二级分类
             lv3s: {},                // 三级分类
             goods: {},               // 商品信息
-            cargo_name: '',          // 货品名称
-            cargo_price: '',         // 货品原价
-            cargo_discount: '',      // 货品折扣价
-            inventory: '',           // 库存量
+            cargo: {},               // 货品信息
+            labelCargo: {},          // 货品拥有的分类标签键值对
+            cargo_ids: {},           // 货品拥有的商品标签键值对
             categoryLabels: [],      // 分类标签
             goodsLabels: [],         // 商品标签
-            cargoImgs: [1],           // 商品图片个数
+            cargoImgs: []            // 货品图片
         }
     },
     // 第一次执行
     mounted(){
         // 获取货品相关数据
-        axios.post('/admin/cargo/detail', {goods_id: goods_id}).then(response => {
+        axios.post('/admin/cargo/detail', {cargo_id: cargo_id, goods_id: goods_id}).then(response => {
             console.log(response);
             // 获取数据失败的情况
-            if(response.data.ServerNo != 200){
-                sweetAlert("请求失败!", response.data.ResultData, "error");
+            if (response.data.ServerNo != 200) {
+                // sweetAlert("请求失败!", response.data.ResultData, "error");
                 return;
             }
             // 一级分类
@@ -39,10 +38,18 @@ new Vue({
             this.lv3s = response.data.ResultData.lv3s;
             // 商品信息
             this.goods = response.data.ResultData.goods;
+            // 货品信息
+            this.cargo = response.data.ResultData.cargo;
             // 分类标签
             this.categoryLabels = response.data.ResultData.lv3s.labels;
             // 商品标签
             this.goodsLabels = response.data.ResultData.goodsLabels;
+            // 货品拥有的分类标签键值对
+            this.labelCargo = JSON.parse(response.data.ResultData.labelCargo.category_attr_ids);
+            // 货品拥有的商品标签键值对
+            this.cargo_ids = JSON.parse(response.data.ResultData.cargo.cargo_ids);
+            // 货品图片
+            this.cargoImgs = JSON.parse(response.data.ResultData.cargo.cargo_original);
         }).catch(error => {
             sweetAlert("请求失败!", error, "error");
         });
@@ -52,13 +59,14 @@ new Vue({
         // 选择分类标签值
         selectLabel(e){
             e.preventDefault();
-            // 样式切换
-            if(!$(e.target).hasClass('r_on')){
-                // 取消选中其它的单选按钮
-                $(e.target).parents('.form-group').find('.label_radio').removeClass('r_on');
-                // 选中当前的单选按钮
-                $(e.target).addClass('r_on');
-                $(e.target).find('input').attr('checked', true);
+            if(e.target.tagName == 'LABEL'){
+                if (!$(e.target).hasClass('r_on')) {
+                    // 取消选中其它的单选按钮
+                    $(e.target).parents('.form-group').find('.label_radio').removeClass('r_on');
+                    // 选中当前的单选按钮
+                    $(e.target).addClass('r_on');
+                    $(e.target).find('input')[0].checked = true;
+                }
             }
         },
         // 添加分类标签值
@@ -68,14 +76,17 @@ new Vue({
             var category_label_id = $(e.target).data('category_label_id');
 
             // 分类标签值不能为空
-            if(!attribute_name){
+            if (!attribute_name) {
                 sweetAlert("操作失败!", "请先填写分类标签值!", "error");
                 return;
             }
 
             // 分类标签值添加请求
-            axios.post('/admin/addCategoryAttr', {category_label_id: category_label_id, attribute_name: attribute_name}).then(response => {
-                if(response.data.ServerNo != 200){
+            axios.post('/admin/addCategoryAttr', {
+                category_label_id: category_label_id,
+                attribute_name: attribute_name
+            }).then(response => {
+                if (response.data.ServerNo != 200) {
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
                 }
@@ -86,7 +97,7 @@ new Vue({
                 // 前端实时添加
                 this.categoryLabels[index].labels.push(data);
                 sweetAlert("操作成功!", '分类标签值添加成功', "success");
-            // 请求失败的情况
+                // 请求失败的情况
             }).catch(error => {
                 sweetAlert("操作失败!", error, "error");
             });
@@ -98,15 +109,18 @@ new Vue({
             var goods_label_id = $(e.target).data('goods_label_id');
 
             // 商品标签值不能为空
-            if(!goods_label_name){
+            if (!goods_label_name) {
                 sweetAlert("操作失败!", "请先填写商品标签值!", "error");
                 return;
             }
 
             // 商品标签值添加请求
-            axios.post('/admin/addGoodsAttr', {goods_label_id: goods_label_id, goods_label_name: goods_label_name}).then(response => {
+            axios.post('/admin/addGoodsAttr', {
+                goods_label_id: goods_label_id,
+                goods_label_name: goods_label_name
+            }).then(response => {
                 console.log(response);
-                if(response.data.ServerNo != 200){
+                if (response.data.ServerNo != 200) {
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
                 }
@@ -125,7 +139,7 @@ new Vue({
         // 添加货品图片
         addCargoImg(e){
             e.preventDefault();
-            this.cargoImgs.push(this.cargoImgs.length + 1);
+            this.cargoImgs.push(this.cargoImgs.length + 1 + '');
         },
         // 上传货品图片
         uploadCargoImg(e){
@@ -142,7 +156,7 @@ new Vue({
                 var allowType = ['image/jpeg', 'image/png', 'image/gif'];
 
                 // 检测上传图片格式是否合法
-                if($.inArray(file.type, allowType) == -1){
+                if ($.inArray(file.type, allowType) == -1) {
                     sweetAlert("操作失败!", "图片格式有误，请上传jpg、png、gif格式的图片!", "error");
                     return;
                 }
@@ -169,27 +183,27 @@ new Vue({
             });
         },
         // 添加货品操作
-        addCargo(e){
+        updateCargo(e){
             // 前端验证
             $('#cargo').bootstrapValidator('validate');
 
             // 货品名称不能为空
-            if (!this.cargo_name) {
+            if (!$.trim($('input[name=cargo_name]').val())) {
                 sweetAlert("操作失败!", "请先填写货品名称!", "error");
                 return;
             }
             // 货品原价不能为空
-            if (!this.cargo_price) {
+            if (!$.trim($('input[name=cargo_price]').val())) {
                 sweetAlert("操作失败!", "请先填写货品原价!", "error");
                 return;
             }
             // 货品折扣价不能为空
-            if (!this.cargo_discount) {
+            if (!$.trim($('input[name=cargo_discount]').val())) {
                 sweetAlert("操作失败!", "请先填写货品折扣价!", "error");
                 return;
             }
             // 库存量不能为空
-            if (!this.inventory) {
+            if (!$.trim($('input[name=inventory]').val())) {
                 sweetAlert("操作失败!", "请先填写库存量!", "error");
                 return;
             }
@@ -203,7 +217,7 @@ new Vue({
             // 构造一个包含Form表单数据的FormData对象，需要在创建FormData对象时指定表单的元素
             var fd = new FormData($(e.target).parents('form')[0]);
             // 添加请求
-            axios.post('/admin/cargo', fd).then(response => {
+            axios.post('/admin/updateCargo/' + cargo_id, fd).then(response => {
                 console.log(response);
                 // 添加货品失败的情况
                 if (response.data.ServerNo != 200) {
@@ -215,11 +229,11 @@ new Vue({
                     title: '操作成功',
                     text: response.data.ResultData,
                     type: 'success'
-                }, function(isConfirm){
-                    if(isConfirm){
+                }, function (isConfirm) {
+                    if (isConfirm) {
                         // 500毫秒以后跳转到货品列表页
                         setTimeout(function () {
-                            location.href="/admin/cargoList/"+goods_id;
+                            location.href = "/admin/cargoList/" + goods_id;
                         }, 500);
                     }
                 });

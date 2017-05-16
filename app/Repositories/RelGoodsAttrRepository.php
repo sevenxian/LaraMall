@@ -26,4 +26,16 @@ class RelGoodsAttrRepository
     {
         $this->model = $relGoodsAttr;
     }
+
+    /**
+     * 删除指定ID集合的数据
+     *
+     * @param $ids
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function deleteWhereIn($ids)
+    {
+        return $this->model->whereIn('goods_attr_id', $ids)->delete();
+    }
 }
