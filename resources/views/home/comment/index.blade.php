@@ -58,7 +58,7 @@
                                             </div>
                                             <li class="td td-item">
                                                 <div class="item-pic">
-                                                    <a href="#" class="J_MakePoint">
+                                                    <a href="{{ url('/home/goodsDetail') }}/{{ $item['cargo_message']['id']}}" class="J_MakePoint">
                                                         <img src="{{ env('QINIU_DOMAIN') }}{{ $item['cargo_message']['cargo_cover'] }}?imageView2/1/w/80/h/80" class="itempic">
                                                     </a>
                                                 </div>
@@ -68,7 +68,7 @@
                                                 <div class="item-title">
                                                     <div class="item-opinion">@if($item['star'] ==1)好评@elseif($item['star'] ==2)中评@else差评@endif</div>
                                                     <div class="item-name">
-                                                        <a href="#">
+                                                        <a href="{{ url('/home/goodsDetail') }}/{{ $item['cargo_message']['id']}}">
                                                             <p class="item-basic-info">{{ $item['cargo_message']['cargo_name'] }}</p>
                                                         </a>
                                                     </div>

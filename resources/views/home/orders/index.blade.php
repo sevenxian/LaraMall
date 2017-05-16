@@ -86,13 +86,13 @@
                                                     <ul class="item-list" data-orderDetails-id="{{$item['id']}}">
                                                         <li class="td td-item">
                                                             <div class="item-pic">
-                                                                <a href="#" class="J_MakePoint">
+                                                                <a href="{{ url('/home/goodsDetail') }}/{{ $item['cargo_message']['id']}}" class="J_MakePoint">
                                                                     <img src="{{ env('QINIU_DOMAIN') }}{{ $item['cargo_message']['cargo_cover'] }}?imageView2/1/w/80/h/80" class="itempic J_ItemImg">
                                                                 </a>
                                                             </div>
                                                             <div class="item-info">
                                                                 <div class="item-basic-info">
-                                                                    <a href="#">
+                                                                    <a href="{{ url('/home/goodsDetail') }}/{{ $item['cargo_message']['id']}}">
                                                                         <p>{{ $item['cargo_message']['cargo_name'] }}</p>
                                                                         @if(!empty($item['label']))
                                                                         <p class="info-little">
@@ -164,8 +164,9 @@
                                                             <div class="am-btn am-btn-danger anniu">
                                                                 @if($val['order']['pay_status'] ==1)
                                                                     <p class="Mystatus againPay"  onmouseover="$(this).html('&nbsp;&nbsp;去支付&nbsp;&nbsp;')"  data-pay-type="{{ $val['order']['pay_type'] }}" onmouseout="$(this).html('等待支付')">等待支付</p>
-                                                                @else
+                                                                @elseif($val['order']['pay_status'] ==3)
                                                                     <p class="Mystatus">交易关闭</p>
+                                                                @else
                                                                 @endif
                                                             </div>
                                                         </li>

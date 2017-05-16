@@ -35,11 +35,6 @@
                                     <em class="s-name">{{ \Session::get('userInfo')->nickname }}<span class="vip1"></span></em>
 
                                 </div>
-                                <div class="m-right">
-                                    <div class="m-address">
-                                        <a href="address.html" class="i-trigger">我的收货地址</a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="box-container-bottom"></div>
@@ -48,7 +43,7 @@
                         <div class="m-order">
                             <div class="s-bar">
                                 <i class="s-icon"></i>我的订单
-                                <a class="i-load-more-item-shadow" href="order.html">全部订单</a>
+                                <a class="i-load-more-item-shadow" href="{{ url('home/orders/0') }}">全部订单</a>
                             </div>
                             <ul>
                                 <li style="width:25%">
@@ -130,24 +125,19 @@
                                     <div class="s-item">
 
                                         <div class="s-pic">
-                                            <a href="#" class="s-pic-link">
+                                            <a href="{{ url('/home/goodsDetail/') }}/{{ $item['cargo_id'] }}" class="s-pic-link">
                                                 <img src="{{ env('QINIU_DOMAIN') }}{{ $item['cargo_cover'] }}" alt="{{ $item['cargo_name'] }}" title="{{ $item['cargo_name'] }}" class="s-pic-img s-guess-item-img">
                                                 @if($item['cargo_status'] == 3)<span class="tip-title">已下架</span>@endif
                                             </a>
                                         </div>
                                         <div class="s-price-box">
                                         <span class="s-price"><em class="s-price-sign">¥</em><em
-                                                    class="s-value">{{ $item['cargo_discount'] }}</em></span>
+                                                    class="s-value">{{ $item['cargo_price'] }}</em></span>
                                         <span class="s-history-price"><em class="s-price-sign">¥</em><em
                                                     class="s-value">{{ $item['cargo_price'] }}</em></span>
 
                                         </div>
-                                        <div class="s-title"><a href="#" title="{{ $item['cargo_name'] }}">{{ $item['cargo_name'] }}</a>
-                                        </div>
-                                        <div class="s-extra-box">
-                                            <span class="s-comment">好评: 98.03%</span>
-                                            <span class="s-sales">月销: 219</span>
-
+                                        <div class="s-title"><a href="{{ url('/home/goodsDetail/') }}/{{ $item['cargo_id'] }}" title="{{ $item['cargo_name'] }}">{{ $item['cargo_name'] }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -222,28 +212,7 @@
                 </div>
             </div>
             <!--底部-->
-            <div class="footer">
-                <div class="footer-hd">
-                    <p>
-                        <a href="#">恒望科技</a>
-                        <b>|</b>
-                        <a href="#">商城首页</a>
-                        <b>|</b>
-                        <a href="#">支付宝</a>
-                        <b>|</b>
-                        <a href="#">物流</a>
-                    </p>
-                </div>
-                <div class="footer-bd">
-                    <p>
-                        <a href="#">关于恒望</a>
-                        <a href="#">合作伙伴</a>
-                        <a href="#">联系我们</a>
-                        <a href="#">网站地图</a>
-                        <em>© 2015-2025 Hengwang.com 版权所有</em>
-                    </p>
-                </div>
-            </div>
+            @include('home.public.footer')
 
         </div>
 
