@@ -82,7 +82,7 @@
                 </a>
                 <ul class="sub" {{ $aside->displayBlock(['basicconfig','friendLink']) }}>
                     <li><a href="{{ route('basicconfig.index') }}">基本配置</a></li>
-                    <li><a href="/friendLink">友情链接</a></li>
+                    <li><a href="friendLink">友情链接</a></li>
                 </ul>
             </li>
 
