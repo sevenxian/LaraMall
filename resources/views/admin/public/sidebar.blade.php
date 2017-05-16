@@ -31,19 +31,6 @@
                     <li><a href="{{ route('classification.create') }}"> 添加分类</a></li>
                 </ul>
             </li>
-
-            <li class="sub-menu {{ $aside->openTag(['categoryLabel']) }}">
-                <a href="javascript:;" class="">
-                    <i class="icon-th"></i>
-                    <span>标签管理</span>
-                    <span class="arrow {{ $aside->openTag(['categoryLabel']) }}"></span>
-                </a>
-                <ul class="sub" {{ $aside->displayBlock(['categoryLabel']) }}>
-                    <li><a href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>
-                    <li><a href=""> 添加分类</a></li>
-                </ul>
-            </li>
-
             <li class="sub-menu {{ $aside->openTag(['goods', 'cargoList', 'cargoActivity']) }}">
                 <a href="javascript:;" class="">
                     <i class="icon-glass"></i>
