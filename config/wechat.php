@@ -64,7 +64,7 @@ return [
          'key'                => env('WECHAT_PAYMENT_KEY', '6cec4c06056611e7a127afc3e04f2fdd'),
          'cert_path'          => env('WECHAT_PAYMENT_CERT_PATH', './wechar/apiclient_cert.pem'), // XXX: 绝对路径！！！！
          'key_path'           => env('WECHAT_PAYMENT_KEY_PATH', './wechar/apiclient_key.pem'),      // XXX: 绝对路径！！！！
-         'notify_url'         => 'http://www.laramall.com/home/order/wechatNotify',//添加回调地址
+         'notify_url'         => 'http://'.$_SERVER['HTTP_HOST'].'/home/order/wechatNotify',//添加回调地址
          // 'device_info'     => env('WECHAT_PAYMENT_DEVICE_INFO', ''),
          // 'sub_app_id'      => env('WECHAT_PAYMENT_SUB_APP_ID', ''),
          // 'sub_merchant_id' => env('WECHAT_PAYMENT_SUB_MERCHANT_ID', ''),
