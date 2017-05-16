@@ -71,7 +71,7 @@
                                             <div class="row">
                                                 <div class="col-md-3" v-for="attribute in categoryLabel.labels">
                                                     <label class="label_radio" @click="selectLabel">
-                                                        <input :name="'categoryLabel'+categoryLabel.id" :value="attribute.id" type="radio" />@{{ attribute.attribute_name }}
+                                                        <input :name="'categoryLabel'+categoryLabel.id" style="position: relative; left: 0" :value="attribute.id" type="radio" />@{{ attribute.attribute_name }}
                                                     </label>
                                                 </div>
                                             </div>
@@ -136,7 +136,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-1 col-md-11">
-                                        <button type="button" class="btn btn-danger" id="validateBtn" @click="addCargo">确 定</button>
+                                        <button type="button" class="btn btn-danger" id="validateBtn" @click="addCargo">添 加</button>
                                     </div>
                                 </div>
                             </form>

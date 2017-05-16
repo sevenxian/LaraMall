@@ -33,10 +33,8 @@ trait BaseRepository
     public function find(array $where, $columns = ['*'])
     {
         if (empty($where)) {
-
             return false;
         }
-
         return $this->model->where($where)->select($columns)->first();
     }
 
@@ -124,7 +122,7 @@ trait BaseRepository
      * @return bool
      * @author zhangyuchao
      */
-    public function delete($where)
+    public function delete(array $where)
     {
         if (empty($where)) {
             

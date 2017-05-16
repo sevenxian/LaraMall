@@ -35,6 +35,10 @@
                                 <div class="am-fl am-cf"><strong class="am-text-danger am-text-lg">新增地址</strong> /
                                     <small>Add&nbsp;address &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最多可创建9个</small>
                                 </div>
+                                @if(count(explode('?',request()->server()['HTTP_REFERER']))>1)
+                                    {{ \Session::set('checkoutUrl', request()->server()['HTTP_REFERER']) }}
+                                    <a href="{{ request()->server()['HTTP_REFERER'] }}" class="am-btn am-btn-danger" style="float:right">返回</a>
+                                @endif
                             </div>
                             <hr/>
 

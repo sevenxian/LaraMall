@@ -98,6 +98,7 @@
             startView: 2,
             forceParse: 0,
             showMeridian: 1,
+            startDate: '{{ $activity ? date("Y-m-d H:i:s", $activity->end_timestamp) : date("Y-m-d H:i:s") }}',
         });
     </script>
 @stop

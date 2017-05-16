@@ -7,7 +7,8 @@
     <div class="nav white">
         <div class="logo"><img src="/images/logo.png"/></div>
         <div class="logoBig">
-            <li><a href="/home/index"><img src="/images/logobig.png"/></a></li>
+            @inject('BasicConfig', 'App\Presenters\BasicConfigPresenter')
+            <li><a href="/home/index"><img src="@if(empty($BasicConfig->getBasicConfig()->logo))/images/logobig.png @else {{ env('QINIU_DOMAIN') }}{{ $BasicConfig->getBasicConfig()->logo }}?imageView2/1/w/200/h/90 @endif"/></a></li>
         </div>
 
         <div class="search-bar pr">

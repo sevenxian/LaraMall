@@ -28,7 +28,7 @@ new Vue({
             console.log(response);
             // 获取数据失败的情况
             if(response.data.ServerNo != 200){
-                sweetAlert("请求失败!", response.request.statusText, "error");
+                sweetAlert("请求失败!", response.data.ResultData, "error");
                 return;
             }
             // 一级分类

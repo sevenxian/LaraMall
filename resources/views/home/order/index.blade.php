@@ -130,7 +130,7 @@
                                         <div class="item-props">
                                             @if(!empty($value['label']))
                                                 @foreach($value['label'] as $v)
-                                                <span class="sku-line">{{ $v['label_name'] }}:{{ $v['attr_name'] }}</span><br>
+                                                <span class="sku-line">{{ str_replace('选择', '', $v['label_name']) }}:{{ $v['attr_name'] }}</span><br>
                                                 @endforeach
                                             @endif
                                         </div>

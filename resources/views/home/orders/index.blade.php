@@ -75,7 +75,7 @@
                                         @foreach($data as $key =>$val)
                                         <div class="order-status5">
                                             <div class="order-title">
-                                                <div class="dd-num" style="max-width:400px;width:400px">订单编号：<a href="javascript:;">{{ $key }}</a></div>
+                                                <div class="dd-num" style="max-width:400px;width:400px">订单编号：<a href="javascript:;" class="orderId" data-order-id="{{ $val['order']['id'] }}">{{ $key }}</a></div>
                                                 <span>成交时间：@if(!empty($val['order'])){{$val['order']['created_at'] }}@endif</span>
                                                 <!--    <em>店铺：小桔灯</em>-->
                                             </div>
@@ -97,7 +97,7 @@
                                                                         @if(!empty($item['label']))
                                                                         <p class="info-little">
                                                                             @foreach($item['label'] as $k=>$v)
-                                                                           {{ $v['label_name'] }}:{{ $v['attr_name'] }}<br>
+                                                                                {{ str_replace('选择', '', $v['label_name']) }}:{{ $v['attr_name'] }}<br>
                                                                             @endforeach
                                                                         </p>
                                                                         @endif
@@ -163,7 +163,7 @@
                                                         <li class="td td-change">
                                                             <div class="am-btn am-btn-danger anniu">
                                                                 @if($val['order']['pay_status'] ==1)
-                                                                    <p class="Mystatus">等待支付</p>
+                                                                    <p class="Mystatus againPay"  onmouseover="$(this).html('&nbsp;&nbsp;去支付&nbsp;&nbsp;')"  data-pay-type="{{ $val['order']['pay_type'] }}" onmouseout="$(this).html('等待支付')">等待支付</p>
                                                                 @else
                                                                     <p class="Mystatus">交易关闭</p>
                                                                 @endif
@@ -247,5 +247,53 @@
             }
 
         });
+
+        // 再次支付
+        $('.againPay').click(function(){
+            var pay_type= $(this).attr('data-pay-type');
+            var order_id = $(this).parents('.order-status5').find('.orderId').attr('data-order-id');
+            var data = {
+                'pay_type':pay_type,
+                'order_id':order_id,
+                '_token':"{{ csrf_token() }}"
+            };
+
+            sendAjax(data,'/home/orders/againPay',function (response) {
+                if(response.ServerNo == 200){
+                    if(pay_type == 2){
+                        location.href=response.ResultData;
+                    }else{
+                        layer.open({
+                            type: 1,
+                            skin: 'layui-layer-rim', //加上边框
+                            area: ['270px', '310px'], //宽高
+                            content: eval(response.ResultData.QrCode)
+                        });
+                        $('.layui-layer-title').html('金额：'+response.ResultData.total_fee+'元');
+                        getInfo(response.ResultData.out_trade_no);
+                    }
+
+                } else {
+                    layer.msg(response.ResultData);
+                }
+            });
+        });
+        function getInfo($orderGuid) {
+            var data ={'guid': $orderGuid, '_token': "{{ csrf_token() }}"}
+            sendAjax(data, '/home/order/rotation', function (res) {
+                // 支付完成
+                if(res.ServerNo == 200){
+                    $('#layui-layer-shade1').hide();
+
+                    location.href = "/home/order/aliPayCogradient?trade_status=TRADE_SUCCESS&total_fee="+res.ResultData.total_amount+"&body="+res.ResultData.guid
+                } else if(res.ServerNo == 400){
+                    setTimeout('getInfo("'+$orderGuid+'")',1000);
+                } else {
+                    $('.layui-layer-close1').trigger('click');
+                    layer.msg('下单失败了!');
+                }
+            });
+
+        }
     </script>
 @stop

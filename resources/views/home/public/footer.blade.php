@@ -15,12 +15,13 @@
         <hr style="height:1px;border:none;border-top:1px solid ;" />
     </div>
     <div class="footer-bd">
-        <p>
+        @inject('BasicConfig', 'App\Presenters\BasicConfigPresenter')
+        <p style="text-align:center">
             <a href="#">关于恒望</a>
             <a href="#">合作伙伴</a>
             <a href="#">联系我们</a>
             <a href="#">网站地图</a>
-            <em>© 2015-2025 Hengwang.com 版权所有</em>
+            <em>@if(empty($BasicConfig->getBasicConfig()->copyright))版权所有 @else {{$BasicConfig->getBasicConfig()->copyright}} @endif</em>
         </p>
     </div>
 </div>

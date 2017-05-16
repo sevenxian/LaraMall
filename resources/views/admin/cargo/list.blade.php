@@ -48,7 +48,7 @@
                                     <td>
                                         <a href="#myModal-1" data-toggle="modal" :data-cid="item.id" class="btn btn-success btn-xs" title="选择推荐位" @click="getRecommend"><i class="icon-plus" :data-cid="item.id"></i></a>
                                         <a href="#myModal-2" data-toggle="modal" :data-cid="item.id" class="btn btn-warning btn-xs" title="做活动" @click="getActivity"><i class="icon-plus" :data-cid="item.id"></i></a>
-                                        <button class="btn btn-primary btn-xs"><i class="icon-pencil"></i></button>
+                                        <a :href="'/admin/cargo/'+item.id+'/edit'" class="btn btn-primary btn-xs"><i class="icon-pencil"></i></a>
                                     </td>
                                 </tr>
                                 <tr v-if="!isData"><td colspan="10" class="text-center">暂无数据</td></tr>

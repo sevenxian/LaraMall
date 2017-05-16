@@ -3,7 +3,7 @@
 
     <div class="filePic">
         <input type="file" id="img" class="inputPic" allowexts="gif,jpeg,jpg,png,bmp" accept="image/*">
-        <img class="am-circle am-img-thumbnail" src="@if(empty(\Session::get('userInfo')->avatar))/images/getAvatar.do.jpg @else {{ \Session::get('userInfo')->avatar }}  @endif" id="images" alt=""/>
+        <img class="am-circle am-img-thumbnail" src="@if(empty(\Session::get('userInfo')->avatar))/images/getAvatar.do.jpg @else {{ env('QINIU_DOMAIN') }}{{ \Session::get('userInfo')->avatar }}  @endif" id="images" alt=""/>
         <input type="hidden" value="{{ csrf_token() }}" id="token">
     </div>
 

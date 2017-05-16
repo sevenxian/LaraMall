@@ -11,3 +11,4 @@ public/uploads
 /storage/debugbar
 /storage/*
 /storage/logs/laravel.log
+.DS_Store

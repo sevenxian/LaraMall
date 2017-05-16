@@ -11,7 +11,7 @@ $(function () {
  */
 function timer(param) {
     var intDiff = Math.abs(param);
-    setInterval(function () {
+    window.mTimer = setInterval(function () {
         var day = 0,
             hour = 0,
             minute = 0,
@@ -22,6 +22,18 @@ function timer(param) {
             hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
             minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
             second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+        }else{
+            if(param < 0){
+                clearInterval(window.mTimer);
+                timer(activityLength);
+            }else{
+                clearInterval(window.mTimer);
+                layer.confirm('本场秒杀活动结束啦，看看最新的秒杀吧~', {
+                    btn: ['查看']
+                }, function () {
+                    location.href = '/home/index';
+                });
+            }
         }
 
         if (minute <= 9) minute = '0' + minute;
