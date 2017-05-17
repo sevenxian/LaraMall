@@ -44,24 +44,23 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {{--<tr v-for="(data,index) in datas">--}}
-                                {{--<td width="15%"><font><font>@{{ data.order_guid }}</font></font></td>--}}
-                                {{--<td width="8%"><font><font>@{{ data.user_message.nickname }}</font></font></td>--}}
-                                {{--<td width="30%"><font><font>@{{ data.cargo_message.cargo_name }}</font></font></td>--}}
-                                {{--<td width="10%"><font><font>@{{ data.commodity_number  }}</font></font></td>--}}
-                                {{--<td width="10%"><font><font>@{{ data.commodity_number * data.cargo_price }}元</font></font></td>--}}
-                                {{--<td>--}}
-                                    {{--<button v-if="data.order_status ==1" class="btn btn-danger btn-xs">待付款</button>--}}
-                                    {{--<button v-else-if="data.order_status ==2" class="btn btn-info btn-xs status"  @click="sendGoods(data.id,index,'status')"  onmouseover="$(this).html('点击发货')" onmouseout="$(this).html('待发货')">待发货</button>--}}
-                                    {{--<button v-else-if="data.order_status ==3" class="btn btn-warning btn-xs">待收货</button>--}}
-                                    {{--<button v-else-if="data.order_status ==4" class="btn btn-primary btn-xs">待评价</button>--}}
-                                    {{--<button v-else-if="data.order_status ==5" class="btn btn-success btn-xs">已完成</button>--}}
-                                    {{--<button v-else="data.order_status ==5" class="btn btn-default btn-xs">已取消</button>--}}
-                                {{--</td>--}}
-                                {{--<td>--}}
-                                    {{--<button  class="btn btn-success btn-xs"  data-toggle="modal" data-target="#address" @click="showAddress(data.order_guid)">配送地址</button>--}}
-                                {{--</td>--}}
-                            {{--</tr>--}}
+                            <tr v-for="(data,index) in datas">
+                                <td width="15%"><font><font>@{{ data.user_message.nickname }}</font></font></td>
+                                <td width="40%"><font><font>@{{ data.cargo_message.cargo_name }}</font></font></td>
+                                <td width="8%">
+                                    <font v-if="data.star ==1"> <font>好评</font></font>
+                                    <font v-else-if="data.star ==2"> <font>中评</font></font>
+                                    <font v-else="data.star ==3"> <font>差评</font></font>
+                                </td>
+                                <td width="15%"><font><font>@{{ data.created_at }}</font></font></td>
+                                <td width="15%">
+                                    <button  class="btn btn-success btn-xs"  data-toggle="modal" @click="showMessage(data.comment_info)">点击查看</button>
+                                </td>
+                                <td>
+                                    <button  class="btn btn-danger btn-xs"  data-toggle="modal" @click="delComment(data.id,index)">删除</button>
+                                </td>
+
+                            </tr>
                             </tbody>
                         </table>
                         <center>@include('common.page')</center>
@@ -73,4 +72,5 @@
 @stop
 @section('customJs')
     <script> var token = "{{ csrf_token() }}" </script>
+    <script src="{{ asset('/admins/handle/comment/index.js') }}"></script>
 @stop

@@ -58,12 +58,17 @@ class AddressController extends Controller
     {
         // 设定最多可填写9个收货地址
         $count = $this->address->count(['user_id'=>\Session::get('user')->user_id]);
+        $param = $request->all();
         if($count>9) {
             // 返回错误信息
             return back()->withErrors('收货地址到达上线,最多可填写9个!');
         }
-        // 添加单条数据
-        $result = $this->address->insert($request->all());
+        // 第一条数据设为默认地址
+        if($count<1) {
+            $param['status'] = 2;
+        }
+        // 添加单条数据s
+        $result = $this->address->insert($param);
         // 判断返回值
         if(!empty($result)) {
             // 添加成功
