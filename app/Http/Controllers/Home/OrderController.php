@@ -517,10 +517,10 @@ class OrderController extends Controller
             'body' => $goodsName,
             'detail' => '',
             'out_trade_no' => $order_guid,//订单号
-            'total_fee' => $total * 100,  //充值金额
+            'total_fee' => 1,  //充值金额
             'attach' => 'xxx'
         ];
-
+        
         $order = new Order($attributes);
         $result = $payment->prepare($order);
         if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS') {

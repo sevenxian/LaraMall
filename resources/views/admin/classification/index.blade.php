@@ -145,7 +145,7 @@
                     <section class="panel">
                         <header class="panel-heading">
                             分类列表：@{{ getLevel(currentLevel) }}
-                            <button class="btn btn-primary  pull-right col-lg-1" @click="backTo()"
+                            <button class="btn btn-primary btn-sm pull-right col-lg-1" @click="backTo()"
                                     v-if="currentLevel != 1">上一级分类
                             </button>
                         </header>

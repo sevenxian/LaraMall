@@ -25,4 +25,16 @@ class IndexGoodsRepository
     {
         $this->model = $indexGoods;
     }
+
+    /**
+     * 搜索
+     * 
+     * @param $body
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function search($body)
+    {
+        return \DB::select("select cargo_id from index_goods where match(body) against('".$body."')");
+    }
 }

@@ -49,12 +49,12 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     Route::post('doLogin', 'UserController@doLogin');
     // 商品列表页
     Route::get('goodsList/{category_id}', 'GoodsController@goodsList');
+    // 商品搜索页
+    Route::get('search', 'GoodsController@search');
     // 商品详情页
     Route::get('goodsDetail/{cargo_id}', 'GoodsController@goodsDetail');
     // 异步获取商品评论信息
     Route::post('goodsDetails/comments', 'GoodsController@comments');
-    // 立即抢购
-    Route::post('toSnapUp', 'GoodsController@toSnapUp');
     // 获取货品ID
     Route::post('getCargoId', 'GoodsController@getCargoId');
     // 分类
@@ -255,6 +255,16 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('recommend/update/{id}', 'RecommendController@update');
         // 推荐位管理
         Route::resource('recommend', 'RecommendController');
+
+        // 友情链接管理
+        Route::resource('friendLink','FriendLinkController');
+        //友情链接管理列表
+        Route::any('linkList','FriendLinkController@linkList');
+        //修改友情链接
+        Route::post('linkUpdate','FriendLinkController@update');
+        // 友情链接图片上传
+        Route::post('linkPhoto','FriendLinkController@fileDo');
+
         // 订单管理
         Route::resource('order', 'OrderController');
         // 获取订单列表

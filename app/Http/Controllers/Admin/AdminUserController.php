@@ -99,7 +99,6 @@ class AdminUserController extends Controller
      */
     public function store(Request $request)
     {
-
         // 密码判断
         if ($request['password'] != $request['rel_password']) {
             // 返回结果

@@ -26,7 +26,6 @@ class AdminUserRepository
         $this->model = $adminUser;
     }
 
-
     /**
      * 获取角色所拥有权限的 id
      *

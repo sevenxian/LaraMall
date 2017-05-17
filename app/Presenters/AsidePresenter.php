@@ -19,6 +19,7 @@ class AsidePresenter
             $data[1] = 'index';
         }
         if (in_array($data[1], $path)) {
+
             return 'open active';
         }
     }

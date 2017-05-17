@@ -9,11 +9,13 @@ use App\Repositories\CategoryAttributeRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CommentsRepository;
 use App\Repositories\GoodsRepository;
+use App\Repositories\IndexGoodsRepository;
 use App\Repositories\RelGoodsActivityRepository;
 use App\Repositories\RelGoodsLabelRepository;
 use App\Repositories\RelLabelCargoRepository;
 use App\Repositories\UserInfoRepository;
 use App\Repositories\GoodsCollectionRepository;
+use App\Tools\Analysis;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -82,10 +84,12 @@ class GoodsController extends Controller
      * @author zhulinjie
      */
     protected $relGoodsActivity;
+
     /**
      * @var CommentsRepository
      */
     protected $comment;
+
     /**
      * @var UserInfoRepository
      */
@@ -98,6 +102,19 @@ class GoodsController extends Controller
      * @author jiaohuafeng
      */
     protected $goodsCollection;
+
+    /**
+     * @var
+     * @author zhulinjie
+     */
+    protected $analysis;
+
+    /**
+     * @var
+     * @author zhulinjie
+     */
+    protected $indexGoods;
+
     /**
      * GoodsController constructor.
      * @param CargoRepository $cargoRepository
@@ -123,7 +140,9 @@ class GoodsController extends Controller
         RelGoodsActivityRepository $relGoodsActivityRepository,
         CommentsRepository $commentsRepository,
         UserInfoRepository $userInfoRepository,
-        GoodsCollectionRepository $goodsCollectionRepository
+        GoodsCollectionRepository $goodsCollectionRepository,
+        Analysis $analysis,
+        IndexGoodsRepository $indexGoodsRepository
     )
     {
         // 注入货品操作类
@@ -148,6 +167,10 @@ class GoodsController extends Controller
         $this->userInfo = $userInfoRepository;
         // 货品收藏操作类
         $this->goodsCollection = $goodsCollectionRepository;
+        // 分词操作类
+        $this->analysis = $analysis;
+        // 商品索引操作类
+        $this->indexGoods = $indexGoodsRepository;
     }
 
     /**
@@ -211,6 +234,32 @@ class GoodsController extends Controller
         $data['attrs'] = $attrs;
 
         return view('home.goods.list', compact('data'));
+    }
+
+    /**
+     * 搜索
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author zhulinjie
+     */
+    public function search(Request $request)
+    {
+        $req = $request->all();
+        $page = isset($req['page']) ? $req['page'] : 1;
+
+        $body[] = $this->analysis->toUnicode($req['keyword']);
+        $body = array_merge($body, $this->analysis->QuickCut($req['keyword']));
+        $body = implode(' ', $body);
+
+        $ids = collect($this->indexGoods->search($body))->pluck('cargo_id')->toArray();
+        $res = $this->cargo->selectWhereIn('id', $ids);
+
+
+        $cargos = new LengthAwarePaginator($res->forPage($page, PAGENUM), count($res), PAGENUM);
+        $cargos->setPath('search');
+
+        return view('home.goods.search', compact('cargos'), ['keyword'=>$req['keyword']]);
     }
 
     /**
@@ -352,30 +401,6 @@ class GoodsController extends Controller
         // 统计差评
         $data['star']['bad'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 3]);
         return view('home.goods.detail', compact('data'));
-    }
-
-    /**
-     * 立即抢购
-     *
-     * @param Request $request
-     * @author zhulinjie
-     */
-    public function toSnapUp(Request $request)
-    {
-        $req = $request->all();
-
-        $cargoActivity = $this->relGoodsActivity->find(['activity_id' => $req['activity_id'], 'cargo_id' => $req['cargo_id']]);
-
-        if (!\Redis::get(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'])) {
-            // 抢购的数量超出用来做活动的商品数量
-            if($req['number'] >= $cargoActivity->number){
-                \Redis::set(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $cargoActivity->number);
-            }else{
-                \Redis::set(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $req['number']);
-            }
-        }
-
-        \Redis::incrBy(STRING_ACTIVITY_CARGO_NUM_ . $req['activity_id'] . $req['cargo_id'], $req['number']);
     }
 
     /**
