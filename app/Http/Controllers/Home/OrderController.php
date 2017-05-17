@@ -173,7 +173,7 @@ class OrderController extends Controller
             }
 
         }
-        //dd($data);
+
         return view('home.orders.index', ['data' => $data, 'page' => $result]);
     }
 

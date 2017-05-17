@@ -144,7 +144,7 @@ class AddressController extends Controller
     public function destroy($id)
     {
         // 删除操作
-        $result = $this->address->delete($id);
+        $result = $this->address->delete(['id' => $id]);
         // 判断返回结果
         if(!empty($result)) {
             // 成功

@@ -91,36 +91,8 @@
     </div>
 @stop
 @section('customJs')
-    <script src="{{ asset('/js/check.js') }}"></script>
-    <script>
-        $('.del').click(function(){
-            var obj = this;
-            var id = $(this).attr('data-id');
-            var data={
-                '_method':'delete',
-                '_token':"{{ csrf_token() }}"
-            }
-            sendAjax(data, "/home/address/"+id, function (response) {
-                if (response.ServerNo == 200) {
-                    $(obj).parents('.user-addresslist').hide();
-                }
-            })
-
-        })
-        $('.default').click(function(){
-            var obj = this;
-            var id = $(this).attr('data-id');
-            var data={
-                'status':2,
-                '_method':'put',
-                '_token':"{{ csrf_token() }}"
-            }
-            sendAjax(data, "/home/address/"+id, function (response) {
-                if (response.ServerNo == 200) {
-                    $(obj).parents('.user-addresslist').addClass('defaultAddr');
-                   // $(obj).parents('.user-addresslist').addClass('defaultAddr');
-                }
-            })
-        })
-    </script>
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">var token= "{{ csrf_token() }}"</script>
+    <script src="{{ asset('/handle/member/address_index.js') }}" type="text/javascript"></script>
 @stop
