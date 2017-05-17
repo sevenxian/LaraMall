@@ -17,7 +17,7 @@
 
 
             <div id="brand" class="item">
-                <a href="{{ url('home/GoodsCollection') }}">
+                <a href="@if(empty(\Session::get('user'))){{ url('/home/login') }}@else{{ url('/home/GoodsCollection') }}@endif ">
                     <span class="wdsc"><img src="/images/wdsc.png"/></span>
                 </a>
                 <div class="mp_tooltip">

@@ -70,7 +70,7 @@
                                 <div class="am-form-content" style="width:45%">
                                     <input type="tel" id="user-code" placeholder="短信验证码">
                                 </div>
-                                <a class="btn" href="javascript:void(0);" id="sendMobileCode">
+                                <a class="btn" href="javascript:void(0);" id="sendMobileCode" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="codeTime"
                                             style="width:100%;height:100%">获取验证码
                                     </button>
@@ -94,7 +94,7 @@
                                 <div class="am-form-content" style="width:45%" id="bindCode">
                                     <input type="tel" id="user-new-code" placeholder="短信验证码">
                                 </div>
-                                <a class="btn" href="javascript:void(0);">
+                                <a class="btn" href="javascript:void(0);" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="secondSend"
                                             style="width:100%;height:100%">获取验证码
                                     </button>
@@ -153,7 +153,7 @@
                                 <div class="am-form-content" style="width:45%" id="bindCode">
                                     <input type="tel" id="user-new-code" placeholder="短信验证码">
                                 </div>
-                                <a class="btn" href="javascript:void(0);">
+                                <a class="btn" href="javascript:void(0);" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="secondSend"
                                             style="width:100%;height:100%">获取验证码
                                     </button>

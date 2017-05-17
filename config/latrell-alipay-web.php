@@ -2,7 +2,7 @@
 return [
 
 	// 安全检验码，以数字和字母组成的32位字符。
-	'key' => 'prol2mxp933fzp9pto08t7fwat83m0gp',
+	'key' => env('ALIPAY_KEY',''),
 
 	//签名方式
 	'sign_type' => 'MD5',
