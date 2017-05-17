@@ -363,6 +363,40 @@ class GoodsController extends Controller
     }
 
     /**
+     * 更改商品状态（上架或下架）
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhulinjie
+     */
+    public function updateGoodsStatus(Request $request)
+    {
+        $req = $request->all();
+
+        switch ($req['status']){
+            case 1:
+            case 3:
+                $status = 2;
+                $msg = '上架';
+                break;
+            case 2:
+                $status = 3;
+                $msg = '下架';
+                break;
+        }
+
+        $res = $this->goods->update(['id' => $req['goods_id']], ['goods_status' => $status]);
+
+        if(!$res){
+            return responseMsg($msg . '失败', 400);
+        }
+
+        $goods = $this->goods->find(['id' => $req['goods_id']]);
+        
+        return responseMsg($goods);
+    }
+    
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

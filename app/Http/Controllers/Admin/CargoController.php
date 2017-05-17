@@ -601,6 +601,16 @@ class CargoController extends Controller
             foreach ($diff as $rid) {
                 $this->relRG->insert(['recommend_id' => $rid, 'cargo_id' => $data['cargo_id']]);
             }
+            $cargo = $this->cargo->find(['id' => $data['cargo_id']]);
+            // 获取货品推荐位
+            $recommends = $this->relRG->select(['cargo_id' => $cargo->id]);
+            $arr = [];
+            if(!empty($recommends)){
+                foreach($recommends as $recommend){
+                    $arr[] = $this->recommend->find(['id' => $recommend->recommend_id]);
+                }
+            }
+            $cargo->recommends = $arr;
             \DB::commit();
             return responseMsg('选择推荐位成功');
         } catch (\Exception $e) {
@@ -713,15 +723,15 @@ class CargoController extends Controller
         // 分词处理 一级分类名称
         array_push($body, $this->analysis->toUnicode($lv1s->name));
         $body = array_merge($body, $this->analysis->QuickCut($lv1s->name));
-
+        
         // 分词处理 商品标题
         array_push($body, $this->analysis->toUnicode($goods->goods_title));
         $body = array_merge($body, $this->analysis->QuickCut($goods->goods_title));
-
+        
         // 分词处理 货品名称
         array_push($body, $this->analysis->toUnicode($param['cargo_name']));
         $body = array_merge($body, $this->analysis->QuickCut($param['cargo_name']));
-
+        
         // 获取分类标签值
         if ($categoryAttrIds) {
             $categoryAttrs = $this->categoryAttribute->selectByWhereIn('id', $categoryAttrIds);
@@ -731,7 +741,7 @@ class CargoController extends Controller
                 $body = array_merge($body, $this->analysis->QuickCut($categoryAttr->attribute_name));
             }
         }
-
+        
         try {
             \DB::beginTransaction();
 
@@ -752,7 +762,7 @@ class CargoController extends Controller
                     throw new \Exception('相同规格的货品已经存在', 400);
                 }
             }
-
+            
             // 修改分类标签值与货品关联表
             if (!empty($categoryLabels)) {
                 $arr = [];
@@ -807,6 +817,50 @@ class CargoController extends Controller
             }
             return responseMsg('货品修改失败', 400);
         }
+    }
+
+    /**
+     * 更改货品状态（上架或下架）
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @author zhulinjie
+     */
+    public function updateCargoStatus(Request $request)
+    {
+        $req = $request->all();
+
+        switch ($req['status']){
+            case 1:
+            case 3:
+                $status = 2;
+                $msg = '上架';
+                break;
+            case 2:
+                $status = 3;
+                $msg = '下架';
+                break;
+        }
+
+        $res = $this->cargo->update(['id' => $req['cargo_id']], ['cargo_status' => $status]);
+
+        if(!$res){
+            return responseMsg($msg . '失败', 400);
+        }
+
+        $cargo = $this->cargo->find(['id' => $req['cargo_id']]);
+
+        // 获取货品推荐位
+        $recommends = $this->relRG->select(['cargo_id' => $cargo->id]);
+        $arr = [];
+        if(!empty($recommends)){
+            foreach($recommends as $recommend){
+                $arr[] = $this->recommend->find(['id' => $recommend->recommend_id]);
+            }
+        }
+        $cargo->recommends = $arr;
+        
+        return responseMsg($cargo);
     }
 
     /**

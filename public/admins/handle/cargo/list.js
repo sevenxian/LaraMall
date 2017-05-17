@@ -13,7 +13,7 @@ new Vue({
                 current_page: 1             // 当前页
             },
             offset: 4,                      // 页码偏移量
-            cargo: [],                      // 货品列表
+            cargos: [],                     // 货品列表
             per_page: 10,                   // 一页显示多少条的数据
             recommends: [],                 // 存储所有的推荐位
             recommendIds: [],               // 存储一个货品对应的推荐位的所有ID
@@ -21,6 +21,7 @@ new Vue({
             activitys: [],                  // 所有活动
             promotion_price: '',            // 促销价
             number: '',                     // 促销数量
+            status: ''                      // 货品状态
         }
     },
     // 第一次执行
@@ -61,7 +62,7 @@ new Vue({
         },
         // 判断是存在数据
         isData(){
-            return this.cargo.length;
+            return this.cargos.length;
         }
     },
     methods: {
@@ -83,7 +84,7 @@ new Vue({
                     sweetAlert("请求失败!", response.data.ResultData, "error");
                 }
                 // 响应式更新数据
-                this.cargo = response.data.ResultData.data;
+                this.cargos = response.data.ResultData.data;
                 this.pagination = response.data.ResultData;
             }).catch(error => {
                 // layer 加载层关闭
@@ -101,6 +102,34 @@ new Vue({
             this.pagination.current_page = page;
             // 执行修改
             this.fetchDatas(page);
+        },
+        // 更改货品状态
+        updateStatus(e){
+            var cargo_id = '';
+            var index = '';
+            if(!this.status){
+                this.status = $(e.target).data('status');
+            }
+
+            cargo_id = $(e.target).data('cargo_id');
+            index = $(e.target).data('index');
+
+            layer.load(2);
+
+            axios.post('/admin/updateCargoStatus', {status: this.status, cargo_id: cargo_id}).then(response => {
+                console.log(response);
+                layer.closeAll('loading');
+                // 判断请求结果
+                if(response.data.ServerNo != 200){
+                    sweetAlert("请求失败!", response.data.ResultData, "error");
+                    return;
+                }
+                this.$set(this.cargos, index, response.data.ResultData);
+                this.status = response.data.ResultData.cargo_status;
+            }).catch(error => {
+                sweetAlert("请求失败!", response.request.statusText, "error");
+                layer.closeAll('loading');
+            });
         },
         // 选择推荐位界面，获取相关数据
         getRecommend(e){

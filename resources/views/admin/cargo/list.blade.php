@@ -31,16 +31,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in cargo">
+                                <tr v-for="(item, index) in cargos">
                                     <td>@{{ item.id }}</td>
                                     <td><img :src="'{{ env('QINIU_DOMAIN') }}'+item.cargo_cover+'?imageView2/1/w/60/h/60'" alt="" width="60px"></td>
                                     <td><a :href="'/home/goodsDetail/'+item.id" target="_blank">@{{ item.cargo_name }}</a></td>
                                     <td>@{{ item.cargo_price }}</td>
                                     <td>@{{ item.cargo_discount }}</td>
                                     <td>
-                                        <button class="btn btn-primary btn-xs" v-if="item.cargo_status == 1" title="待售"><i class="icon-truck"></i></button>
-                                        <button class="btn btn-success btn-xs" v-if="item.cargo_status == 2" title="上架"><i class="icon-ok"></i></button>
-                                        <button class="btn btn-danger btn-xs" v-if="item.cargo_status == 3" title="下架"><i class="icon-remove"></i></button>
+                                        <button class="btn btn-primary btn-xs" v-if="item.cargo_status == 1" @click="updateStatus" :data-index="index" :data-cargo_id="item.id" :data-status="item.cargo_status">待售</button>
+                                        <button class="btn btn-success btn-xs" v-if="item.cargo_status == 2" @click="updateStatus" :data-index="index" :data-cargo_id="item.id" :data-status="item.cargo_status">上架</button>
+                                        <button class="btn btn-danger btn-xs" v-if="item.cargo_status == 3" @click="updateStatus" :data-index="index" :data-cargo_id="item.id" :data-status="item.cargo_status">下架</button>
                                     </td>
                                     <td>@{{ item.inventory }}</td>
                                     <td>活动</td>

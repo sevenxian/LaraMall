@@ -196,12 +196,16 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::post('getGoodsDetail', 'GoodsController@getGoodsDetail');
         // 修改商品
         Route::post('updateGoods/{id}', 'GoodsController@update');
+        // 修改商品状态
+        Route::post('updateGoodsStatus', 'GoodsController@updateGoodsStatus');
         // 货品管理
         Route::resource('cargo', 'CargoController');
         // 货品添加
         Route::get('addCargo/{goods_id}', 'CargoController@addCargo');
         // 获取货品的分类信息
         Route::post('cargo/detail', 'CargoController@detail');
+        // 修改货品状态
+        Route::resource('updateCargoStatus', 'CargoController@updateCargoStatus');
         // 添加分类标签值
         Route::post('addCategoryAttr', 'CargoController@addCategoryAttr');
         // 添加商品标签值

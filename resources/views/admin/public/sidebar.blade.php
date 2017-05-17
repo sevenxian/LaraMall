@@ -6,7 +6,7 @@
             <li class="{{ $aside->openTag(['index']) }}">
                 <a class="" href="{{ url('/admin/index') }}">
                     <i class="icon-home"></i>
-                    <span>首页</span>
+                    <span>首 页</span>
                 </a>
             </li>
 
@@ -67,7 +67,7 @@
                 </ul>
             </li>
 
-            <li>
+            <li class="sub-menu {{ $aside->openTag(['comments']) }}">
                 <a class="" href="{{ url('/admin/comments')}}">
                     <i class="icon-comment"></i>
                     <span>评论管理</span>

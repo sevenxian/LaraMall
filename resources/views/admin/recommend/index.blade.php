@@ -2,47 +2,6 @@
 @section('content')
     <section id="main-content" class="has-js">
         <section class="wrapper">
-            <!-- 绑定属性模态框 Start -->
-        {{--<div class="modal fade" id="bindModal" tabindex="-1" role="dialog" aria-labelledby="bindModalLabel">--}}
-        {{--<div class="modal-dialog" role="document">--}}
-        {{--<div class="modal-content">--}}
-        {{--<form method="post">--}}
-        {{--<div class="modal-header">--}}
-        {{--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span--}}
-        {{--aria-hidden="true">&times;</span></button>--}}
-        {{--<h4 class="modal-title" id="exampleModalLabel">角色权限绑定</h4>--}}
-        {{--</div>--}}
-        {{--<div class="modal-body">--}}
-        {{--<div class="form-group">--}}
-        {{--<label for="addName" class="control-label">角色名称:</label>--}}
-        {{--<span class="form-control">@{{ role.display_name }}</span>--}}
-        {{--</div>--}}
-        {{--<div class="form-group">--}}
-        {{--<label for="addName" class="control-label">权限:</label>--}}
-        {{--<div class="checkboxes">--}}
-        {{--<div class="row" id="labelsC">--}}
-        {{--<div class="col-md-6" v-for="permission in permissions">--}}
-        {{--<label class="label_check" :class="{'c_on':permission.checked}">--}}
-        {{--<input--}}
-        {{--:value="permission.id"--}}
-        {{--type="checkbox"/> @{{ permission.display_name }}--}}
-        {{--</label>--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="modal-footer">--}}
-        {{--<button type="button" @click="doneBind()" class="btn btn-primary">--}}
-        {{--完成--}}
-        {{--</button>--}}
-        {{--</div>--}}
-        {{--</form>--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        {{--</div>--}}
-        <!-- 绑定属性模态框 End -->
-
             <!-- 修改分类模态框 start -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
                 <div class="modal-dialog" role="document">
@@ -126,11 +85,6 @@
                                             @click="fetchByIndex(index)"
                                             data-toggle="modal" data-target="#exampleModal"
                                             data-whatever="@getbootstrap">修改信息
-                                    </button>
-                                    <button class="btn btn-primary btn-xs"
-                                            @click="fetchPermissions(index, data.id)"
-                                            data-toggle="modal" data-target="#bindModal"
-                                            data-whatever="@getbootstrap">查看商品
                                     </button>
                                 </td>
                             </tr>

@@ -151,50 +151,6 @@ new Vue({
             $('.form-group').removeClass('has-success', 'has-error');
             $('small').remove();
             $('button[type="submit"]').removeAttr('disabled');
-        },
-        // 完成权限绑定
-        doneBind() {
-            // layer 加载层
-            layer.load(2);
-            // 获取选中标签的 id
-            var labels = [];
-            $('.c_on > input[type="checkbox"]').each(function (i, e) {
-                labels[i] = $(e).val();
-            });
-            // 发送一次分类绑定标签请求
-            axios.patch('/admin/syncPermission/' + this.role.id, labels).then(response => {
-                // layer 加载层关闭
-                layer.closeAll();
-                // 隐藏模态框
-                $('#bindModal').modal('hide');
-            }).catch(error => {
-                // layer 加载层关闭
-                sweetAlert("失败!", "请求失败!", "error");
-            });
-        },
-        // 获取分类下得标签
-        fetchPermissions(index, id) {
-            // layer 加载层
-            layer.load(2);
-            this.role = [];
-            // 将查询分类数据赋值都变量方便提供给修改模态框
-            this.role = this.datas[index];
-            // 清空标签列表数据
-            this.permissions = [];
-            // 获取当前分类已有的标签
-            axios.get('/admin/acl/' + id).then(response => {
-                // layer 加载层关闭
-                layer.closeAll();
-                // 判断修改是否成功
-                if (response.data.ServerNo != 200) {
-                    return sweetAlert("失败!", "获取标签失败!", "error");
-                }
-                // 添加到标签列表之中，并且页面自动生成新元素
-                this.permissions = response.data.ResultData;
-            }).catch(error => {
-                // layer 加载层关闭
-                sweetAlert("失败!", "请求失败!", "error");
-            });
         }
     }
 });

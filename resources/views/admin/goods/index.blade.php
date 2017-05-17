@@ -34,14 +34,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in goods">
+                                <tr v-for="(item, index) in goods">
                                     <td>@{{ item.id }}</td>
                                     <td><img :src="'{{ env('QINIU_DOMAIN') }}'+JSON.parse(item.goods_original)[0]+'?imageView2/1/w/60/h/60'" alt="" width="60px"></td>
                                     <td><a :href="'/admin/cargoList/'+item.id">@{{ item.goods_title }}</a></td>
                                     <td>
-                                        <button class="btn btn-primary btn-xs" v-if="item.goods_status == 1" title="待售"><i class="icon-truck"></i></button>
-                                        <button class="btn btn-success btn-xs" v-if="item.goods_status == 2" title="上架"><i class="icon-ok"></i></button>
-                                        <button class="btn btn-danger btn-xs" v-if="item.goods_status == 3" title="下架"><i class="icon-remove"></i></button>
+                                        <button class="btn btn-primary btn-xs" v-if="item.goods_status == 1" @click="updateStatus" :data-index="index" :data-goods_id="item.id" :data-status="item.goods_status">待售</button>
+                                        <button class="btn btn-success btn-xs" v-else-if="item.goods_status == 2" @click="updateStatus" :data-index="index" :data-goods_id="item.id" :data-status="item.goods_status">上架</button>
+                                        <button class="btn btn-danger btn-xs" v-else @click="updateStatus" :data-index="index" :data-goods_id="item.id" :data-status="item.goods_status">下架</button>
                                     </td>
                                     <td>
                                         <a :href="'/admin/addCargo/'+item.id" class="btn btn-success btn-xs"><i class="icon-plus"></i></a>
