@@ -33,21 +33,10 @@
                     <li><a href="{{ route('classification.create') }}"> 添加分类</a></li>
                 </ul>
             </li>
-            {{--<li class="sub-menu {{ $aside->openTag(['categoryLabel']) }}">--}}
-                {{--<a href="javascript:;" class="">--}}
-                    {{--<i class="icon-th"></i>--}}
-                    {{--<span>标签管理</span>--}}
-                    {{--<span class="arrow {{ $aside->openTag(['categoryLabel']) }}"></span>--}}
-                {{--</a>--}}
-                {{--<ul class="sub" {{ $aside->displayBlock(['categoryLabel']) }}>--}}
-                    {{--<li><a href="{{ route('categoryLabel.index') }}"> 分类标签列表</a></li>--}}
-                    {{--<li><a href=""> 添加分类</a></li>--}}
-                {{--</ul>--}}
-            {{--</li>--}}
 
             <li class="sub-menu {{ $aside->openTag(['goods', 'cargoList', 'cargoActivity']) }}">
                 <a href="javascript:;" class="">
-                    <i class="icon-folder-open"></i>
+                    <i class="icon-th"></i>
                     <span>商品管理</span>
                     <span class="arrow {{ $aside->openTag(['goods', 'cargoList', 'cargoActivity']) }}"></span>
                 </a>
@@ -61,7 +50,7 @@
 
             <li class="sub-menu {{ $aside->openTag(['order']) }}">
                 <a class="" href="{{ url('/admin/order') }}">
-                    <i class=" icon-film"></i>
+                    <i class="icon-tasks"></i>
                     <span>订单管理</span>
                 </a>
             </li>
@@ -80,7 +69,7 @@
 
             <li class="sub-menu {{ $aside->openTag(['comments']) }}">
                 <a class="" href="{{ url('/admin/comments')}}">
-                    <i class=" icon-group"></i>
+                    <i class="icon-comment"></i>
                     <span>评论管理</span>
                 </a>
             </li>
@@ -99,7 +88,7 @@
 
             <li class="sub-menu {{ $aside->openTag(['acl', 'permission']) }}">
                 <a href="javascript:;" class="">
-                    <i class="icon-lock"></i>
+                    <i class="icon-key"></i>
                     <span>权限管理</span>
                     <span class="arrow {{ $aside->openTag(['acl', 'permission']) }}"></span>
                 </a>

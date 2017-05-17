@@ -16,8 +16,7 @@ new Vue({
             offset: 4,                      // 页码偏移量
             goods: [],                      // 商品列表
             per_page: 10,                   // 一页显示的数据
-            search: {},                     // 搜索条件
-            status: ''                      // 商品状态
+            search: {}                      // 搜索条件
         }
     },
     // 第一次执行
@@ -112,19 +111,13 @@ new Vue({
         },
         // 更改商品状态
         updateStatus(e){
-            var goods_id = '';
-            var index = '';
-
-            if(!this.status){
-                this.status = $(e.target).data('status');
-            }
-
-            goods_id = $(e.target).data('goods_id');
-            index = $(e.target).data('index');
+            var goods_id = $(e.target).data('goods_id');
+            var index = $(e.target).data('index');
+            var status = e.target.getAttribute('data-status');
 
             layer.load(2);
             
-            axios.post('/admin/updateGoodsStatus', {status: this.status, goods_id: goods_id}).then(response => {
+            axios.post('/admin/updateGoodsStatus', {status: status, goods_id: goods_id}).then(response => {
                 console.log(response);
                 layer.closeAll('loading');
                 // 判断请求结果

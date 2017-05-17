@@ -66,7 +66,6 @@ class IndexController extends Controller
         // 获取最近的一次活动
         $currentTimestamp = time();
         $activity = $this->activity->activities($currentTimestamp);
-//        dd($activity);
 
         // 获取楼层和楼层下面得商品
         $recommends = $this->recommend->recommendWithGoods();

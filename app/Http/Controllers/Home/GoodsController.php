@@ -247,14 +247,13 @@ class GoodsController extends Controller
     {
         $req = $request->all();
         $page = isset($req['page']) ? $req['page'] : 1;
-
+        
         $body[] = $this->analysis->toUnicode($req['keyword']);
         $body = array_merge($body, $this->analysis->QuickCut($req['keyword']));
         $body = implode(' ', $body);
 
         $ids = collect($this->indexGoods->search($body))->pluck('cargo_id')->toArray();
         $res = $this->cargo->selectWhereIn('id', $ids);
-
 
         $cargos = new LengthAwarePaginator($res->forPage($page, PAGENUM), count($res), PAGENUM);
         $cargos->setPath('search');

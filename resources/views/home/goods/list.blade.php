@@ -103,33 +103,35 @@
                         <div class="clear"></div>
                         <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 boxes">
                             @foreach($data['cargos'] as $cargo)
-                                <li>
-                                    <div class="i-pic limit">
-                                        <a href="/home/goodsDetail/{{ $cargo->id }}"><img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/430/h/430"/></a>
-                                        <p class="title fl">{{ $cargo->cargo_name }}</p>
-                                        <p class="price fl">
-                                            <b>¥</b>
-                                            <strong>{{ $cargo->cargo_price }}</strong>
-                                        </p>
-                                        <p class="number fl">
-                                            <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">
+                                @if($cargo->cargo_status == 2)
+                                    <li>
+                                        <div class="i-pic limit">
+                                            <a href="/home/goodsDetail/{{ $cargo->id }}"><img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/430/h/430"/></a>
+                                            <p class="title fl">{{ $cargo->cargo_name }}</p>
+                                            <p class="price fl">
+                                                <b>¥</b>
+                                                <strong>{{ $cargo->cargo_price }}</strong>
+                                            </p>
+                                            <p class="number fl">
+                                                <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">
 
-                                                @if(!empty($cargo->goodscollection->toArray()) && !empty(\Session::get('user')->user_id))
-                                                    @foreach($cargo->goodscollection as $item)
-                                                        @if($cargo->id == $item->cargo_id)
-                                                            已收藏
-                                                        @else
-                                                            收藏
-                                                        @endif
-                                                    @endforeach
-                                                @else
+                                                    @if(!empty($cargo->goodscollection->toArray()) && !empty(\Session::get('user')->user_id))
+                                                        @foreach($cargo->goodscollection as $item)
+                                                            @if($cargo->id == $item->cargo_id)
+                                                                已收藏
+                                                            @else
+                                                                收藏
+                                                            @endif
+                                                        @endforeach
+                                                    @else
                                                         收藏
-                                                @endif
-                                            </a>
-                                            <span class="count">{{count($cargo->goodscollection->toArray())}}</span>
-                                        </p>
-                                    </div>
-                                </li>
+                                                    @endif
+                                                </a>
+                                                <span class="count">{{count($cargo->goodscollection->toArray())}}</span>
+                                            </p>
+                                        </div>
+                                    </li>
+                                @endif
                             @endforeach
                         </ul>
                     </div>

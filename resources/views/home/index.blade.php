@@ -254,7 +254,6 @@
         </div>
         <div class="clear "></div>
         @if($data['activity'])
-            <!--热门活动 -->
             <div class="am-container activity ">
                 <div class="shopTitle ">
                     <h4>{{ $data['activity']->name }}</h4>
@@ -264,13 +263,15 @@
                 <div class="am-g am-g-fixed">
                     <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-thumbnails">
                         @foreach($data['activity']->relGoodsActivitys as $relGoodsActivity)
-                            <li>
-                                <a href="/home/goodsDetail/{{ $relGoodsActivity->cargo->id }}">
-                                    <img src="{{ env('QINIU_DOMAIN') }}{{ $relGoodsActivity->cargo->cargo_cover }}?imageView2/1/w/350/h/350"/>
-                                    <div class="pro-title ">{{ str_limit($relGoodsActivity->cargo->cargo_name, 50, '...') }}</div>
-                                    <span class="e-price ">￥{{ $relGoodsActivity->cargo->cargo_price }}</span> <span class="seckill-price"><i>¥</i><del>{{ $relGoodsActivity->promotion_price }}</del></span>
-                                </a>
-                            </li>
+                            @if($relGoodsActivity->cargo->cargo_status == 2)
+                                <li>
+                                    <a href="/home/goodsDetail/{{ $relGoodsActivity->cargo->id }}">
+                                        <img src="{{ env('QINIU_DOMAIN') }}{{ $relGoodsActivity->cargo->cargo_cover }}?imageView2/1/w/350/h/350"/>
+                                        <div class="pro-title ">{{ str_limit($relGoodsActivity->cargo->cargo_name, 50, '...') }}</div>
+                                        <span class="e-price ">￥{{ $relGoodsActivity->cargo->cargo_price }}</span> <span class="seckill-price"><i>¥</i><del>{{ $relGoodsActivity->promotion_price }}</del></span>
+                                    </a>
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
                 </div>
@@ -279,7 +280,6 @@
         @endif
 
         @foreach($data['recommends'] as $recommend)
-            <!-- 海味 -->
             <div class="am-container activity">
                 <div class="shopTitle ">
                     <h4>{{ $recommend->recommend_name }}</h4>
@@ -288,13 +288,15 @@
                 <div class="am-g am-g-fixed">
                     <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-thumbnails">
                         @foreach($recommend->cargos as $cargo)
-                            <li>
-                                <a href="/home/goodsDetail/{{ $cargo->id }}">
-                                    <img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/350/h/350"/>
-                                    <div class="pro-title ">{{ str_limit($cargo->cargo_name, 50, '...') }}</div>
-                                    <span class="e-price ">￥{{ $cargo->cargo_price }}</span>
-                                </a>
-                            </li>
+                            @if($cargo->cargo_status == 2)
+                                <li>
+                                    <a href="/home/goodsDetail/{{ $cargo->id }}">
+                                        <img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/350/h/350"/>
+                                        <div class="pro-title ">{{ str_limit($cargo->cargo_name, 50, '...') }}</div>
+                                        <span class="e-price ">￥{{ $cargo->cargo_price }}</span>
+                                    </a>
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
                 </div>

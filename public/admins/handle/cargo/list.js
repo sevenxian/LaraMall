@@ -21,7 +21,7 @@ new Vue({
             activitys: [],                  // 所有活动
             promotion_price: '',            // 促销价
             number: '',                     // 促销数量
-            status: ''                      // 货品状态
+            index: ''                       // 当前货品索引
         }
     },
     // 第一次执行
@@ -105,18 +105,13 @@ new Vue({
         },
         // 更改货品状态
         updateStatus(e){
-            var cargo_id = '';
-            var index = '';
-            if(!this.status){
-                this.status = $(e.target).data('status');
-            }
-
-            cargo_id = $(e.target).data('cargo_id');
-            index = $(e.target).data('index');
+            var cargo_id = $(e.target).data('cargo_id');
+            var index = $(e.target).data('index');
+            var status = e.target.getAttribute('data-status');
 
             layer.load(2);
 
-            axios.post('/admin/updateCargoStatus', {status: this.status, cargo_id: cargo_id}).then(response => {
+            axios.post('/admin/updateCargoStatus', {status: status, cargo_id: cargo_id}).then(response => {
                 console.log(response);
                 layer.closeAll('loading');
                 // 判断请求结果
@@ -125,7 +120,6 @@ new Vue({
                     return;
                 }
                 this.$set(this.cargos, index, response.data.ResultData);
-                this.status = response.data.ResultData.cargo_status;
             }).catch(error => {
                 sweetAlert("请求失败!", response.request.statusText, "error");
                 layer.closeAll('loading');
@@ -134,6 +128,8 @@ new Vue({
         // 选择推荐位界面，获取相关数据
         getRecommend(e){
             this.cargo_id = $(e.target).data('cid');
+            this.index = $(e.target).data('index');
+
             axios.post('/admin/getRecommend', {cargo_id: this.cargo_id}).then(response => {
                 console.log(response);
                 // 判断请求结果
@@ -153,15 +149,15 @@ new Vue({
             fd.append('cargo_id', this.cargo_id);
 
             axios.post('/admin/selectRecommend', fd).then(response => {
+                console.log(response);
                 if(response.data.ServerNo != 200){
                     sweetAlert("操作失败!", response.request.ResultData, "error");
                 }
-                sweetAlert("操作成功!", response.request.ResultData, "success");
-                setTimeout(function () {
-                    location.href = '/admin/cargoList/'+goods_id;
-                }, 500);
+                this.$set(this.cargos, this.index, response.data.ResultData);
+                // 隐藏模态框
+                $('#myModal-1').modal('hide');
             }).catch(error => {
-                sweetAlert("请求失败!", response.request.ResultData, "error");
+                sweetAlert("请求失败!", response.request.statusText, "error");
             });
         },
         // 货品推荐位 字符串形式

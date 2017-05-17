@@ -25,7 +25,6 @@
                                     <th>货品折扣价</th>
                                     <th>货品状态</th>
                                     <th>库存</th>
-                                    <th>活动</th>
                                     <th>推荐位</th>
                                     <th>操作</th>
                                 </tr>
@@ -39,14 +38,13 @@
                                     <td>@{{ item.cargo_discount }}</td>
                                     <td>
                                         <button class="btn btn-primary btn-xs" v-if="item.cargo_status == 1" @click="updateStatus" :data-index="index" :data-cargo_id="item.id" :data-status="item.cargo_status">待售</button>
-                                        <button class="btn btn-success btn-xs" v-if="item.cargo_status == 2" @click="updateStatus" :data-index="index" :data-cargo_id="item.id" :data-status="item.cargo_status">上架</button>
-                                        <button class="btn btn-danger btn-xs" v-if="item.cargo_status == 3" @click="updateStatus" :data-index="index" :data-cargo_id="item.id" :data-status="item.cargo_status">下架</button>
+                                        <button class="btn btn-success btn-xs" v-else-if="item.cargo_status == 2" @click="updateStatus" :data-index="index" :data-cargo_id="item.id" :data-status="item.cargo_status">上架</button>
+                                        <button class="btn btn-danger btn-xs" v-else @click="updateStatus" :data-index="index" :data-cargo_id="item.id" :data-status="item.cargo_status">下架</button>
                                     </td>
                                     <td>@{{ item.inventory }}</td>
-                                    <td>活动</td>
                                     <td>@{{ recommendStr(item.recommends) }}</td>
                                     <td>
-                                        <a href="#myModal-1" data-toggle="modal" :data-cid="item.id" class="btn btn-success btn-xs" title="选择推荐位" @click="getRecommend"><i class="icon-plus" :data-cid="item.id"></i></a>
+                                        <a href="#myModal-1" data-toggle="modal" :data-cid="item.id" class="btn btn-success btn-xs" title="选择推荐位" @click="getRecommend" :data-index="index"><i class="icon-plus" :data-cid="item.id" :data-index="index"></i></a>
                                         <a href="#myModal-2" data-toggle="modal" :data-cid="item.id" class="btn btn-warning btn-xs" title="做活动" @click="getActivity"><i class="icon-plus" :data-cid="item.id"></i></a>
                                         <a :href="'/admin/cargo/'+item.id+'/edit'" class="btn btn-primary btn-xs"><i class="icon-pencil"></i></a>
                                     </td>
@@ -93,7 +91,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-lg-offset-2 col-lg-10">
-                                                    <button type="button" class="btn btn-primary" @click="selectRecommend">确 定</button>
+                                                    <button type="button" class="btn btn-primary" @click="selectRecommend" :data-index="index">确 定</button>
                                                 </div>
                                             </div>
                                         </form>

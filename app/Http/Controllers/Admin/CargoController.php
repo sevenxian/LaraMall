@@ -612,7 +612,7 @@ class CargoController extends Controller
             }
             $cargo->recommends = $arr;
             \DB::commit();
-            return responseMsg('选择推荐位成功');
+            return responseMsg($cargo);
         } catch (\Exception $e) {
             \DB::rollback();
             return responseMsg('选择推荐位失败', 400);
