@@ -162,12 +162,12 @@ class SafetyController extends Controller
             // 原账号为手机
             $tel = \Session::get('userInfo')->tel;
             // 调用阿里大鱼发送短信
-            $result = $this->codeSnippet->mobileCodeForSms($tel, 'laravl商城', 'SMS_61965053');
+            $result = $this->codeSnippet->mobileCodeForSms($tel, config('subassembly.autograph'), config('subassembly.template_id'));
         } else {
             // 原账号为邮箱
             $email = \Session::get('userInfo')->email;
             // 调用邮件发送验证码
-            $result = $this->codeSnippet->sendCodeForEmail('laramall_register', $email);
+            $result = $this->codeSnippet->sendCodeForEmail(config('subassembly.sendCloud_template'), $email);
         }
         // 判断返回信息
         if (!is_bool($result)) {
@@ -240,10 +240,10 @@ class SafetyController extends Controller
                 return responseMsg('手机号码已使用', 400);
             }
             // 调用阿里大鱼发送短信
-            $result = $this->codeSnippet->mobileCodeForSms($request['login_name'], 'laravl商城', 'SMS_61965053');
+            $result = $this->codeSnippet->mobileCodeForSms($request['login_name'], config('subassembly.autograph'), config('subassembly.template_id'));
         } else {
             // 调用邮箱发送验证码函数
-            $result = $this->codeSnippet->sendCodeForEmail('laramall_register', $request['login_name']);
+            $result = $this->codeSnippet->sendCodeForEmail(config('subassembly.sendCloud_template'), $request['login_name']);
         }
         // 判断返回值
         if (!is_bool($result)) {
@@ -361,7 +361,7 @@ class SafetyController extends Controller
             'token' => 'email=' . $request['email'] . '&token=' . md5($request['email'])
         ];
         //Common::sendEmail('bing_email', $data, $request['email']);
-        $this->codeSnippet->sendCodeForEmail('bing_email',  $request['email'],$data);
+        $this->codeSnippet->sendCodeForEmail(config('subassembly.sendCloud_bind_email'),  $request['email'],$data);
         \Redis::sEtex(STRING_USER_VERIFY_CODE_ . $request['email'], 86400, md5($request['email']));
         return responseMsg('邮件已发送,请注意查收');
 

@@ -115,7 +115,7 @@ class RegisterController extends Controller
             return responseMsg('手机号码已注册!', 400);
         }
         // 调用发送验证码 代码片段
-        $smsResult = $this->codeSnippet->mobileCodeForSms($request['tel'], 'laravl商城', 'SMS_61965053');
+        $smsResult = $this->codeSnippet->mobileCodeForSms($request['tel'], config('subassembly.autograph'), config('subassembly.template_id'));
         if (!is_bool($smsResult)) {
             return responseMsg($smsResult, 400);
         }
@@ -138,7 +138,7 @@ class RegisterController extends Controller
             return responseMsg('邮箱已注册!', 400);
         }
         // 判断邮箱是否重复发送
-        $emailResult = $this->codeSnippet->sendCodeForEmail('laramall_register', $request['email']);
+        $emailResult = $this->codeSnippet->sendCodeForEmail(config('subassembly.sendCloud_template'), $request['email']);
         if (!is_bool($emailResult)) {
             return responseMsg($emailResult, 400);
         }

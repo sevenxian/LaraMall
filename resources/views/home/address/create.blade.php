@@ -69,11 +69,11 @@
                                     <div class="am-form-group">
                                         <label for="user-address" class="am-form-label">所在地</label>
                                         <div class="am-form-content address">
-                                            <select data-am-selected id="s_province" name="province">
+                                            <select id="s_province" name="province">
                                             </select>
-                                            <select data-am-selected id="s_city" name="city">
+                                            <select id="s_city" name="city">
                                             </select>
-                                            <select data-am-selected id="s_county" name="county">
+                                            <select id="s_county" name="county">
                                             </select>
                                         </div>
                                     </div>
