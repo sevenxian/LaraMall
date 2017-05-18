@@ -77,11 +77,11 @@
                         </div>
 
                         <!--分页 -->
-                        {{--@if(!$page->isEmpty())--}}
-                            {{--<div class="am-pagination" style="text-align:center">--}}
-                                {{--{{ $page->render() }}--}}
-                            {{--</div>--}}
-                        {{--@endif--}}
+                        @if(!$page->isEmpty())
+                            <div class="am-pagination" style="text-align:center">
+                                {{ $page->render() }}
+                            </div>
+                        @endif
 
                     </div>
 
@@ -96,44 +96,9 @@
     </div>
 @stop
 @section('customJs')
-    <script type="text/javascript" src="/js/check.js"></script>
-    <script>
-        $('.del').click(function () {
-            layer.load(2);
-            var obj = $(this);
-            var data={
-                'cargo_id':$(this).attr('data-id'),
-                '_token':"{{ csrf_token() }}",
-            }
-            sendAjax(data,'/home/GoodsCollection',function(response){
-                layer.closeAll();
-                if(response.ServerNo == 300){
-                    layer.msg('移除成功~');
-                    obj.parents('.s-item-wrap').hide();
-                }else{
-                    layer.msg('移除失败~');
-                }
-            })
-        })
-        $('.buy').click(function(){
-            layer.load(2);
-            var data = {
-                "cargo_id":$(this).attr('data-cargoId')
-            }
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">var token= "{{ csrf_token() }}"</script>
+    <script src="{{ asset('/handle/member/goodsCollection_index.js') }}" type="text/javascript"></script>
 
-            sendAjax(data,'/home/addToShoppingCart',function(response){
-                layer.closeAll();
-                if(response.ServerNo == 200){
-                    var number=parseInt($('#J_MiniCartNum').html())+parseInt(response.ResultData);
-                    $('#J_MiniCartNum').html(number)
-                    layer.msg('成功加入购物车~');
-                }else if(response.ServerNo == 414){
-                    layer.msg(response.ResultData);
-                }else{
-                    layer.msg('加入购物车失败了~');
-                }
-            })
-        })
-    </script>
 
 @stop

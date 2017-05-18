@@ -51,7 +51,8 @@
                                     @if(!empty($data['cargo']['label']))
                                     <div class="info-little">
                                         @foreach($data['cargo']['label'] as $item)
-                                        <span>{{ $item['label_name'] }}：{{ $item['attr_name'] }}</span>
+                                            <span>{{ str_replace('选择', '', $item['label_name']) }}
+                                                ：{{ $item['attr_name'] }}</span><br>
                                         @endforeach
                                     </div>
                                     @endif
@@ -76,18 +77,6 @@
                         <input type="hidden" name="cargo_id" id="cargo_id" value="{{ $data['order']['cargo_id'] }}">
                         <input type="hidden" name="goods_id" id="goods_id" value="{{ $data['order']['goods_id'] }}">
                         <input type="hidden" name="goods_id" id="order_id" value="{{ $data['order']['id'] }}">
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $(".comment-list .item-opinion li").click(function () {
-                                    $(this).prevAll().children('i').removeClass("active");
-                                    $(this).nextAll().children('i').removeClass("active");
-                                    $(this).children('i').addClass("active");
-
-                                });
-                            })
-                        </script>
-
-
                     </div>
                     @endif
 
@@ -102,44 +91,7 @@
     </div>
 @stop
 @section('customJs')
-    <script src="{{ asset('/js/check.js') }}"></script>
-    <script>
-
-        $('.am-btn').click(function(){
-
-            var  star = $('.item-opinion').find('.active').attr('data-star');
-            if(!star){
-                return layer.msg('评价不能为空');
-            }
-            var content = $('#comment').val();
-            if(!star){
-                return layer.msg('评价不能为空');
-            }
-            if(!content){
-                return layer.msg('评论不能为空');
-            }
-            if(content.replace(/[\u0391-\uFFE5]/g,"aaa").length < 15){
-                return layer.msg('评论内容不小于5个汉字');
-            }
-            var data = {
-                'star':star,
-                'comment_info':content,
-                'comment_type':0,
-                'cargo_id':$("#cargo_id").val(),
-                'goods_id':$('#goods_id').val(),
-                'order_id':$('#order_id').val(),
-                '_token':"{{ csrf_token() }}"
-            }
-            sendAjax(data,'/home/comments',function(response){
-                if(response.ServerNo == 200){
-                    layer.msg('评论成功!');
-                    location.href="/home/comments";
-                }else{
-                    layer.msg(response.ResultData);
-                }
-            })
-
-
-        })
-    </script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">var token= "{{ csrf_token() }}"</script>
+    <script src="{{ asset('/handle/member/comment_create.js') }}" type="text/javascript"></script>
 @stop

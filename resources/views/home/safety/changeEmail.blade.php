@@ -166,15 +166,19 @@
     </div>
 @stop
 @section('customJs')
-    <!-- 初始化倒计时 -->
-    <script> var wait = 60;</script>
-    <!-- 验证函数库 -->
-    <script src="{{ asset('/js/check.js') }}"></script>
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/function.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        var token= "{{ csrf_token() }}";
+        var wait = 60;
+    </script>
+
     @if(!empty(\Session::get('userInfo')->email))
         <!-- 更换电子邮箱 -->
-        <script src="{{ asset('/js/againBindEmail.js') }}"></script>
+        <script src="{{ asset('/handle/member/safety_changeEmail.js') }}" type="text/javascript"></script>
     @else
         <!-- 绑定电子邮箱 -->
-        <script src="{{ asset('/js/bindEmail.js') }}"></script>
+        <script src="{{ asset('/handle/member/safety_bingEmail.js') }}" type="text/javascript"></script>
     @endif
 @stop

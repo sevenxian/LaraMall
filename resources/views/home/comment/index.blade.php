@@ -121,5 +121,3 @@
         @include('home.public.aside')
     </div>
 @stop
-@section('customJs')
-@stop

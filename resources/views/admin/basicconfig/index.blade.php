@@ -19,10 +19,9 @@
                         <header class="panel-heading" style="padding: 15px;">
                                     网站基础配置
                             @if(!empty($data))
-                                <button type="button" style="float: right" class="btn btn-primary" ><a style="color:white" href="{{ url('admin/basicconfig/'.$data->id.'/edit') }}">修改网站配置</a></button>
-                            @endif
-                            @if(empty($data))
-                                <button type="button" style="float: right" class="btn btn-primary" ><a style="color:white" href="{{ route('basicconfig.create') }}">添加网站配置</a></button>
+                                <button type="button" style="float: right" class="btn btn-primary" ><a style="color:white" href="{{ url('/admin/basicconfig') }}/{{ $data->id }}/edit">修改网站配置</a></button>
+                            @else
+                                <button type="button" style="float: right" class="btn btn-primary" ><a style="color:white" href="{{ url('/admin/basicconfig/create') }}">添加网站配置</a></button>
                             @endif
 
                         </header>
@@ -54,7 +53,7 @@
                                         <div class="col-sm-1">
                                             {{--<input type="text" class="form-control" id="logo" name="logo" value="{{$data->logo}}" disabled>--}}
                                             <div class="thumbnail" style="cursor: pointer;">
-                                                <img src="{{ env('QINIU_DOMAIN') }}{{$data->logo}}">
+                                                <img src="@if(empty($data->logo)) /admins/img/goods_default.gif @else {{ env('QINIU_DOMAIN') }}{{$data->logo}} @endif">
                                             </div>
                                         </div>
                                     </div>
@@ -107,9 +106,6 @@
 @stop
 
 @section('customJs')
-    <!--当前页面 js-->
-    <script src="/admins/js/form-component.js"></script>
-    <script src="/admins/js/gritter.js" type="text/javascript"></script>
     <script>
         var QINIU_DOMAIN = '{{ env("QINIU_DOMAIN") }}';
     </script>

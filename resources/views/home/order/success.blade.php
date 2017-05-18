@@ -45,7 +45,3 @@
     @endif
     @include('home.public.footer')
 @stop
-@section('customJs')
-
-
-@stop

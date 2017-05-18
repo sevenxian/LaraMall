@@ -53,6 +53,7 @@ class CommentsController extends Controller
         $this->goodsLabel = $goodsLabelRepository;
         $this->comment = $commentsRepository;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -65,14 +66,14 @@ class CommentsController extends Controller
         // 获取用户ID
         $userId = \Session::get('user')->user_id;
         // 根据用户ID查找用户所有评论
-        $commentResult = $this->comment->commentsList(['user_id' => $userId],1);
+        $commentResult = $this->comment->commentsList(['user_id' => $userId], 1);
         // 判断是否为空
-        if(!empty($commentResult)) {
+        if (!empty($commentResult)) {
             // 对象转数组
             $data = $commentResult->toArray();
             // 便利数据 获取商品标签
-            foreach ($data['data'] as $key => $item){
-                $labels = json_decode($item['cargo_message']['cargo_ids'],1);
+            foreach ($data['data'] as $key => $item) {
+                $labels = json_decode($item['cargo_message']['cargo_ids'], 1);
                 foreach ($labels as $k => $v) {
                     // 查询商品标签
                     $label = $this->goodsLabel->find(['id' => $k]);
@@ -91,7 +92,7 @@ class CommentsController extends Controller
         }
 
         // 返回视图
-        return view('home.comment.index',['data' => $data,'page'=>$commentResult]);
+        return view('home.comment.index', ['data' => $data, 'page' => $commentResult]);
     }
 
     /**
@@ -107,15 +108,15 @@ class CommentsController extends Controller
         $detailResult = $this->orderDetails->find(['id' => $orderDetailsId]);
         // 初始化返回数组
         $data = [];
-        if(!empty($detailResult)) {
+        if (!empty($detailResult)) {
             // 订单详情数据
             $data['order'] = $detailResult->toArray();
-            $cargo = \Redis::hGetAll($this->hashCargo.$detailResult->cargo_id);
-            if(empty($cargo)) {
+            $cargo = \Redis::hGetAll($this->hashCargo . $detailResult->cargo_id);
+            if (empty($cargo)) {
                 $cargo = $this->cargo->find(['id' => $detailResult->cargo_id]);
-                if(!empty($cargo)) {
+                if (!empty($cargo)) {
                     $cargo = $cargo->toArray();
-                    \Redis::hSet($this->hashCargo.$detailResult->cargo_id);
+                    \Redis::hSet($this->hashCargo . $detailResult->cargo_id);
                 }
             }
 
@@ -137,7 +138,7 @@ class CommentsController extends Controller
             $data['cargo'] = $cargo;
         }
 
-        return view('home.comment.create',['data' => $data]);
+        return view('home.comment.create', ['data' => $data]);
     }
 
     /**
@@ -159,29 +160,33 @@ class CommentsController extends Controller
             'cargo_id' => $request['cargo_id']
         ];
         // 根据条件查询是否已对该商品进行评价
-        if($this->comment->find($where)) {
-            return responseMsg('已经对该商品进行评价，不可重复评论',400);
+        if ($this->comment->find($where)) {
+            return responseMsg('已经对该商品进行评价，不可重复评论', 400);
         }
 
         try {
             // 开始事物
             \DB::beginTransaction();
             // 插入评论数据
-             $commentResult = $this->comment->insert($request->all());
-             // 插入数据失败 抛出异常
-             if(empty($commentResult)) {
-                 throw new \Exception('评论数据写入失败');
-             }
-             // 更改订单状态
-             $orderResult = $this->orderDetails->update(['id' => $request['order_id']],['order_status' => 5,'comment_status' => 2]);
-             // 判断订单状态是否更新成功
-             if(empty($orderResult)) {
-                 throw new \Exception('订单状态更新失败');
-             }
-             // 提交
-             \DB::commit();
+            $commentResult = $this->comment->insert($request->all());
+            // 插入数据失败 抛出异常
+            if (empty($commentResult)) {
+                throw new \Exception('评论数据写入失败');
+            }
+            // 更改订单状态
+            $orderResult = $this->orderDetails->update(['id' => $request['order_id']], ['order_status' => 5, 'comment_status' => 2]);
+            // 判断订单状态是否更新成功
+            if (empty($orderResult)) {
+                throw new \Exception('订单状态更新失败');
+            }
+            $commentNum = $this->orderDetails->incrementForField(['id' => $request['cargo_id']], 'number_of_comments');
+            if (empty($commentNum)) {
+                throw new \Exception('评论数量修改失败');
+            }
+            // 提交
+            \DB::commit();
 
-             // 成功返回
+            // 成功返回
             return responseMsg('成功');
         } catch (Exception $e) {
             // 事物回滚
@@ -195,7 +200,7 @@ class CommentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -206,7 +211,7 @@ class CommentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -217,8 +222,8 @@ class CommentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -229,7 +234,7 @@ class CommentsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

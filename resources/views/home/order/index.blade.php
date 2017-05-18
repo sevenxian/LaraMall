@@ -17,6 +17,7 @@
 @section('content')
     <div class="concent">
         <!--地址 -->
+        @if(!empty($data))
         <div class="paycont">
             <div class="address">
                 <h3>确认收货地址 </h3>
@@ -117,12 +118,12 @@
                                 <div class="pay-phone">
                                     <li class="td td-item">
                                         <div class="item-pic">
-                                            <a href="#" class="J_MakePoint">
+                                            <a href="{{ url('/home/goodsDetail') }}/{{ $value['id'] }}" class="J_MakePoint">
                                                 <img src="{{ env('QINIU_DOMAIN') }}{{ $value['cargo_cover'] }}?imageView2/1/w/80/h/80" class="itempic J_ItemImg"></a>
                                         </div>
                                         <div class="item-info">
                                             <div class="item-basic-info">
-                                                <a href="#" class="item-title J_MakePoint" data-point="tbcart.8.11">{{ $value['cargo_name'] }}</a>
+                                                <a href="{{ url('/home/goodsDetail') }}/{{ $value['id'] }}" class="item-title J_MakePoint" data-point="tbcart.8.11">{{ $value['cargo_name'] }}</a>
                                             </div>
                                         </div>
                                     </li>
@@ -143,7 +144,7 @@
                                                         <em class="price-original">{{ $value['cargo_price'] }}</em>
                                                     </div>
                                                     <div class="price-line">
-                                                        <em class="J_Price price-now" tabindex="0">{{ $value['price'] }}</em>
+                                                        <em class="J_Price price-now" tabindex="0">@if(!empty($value['price'])) {{ $value['price'] }} @else {{ $value['cargo_discount'] }} @endif</em>
                                                     </div>
                                                 </div>
                                             </div>
@@ -237,112 +238,16 @@
                 <div class="clear"></div>
             </div>
         </div>
+        @else
+            <div style="width:100%;text-align: center;color:red;padding:300px 0px">订单已经生成，去<a href="{{ url('/home/orders/0') }}" style="color:red">看看</a>吧~</div>
+        @endif
         <!--底部-->
         @include('home.public.footer')
     </div>
 @stop
 @section('customJs')
     <script type="text/javascript" src="/js/address.js"></script>
-    <script src="/layer/layer.js"></script>
-    <script src="/js/check.js"></script>
-    <script>
-        // 更改收货地址
-        $('.user-addresslist').click(function () {
-            layer.load(2);
-            // 修改省份
-            $('#holyshit268').find('.province').html($(this).find('.province').html());
-            // 修改城市
-            $('#holyshit268').find('.city').html($(this).find('.city').html());
-            // 修改县
-            $('#holyshit268').find('.dist').html($(this).find('.dist').html());
-            // 修改详细地址
-            $('#holyshit268').find('.street').html($(this).find('.street').html());
-            // 修改收货人
-            $('#holyshit268').find('.buy-user').html($(this).find('.buy-user').html());
-            // 修改收货人手机号
-            $('#holyshit268').find('.buy-phone').html($(this).find('.buy-phone').html());
-            // 收货地址表ID
-            $('#holyshit268').attr('data-address-id',$(this).attr('data-address-id'));
-            layer.closeAll()
-        });
-        // 提交订单
-        $('#J_Go').click(function(){
-            //layer.load(3);
-            // 初始化购买商品信息
-            var goodsMessage =[];
-            // 初始化收货地址信息
-            var addressMessage;
-            // 拼装商品信息
-            $.each($('.item-content'),function(key,val){
-                // 过滤掉没有库存的商品
-                if( $(val).attr('data-number') != 0){
-                    // 初始化货品信息
-                    var cargo={};
-                    // 获取货品数量
-                    cargo.shopping_number=$(val).find('.sl').html();
-                    // 商品标题
-                    cargo.cargo_title=$(val).find('.item-title').html();
-                    // 获取货品ID
-                    cargo.cargo_id = $(val).attr('data-cargo-id');
-                    // 添加到商品信息
-                    goodsMessage.push(cargo);
-                }
-            });
-            // 收货地址表ID
-            addressMessage = $('#holyshit268').attr('data-address-id');
-            // 定义支付方式
-            var pay_type = $('.pay.selected').attr('data-pay-type');
-
-            if(goodsMessage.length < 1){
-                layer.msg('没有库存了,下单失败了!');
-                return false;
-            }
-            // 拼接提交参数
-            var data = {
-                'goods_message':JSON.stringify(goodsMessage),
-                'address_id':addressMessage,
-                'pay_type':pay_type,
-                '_token':"{{ csrf_token() }}",
-            };
-            sendAjax(data,'/home/order',function (response) {
-                //layer.closeAll();
-                if(response.ServerNo == 200){
-                    if(pay_type == 2){
-                        location.href=response.ResultData;
-                    }else{
-                        layer.open({
-                            type: 1,
-                            skin: 'layui-layer-rim', //加上边框
-                            area: ['270px', '310px'], //宽高
-                            content: eval(response.ResultData.QrCode)
-                        });
-                        $('.layui-layer-title').html('金额：'+response.ResultData.total_fee+'元');
-                        getInfo(response.ResultData.out_trade_no);
-                    }
-
-                } else {
-                    layer.msg(response.ResultData);
-                }
-            });
-
-        });
-
-        function getInfo($orderGuid) {
-            var data ={'guid': $orderGuid, '_token': "{{ csrf_token() }}"}
-            sendAjax(data, '/home/order/rotation', function (res) {
-                    // 支付完成
-                    if(res.ServerNo == 200){
-                        $('#layui-layer-shade1').hide();
-
-                        location.href = "/home/order/aliPayCogradient?trade_status=TRADE_SUCCESS&total_fee="+res.ResultData.total_amount+"&body="+res.ResultData.guid
-                    } else if(res.ServerNo == 400){
-                        setTimeout('getInfo("'+$orderGuid+'")',1000);
-                    } else {
-                        $('.layui-layer-close1').trigger('click');
-                        layer.msg('下单失败了!');
-                    }
-            });
-
-        }
-    </script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">var token= "{{ csrf_token() }}"</script>
+    <script src="{{ asset('/handle/order_index.js') }}" type="text/javascript"></script>
 @stop

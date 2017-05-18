@@ -57,7 +57,7 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                 <div class="thumbnail" style="cursor: pointer;">
-                                                    <img src="{{ env('QINIU_DOMAIN') }}{{$data->logo}}" @click="uploadLogoImg">
+                                                    <img src="@if(empty($data->logo)) /admins/img/goods_default.gif @else {{ env('QINIU_DOMAIN') }}{{$data->logo}} @endif" @click="uploadLogoImg">
                                                     <input type="file" style="display: none;">
                                                     <input type="hidden" name="logo" class="logo" value="{{$data->logo}}">
 

@@ -31,7 +31,7 @@ class CargoRepository
      * CargoRepository constructor.
      * @param Cargo $cargo
      */
-    public function __construct(Cargo $cargo, Analysis $analysis)
+    public function __construct(Cargo $cargo)
     {
         $this->model = $cargo;
     }
@@ -45,34 +45,37 @@ class CargoRepository
      * @return mixed
      * @author zhulinjie
      */
-    public function selectWhereIn($fields, array $ids, array $where = []){
+    public function selectWhereIn($fields, array $ids, array $where = [])
+    {
         return $this->model->where($where)->whereIn($fields, $ids)->get();
     }
 
     /**
-     * 通过where获取多条数据
+     * 字段数量自增
      *
-     * @param $fields
-     * @param array $ids
      * @param array $where
+     * @param $field
+     * @param $num
      * @return mixed
-     * @author jiaohuafeng
+     * @author zhangyuchao
      */
-    public function selectWhere(array $where = []){
-        return $this->model->where($where)->get();
+    public function incrementForField(array $where,$field,$num = 1)
+    {
+        return $this->model->where($where)->increment($field,$num);
     }
 
     /**
-     * 通过货品ID获取跟货品相关联的货品关联表的数据
+     * 字段数量自减
      *
-     * @param $fields
-     * @param array $ids
      * @param array $where
+     * @param $field
+     * @param $num
      * @return mixed
-     * @author jiaohuafeng
+     * @author zhangyuchao
      */
-    public function getCargoCollection(array $where = []){
-        return $this->model->find($where)->goodscollection();
+    public function decrementForField(array $where,$field,$num = 1)
+    {
+        return $this->model->where($where)->decrement($field,$num);
     }
 
 }

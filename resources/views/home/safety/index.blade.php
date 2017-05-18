@@ -111,8 +111,12 @@
     </div>
 @stop
 @section('customJs')
-    <!-- 七牛图片路径 -->
-    <script>var imgUrl = "{{ env('QINIU_DOMAIN') }}";</script>
-    <!-- 头像上传 -->
-    <script src="{{ asset('/js/uploadAvatar.js') }}"></script>
+
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        var token= "{{ csrf_token() }}";
+        var imgUrl = "{{ env('QINIU_DOMAIN') }}";
+    </script>
+    <script src="{{ asset('/handle/member/uploadAvatar.js') }}" type="text/javascript"></script>
+
 @stop

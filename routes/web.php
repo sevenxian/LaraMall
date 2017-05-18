@@ -145,8 +145,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('user', 'UserController');
 
     // 认证后的操作路由
-    //Route::group(['middleware' => 'user:admin'], function () {
-    Route::group([], function () {
+    Route::group(['middleware' => 'user:admin'], function () {
+
         Route::get('/', 'IndexController@index');
         // 后台首页
         Route::get('index', 'IndexController@index')->name('admin.index');
@@ -281,21 +281,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
         Route::resource('comments', 'CommentsController');
         // 获取评论列表
         Route::any('commentList', 'CommentsController@commentList');
-
-
-
-
-
         // 网站配置
-        Route::resource('basicconfig', 'BasicConfigController', ['names' => [
-            'index' => 'basicconfig.index',
-            'store' => 'basicconfig.store',
-            'create' => 'basicconfig.create',
-        ]]);
-        // 上传网站LOGO图片
-        Route::post('logoImgUpload', 'BasicConfigController@logoImgUpload');
-        /*根据id 更新网址配置信息、*/
+        Route::resource('basicconfig', 'BasicConfigController');
+        // 网站配置 更新
         Route::post('basicconfig/update/{id}', 'BasicConfigController@update');
+        // 网站配置 LOGO上传
+        Route::post('logoImgUpload', 'BasicConfigController@logoImgUpload');
 
 
     });

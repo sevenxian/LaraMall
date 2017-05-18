@@ -79,8 +79,6 @@
     </div>
 @stop
 @section('customJs')
-    <!-- 引入验证函数库 -->
-    <script src="{{ asset('/js/check.js') }}"></script>
-    <!-- 实名认证js -->
-    <script src="{{ asset('/js/idCard.js') }}"></script>
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/member/safety_idCard.js') }}" type="text/javascript"></script>
 @stop

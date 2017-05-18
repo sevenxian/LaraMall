@@ -39,7 +39,7 @@
                                     <label for="code"><i class="am-icon-code-fork"></i></label>
                                     <input type="text" name="code" id="emailCode" placeholder="请输入验证码">
                                     <a class="btn" href="javascript:void(0);">
-                                        <span id="dyMobileButton" class="sendEmail">获取</span>
+                                        <button type="button" id="dyMobileButton" class="sendEmail dyEmailButton" style="width:40%" >获取验证码</button>
                                     </a>
                                 </div>
                                 <div id="emailCodeErrorMessage" style="color:red;font-size:12px;margin:2px 30px"></div>
@@ -80,7 +80,7 @@
                                     <input type="text" name="code" id="telCode" placeholder="请输入验证码">
                                     <a class="btn" href="javascript:void(0);" onclick="sendMobileCode();"
                                        id="sendMobileCode">
-                                        <span id="dyMobileButton">获取</span></a>
+                                        <button type="button" id="dyMobileButton" class="dyMobileButton" style="width:40%">获取验证码</button></a>
                                 </div>
                                 <div id="telCodeErrorMessage" style="color:red;font-size:12px;margin:2px 30px"></div>
                                 <div class="user-pass">
@@ -126,6 +126,10 @@
 @stop
 
 @section('customJs')
+
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/function.js') }}" type="text/javascript"></script>
     <script>
         // 获取手机验证码路由
         var telVerifyCodeUrl = "{{ url('/home/register/sendMobileCode') }}";
@@ -133,12 +137,9 @@
         var emailVerifyCodeUrl = "{{ url('/home/register/sendEmailCode') }}";
         // 注册路由
         var registerUrl = "{{ url('home/register/createUser') }}";
+        var token= "{{ csrf_token() }}";
+        var wait = 60;
     </script>
-    <!-- 表单验证函数 -->
-    <script src="{{ asset('/js/check.js') }}"></script>
-    <!-- 手机号码注册 -->
-    <script src="{{ asset('/js/telRegister.js') }}"></script>
-    <!-- 邮箱注册 -->
-    <script src="{{ asset('/js/emailRegister.js') }}"></script>
+    <script src="{{ asset('/handle/register.js') }}" type="text/javascript"></script>
 @endsection
 

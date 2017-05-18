@@ -117,7 +117,7 @@
                         $(this).removeClass("hover")
                         $(this).children("div.menu-in").css("display", "none")
                     });
-                })
+                });
             </script>
 
             <!--小导航 -->
