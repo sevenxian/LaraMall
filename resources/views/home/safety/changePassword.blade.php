@@ -103,8 +103,6 @@
     </div>
 @stop
 @section('customJs')
-    <!-- 引入验证函数库 -->
-    <script src="{{ asset('/js/check.js') }}"></script>
-    <!-- 验证密码 -->
-    <script src="{{ asset('js/changePassword.js') }}"></script>
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/member/safety_changePassword.js') }}" type="text/javascript"></script>
 @stop

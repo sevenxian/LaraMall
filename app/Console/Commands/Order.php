@@ -83,16 +83,13 @@ class Order extends Command
                     // 设置自动取消之后 把库存还原
                     $cargoes = json_decode($item->goods_message,1);
                     foreach ($cargoes as $cargo) {
-                        $cargoResult = $this->cargo->find(['id' =>$cargo['id']]);
-                        if(!empty($cargoResult)) {
-                            $inventory = $this->cargo->update(['id' =>$cargo['id']],['inventory' => $cargoResult->inventory + $item['shopping_number'] ]);
-                            if(empty($inventory)) {
+                        $cargoResult = $this->cargo->incrementForField(['id' =>$cargo['id']],'inventory',$item['shopping_number']);
+                            if(empty($cargoResult)) {
                                 \Log::info('库存修改失败',$item);
-                            }
                         }
                     }
-
                 }
+
             }
         }
     }

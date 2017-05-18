@@ -205,6 +205,6 @@
 @stop
 @section('customJs')
     <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
-    <script type="text/javascript">var token= "{{ csrf_token() }}"</script>
+    <script type="text/javascript">var token= "{{ csrf_token() }}";</script>
     <script src="{{ asset('/handle/member/orders_index.js') }}" type="text/javascript"></script>
 @stop

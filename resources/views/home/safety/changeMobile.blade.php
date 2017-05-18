@@ -178,15 +178,19 @@
     </div>
 @stop
 @section('customJs')
-    <!-- 初始化倒计时 -->
-    <script> var wait = 60;</script>
-    <!-- 验证函数库 -->
-    <script src="{{ asset('/js/check.js') }}"></script>
+
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/function.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        var token= "{{ csrf_token() }}";
+        var wait = 60;
+    </script>
     @if(!empty(\Session::get('userInfo')->tel))
         <!-- 更换手机号码 -->
-        <script src="{{ asset('/js/againBindTel.js') }}"></script>
+        <script src="{{ asset('/handle/member/safety_changeMobile.js') }}" type="text/javascript"></script>
     @else
         <!-- 绑定手机号码 -->
-        <script src="{{ asset('/js/bindTel.js') }}"></script>
+        <script src="{{ asset('/handle/member/safety_bindMobile.js') }}" type="text/javascript"></script>
     @endif
 @stop

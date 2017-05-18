@@ -399,7 +399,9 @@ class GoodsController extends Controller
         $data['star']['almost'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 2]);
         // 统计差评
         $data['star']['bad'] = $this->comment->count(['cargo_id'=>$cargo_id,'star' => 3]);
+
         return view('home.goods.detail', compact('data'));
+
     }
 
     /**

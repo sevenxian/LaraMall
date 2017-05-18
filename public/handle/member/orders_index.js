@@ -81,8 +81,8 @@ $(document).ready(function () {
         });
     });
     // 轮询
-    function getInfo($orderGuid) {
-        var data ={'guid': $orderGuid, '_token': token};
+    function getInfo(orderGuid) {
+        var data ={'guid': orderGuid, '_token': token};
         sendAjax(data, '/home/order/rotation', function (res) {
             // 支付完成
             if(res.ServerNo == 200){
@@ -90,7 +90,7 @@ $(document).ready(function () {
 
                 location.href = "/home/order/aliPayCogradient?trade_status=TRADE_SUCCESS&total_fee="+res.ResultData.total_amount+"&body="+res.ResultData.guid
             } else if(res.ServerNo == 400){
-                setTimeout('getInfo("'+$orderGuid+'")',1000);
+                setTimeout(getInfo(orderGuid),1000);
             } else {
                 $('.layui-layer-close1').trigger('click');
                 layer.msg('下单失败了!');

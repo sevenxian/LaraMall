@@ -1,4 +1,4 @@
-$(document).ready(function () {
+
     // 更改收货地址
     $('.user-addresslist').click(function () {
         layer.load(2);
@@ -20,7 +20,7 @@ $(document).ready(function () {
     });
 // 提交订单
     $('#J_Go').click(function(){
-        //layer.load(3);
+        layer.load(2);
         // 初始化购买商品信息
         var goodsMessage =[];
         // 初始化收货地址信息
@@ -79,8 +79,8 @@ $(document).ready(function () {
 
     });
 
-    function getInfo($orderGuid) {
-        var data ={'guid': $orderGuid, '_token': token}
+    function getInfo(orderGuid) {
+        var data ={'guid': orderGuid, '_token': token}
         sendAjax(data, '/home/order/rotation', function (res) {
             // 支付完成
             if(res.ServerNo == 200){
@@ -88,7 +88,7 @@ $(document).ready(function () {
 
                 location.href = "/home/order/aliPayCogradient?trade_status=TRADE_SUCCESS&total_fee="+res.ResultData.total_amount+"&body="+res.ResultData.guid
             } else if(res.ServerNo == 400){
-                setTimeout('getInfo("'+$orderGuid+'")',1000);
+                setTimeout(getInfo(orderGuid),1000);
             } else {
                 $('.layui-layer-close1').trigger('click');
                 layer.msg('下单失败了!');
@@ -96,5 +96,5 @@ $(document).ready(function () {
         });
 
     }
-});
+
 

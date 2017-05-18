@@ -17,6 +17,7 @@
 @section('content')
     <div class="concent">
         <!--地址 -->
+        @if(!empty($data))
         <div class="paycont">
             <div class="address">
                 <h3>确认收货地址 </h3>
@@ -117,12 +118,12 @@
                                 <div class="pay-phone">
                                     <li class="td td-item">
                                         <div class="item-pic">
-                                            <a href="#" class="J_MakePoint">
+                                            <a href="{{ url('/home/goodsDetail') }}/{{ $value['id'] }}" class="J_MakePoint">
                                                 <img src="{{ env('QINIU_DOMAIN') }}{{ $value['cargo_cover'] }}?imageView2/1/w/80/h/80" class="itempic J_ItemImg"></a>
                                         </div>
                                         <div class="item-info">
                                             <div class="item-basic-info">
-                                                <a href="#" class="item-title J_MakePoint" data-point="tbcart.8.11">{{ $value['cargo_name'] }}</a>
+                                                <a href="{{ url('/home/goodsDetail') }}/{{ $value['id'] }}" class="item-title J_MakePoint" data-point="tbcart.8.11">{{ $value['cargo_name'] }}</a>
                                             </div>
                                         </div>
                                     </li>
@@ -143,7 +144,7 @@
                                                         <em class="price-original">{{ $value['cargo_price'] }}</em>
                                                     </div>
                                                     <div class="price-line">
-                                                        <em class="J_Price price-now" tabindex="0">{{ $value['price'] }}</em>
+                                                        <em class="J_Price price-now" tabindex="0">@if(!empty($value['price'])) {{ $value['price'] }} @else {{ $value['cargo_discount'] }} @endif</em>
                                                     </div>
                                                 </div>
                                             </div>
@@ -237,11 +238,15 @@
                 <div class="clear"></div>
             </div>
         </div>
+        @else
+            <div style="width:100%;text-align: center;color:red;padding:300px 0px">订单已经生成，去<a href="{{ url('/home/orders/0') }}" style="color:red">看看</a>吧~</div>
+        @endif
         <!--底部-->
         @include('home.public.footer')
     </div>
 @stop
 @section('customJs')
+    <script type="text/javascript" src="/js/address.js"></script>
     <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
     <script type="text/javascript">var token= "{{ csrf_token() }}"</script>
     <script src="{{ asset('/handle/order_index.js') }}" type="text/javascript"></script>
