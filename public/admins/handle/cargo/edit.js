@@ -45,7 +45,9 @@ new Vue({
             // 商品标签
             this.goodsLabels = response.data.ResultData.goodsLabels;
             // 货品拥有的分类标签键值对
-            this.labelCargo = JSON.parse(response.data.ResultData.labelCargo.category_attr_ids);
+            if(response.data.ResultData.labelCargo.category_attr_ids != undefined){
+                this.labelCargo = JSON.parse(response.data.ResultData.labelCargo.category_attr_ids);
+            }
             // 货品拥有的商品标签键值对
             this.cargo_ids = JSON.parse(response.data.ResultData.cargo.cargo_ids);
             // 货品图片
@@ -195,11 +197,6 @@ new Vue({
             // 货品原价不能为空
             if (!$.trim($('input[name=cargo_price]').val())) {
                 sweetAlert("操作失败!", "请先填写货品原价!", "error");
-                return;
-            }
-            // 货品折扣价不能为空
-            if (!$.trim($('input[name=cargo_discount]').val())) {
-                sweetAlert("操作失败!", "请先填写货品折扣价!", "error");
                 return;
             }
             // 库存量不能为空

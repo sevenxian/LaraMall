@@ -23,6 +23,8 @@ class CreateDataCargoTable extends Migration
             $table->integer('inventory')->default(0)->comment('库存量');
             $table->decimal('cargo_price', 7, 2)->comment('货品原价');
             $table->decimal('cargo_discount', 7, 2)->default(1)->comment('货品折扣');
+            $table->integer('sales_volume')->default(0)->comment('销售量');
+            $table->integer('number_of_comments')->default(0)->comment('评论数');
             $table->json('cargo_original')->comment('货品原图:多个');
             $table->text('cargo_info')->comment('货品详情');
             $table->tinyInteger('cargo_status')->default(1)->comment('货品状态 1:待售 2:上架 3:下架	默认为 1');

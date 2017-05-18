@@ -226,12 +226,15 @@ class CargoController extends Controller
             if (!$cargo) {
                 return responseMsg('该货品不存在', 404);
             }
+            $res['cargo'] = $cargo;
 
             // 货品拥有的分类标签键值对
             $labelCargo = $this->relLabelCargo->find(['cargo_id' => $cargo->id]);
-
-            $res['cargo'] = $cargo;
-            $res['labelCargo'] = $labelCargo;
+            if($labelCargo){
+                $res['labelCargo'] = $labelCargo;
+            }else{
+                $res['labelCargo'] = '';
+            }
         }
 
         // 获取三级分类
@@ -383,7 +386,7 @@ class CargoController extends Controller
         $param['inventory'] = $data['inventory'];
         $param['cargo_price'] = $data['cargo_price'];
         $param['cargo_name'] = $data['cargo_name'];
-        $param['cargo_discount'] = $data['cargo_discount'];
+        $param['cargo_discount'] = $param['cargo_price'];
         $param['cargo_original'] = json_encode($data['cargo_original']);
         $param['cargo_info'] = $data['cargo_info'];
 
@@ -693,7 +696,6 @@ class CargoController extends Controller
         $param['inventory'] = $data['inventory'];
         $param['cargo_price'] = $data['cargo_price'];
         $param['cargo_name'] = $data['cargo_name'];
-        $param['cargo_discount'] = $data['cargo_discount'];
         $param['cargo_original'] = json_encode($data['cargo_original']);
         $param['cargo_info'] = $data['cargo_info'];
 
@@ -762,12 +764,20 @@ class CargoController extends Controller
                     throw new \Exception('相同规格的货品已经存在', 400);
                 }
             }
-            
+
             // 修改分类标签值与货品关联表
             if (!empty($categoryLabels)) {
                 $arr = [];
                 $arr['category_attr_ids'] = json_encode($categoryLabels);
-                $this->relLabelCargo->update(['id' => $id], $arr);
+                // 先判断记录是否存在 如果不存在 则为新增操作
+                $relLabelCargo = $this->relLabelCargo->find(['id' => $id]);
+                if(!$relLabelCargo){
+                    $arr['goods_id'] = $data['goods_id'];
+                    $arr['cargo_id'] = $id;
+                    $this->relLabelCargo->insert($arr);
+                }else{
+                    $this->relLabelCargo->update(['id' => $id], $arr);
+                }
             }
             
             // 查找需要删除的商品标签值
@@ -815,7 +825,7 @@ class CargoController extends Controller
             if($e->getCode() == 400){
                 return responseMsg($e->getMessage(), $e->getCode());
             }
-            return responseMsg('货品修改失败', 400);
+            return responseMsg($e->getMessage(), 400);
         }
     }
 

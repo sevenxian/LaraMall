@@ -47,15 +47,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="cargo_price" class="col-md-1 control-label">货品原价</label>
+                                    <label for="cargo_price" class="col-md-1 control-label">货品价格</label>
                                     <div class="col-md-6">
                                         <input type="text" name="cargo_price" v-model="cargo_price" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="cargo_discount" class="col-md-1 control-label">货品折扣价</label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="cargo_discount" v-model="cargo_discount" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">

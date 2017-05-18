@@ -14,7 +14,6 @@ new Vue({
             goods: {},               // 商品信息
             cargo_name: '',          // 货品名称
             cargo_price: '',         // 货品原价
-            cargo_discount: '',      // 货品折扣价
             inventory: '',           // 库存量
             categoryLabels: [],      // 分类标签
             goodsLabels: [],         // 商品标签
@@ -181,11 +180,6 @@ new Vue({
             // 货品原价不能为空
             if (!this.cargo_price) {
                 sweetAlert("操作失败!", "请先填写货品原价!", "error");
-                return;
-            }
-            // 货品折扣价不能为空
-            if (!this.cargo_discount) {
-                sweetAlert("操作失败!", "请先填写货品折扣价!", "error");
                 return;
             }
             // 库存量不能为空

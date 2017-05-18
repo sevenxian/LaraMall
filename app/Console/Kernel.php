@@ -13,8 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
         \App\Console\Commands\Order::class,
+        \App\Console\Commands\cargoActivity::class
     ];
 
     /**
@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // 每分钟查询一次未支付的订单
         //$schedule->command('order:order')->everyMinute();
+        $schedule->command('cargoActivity')->everyMinute();
     }
 
     /**

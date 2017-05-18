@@ -182,13 +182,13 @@ class GoodsController extends Controller
     public function goodsList(Request $request, $category_id)
     {
         $req = $request->all();
-
+        
         // 获取分类信息
         $category = $this->category->select();
-
+        
         // 查找家谱树
         $tree = array_reverse($this->tree($category->toArray(), $category_id));
-        
+
         // 获取标签搜索条件
         if (isset($req['ev']) && !empty($req['ev'])) {
             $ev = explode('%', $req['ev']);
@@ -200,7 +200,7 @@ class GoodsController extends Controller
         } else {
             $data['ev'] = [];
         }
-
+        
         // 获取排序搜索条件
         if(isset($req['sort']) && !empty($req['sort'])){
             $data['sort'] = $req['sort'];
@@ -227,7 +227,7 @@ class GoodsController extends Controller
             // 获取货品列表
             $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM);
         }
-
+        
         // 获取分类标签信息
         $labelInfo = $this->category->find(['id' => $category_id])->labels;
 
@@ -244,7 +244,7 @@ class GoodsController extends Controller
         $data['labels'] = $labels;
         $data['attrs'] = $attrs;
         $data['tree'] = $tree;
-        
+
         return view('home.goods.list', compact('data'));
     }
 
