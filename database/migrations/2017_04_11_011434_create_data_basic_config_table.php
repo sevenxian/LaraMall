@@ -14,7 +14,7 @@ class CreateDataBasicConfigTable extends Migration
     public function up()
     {
         Schema::create('data_basic_config', function (Blueprint $table) {
-            $table->increments('id')->comment('网站基本配置表');
+            $table->increments('id')->unsigned()->comment('网站基本配置表');
             $table->string('site_name',32)->comment('网站名称');
             $table->string('site_describe',255)->comment('网站描述');
             $table->string('telephone',32)->comment('网站400电话');

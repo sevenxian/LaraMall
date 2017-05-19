@@ -14,9 +14,9 @@ class CreateRelRecommendGoodsTable extends Migration
     public function up()
     {
         Schema::create('rel_recommend_goods', function (Blueprint $table) {
-            $table->increments('id')->comment('推荐位与货品关联表');
-            $table->integer('recommend_id')->index()->comment('推荐位ID');
-            $table->integer('cargo_id')->index()->comment('货品ID');
+            $table->increments('id')->unsigned()->comment('推荐位与货品关联表');
+            $table->integer('recommend_id')->unsigned()->index()->comment('推荐位ID');
+            $table->integer('cargo_id')->unsigned()->index()->comment('货品ID');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
         });

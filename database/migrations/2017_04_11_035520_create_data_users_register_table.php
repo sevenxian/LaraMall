@@ -14,7 +14,7 @@ class CreateDataUsersRegisterTable extends Migration
     public function up()
     {
         Schema::create('data_users_register', function (Blueprint $table) {
-            $table->increments('id')->comment('用户注册原始表');
+            $table->increments('id')->unsigned()->comment('用户注册原始表');
             $table->string('email',32)->nullable()->index()->comment('邮箱');
             $table->string('tel',32)->nullable()->index()->comment('手机号码');
             $table->string('password',255)->comment('密码');

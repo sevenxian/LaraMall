@@ -14,7 +14,7 @@ class CreateDataCategoryLabelsTable extends Migration
     public function up()
     {
         Schema::create('data_category_labels', function (Blueprint $table) {
-            $table->increments('id')->comment('分类标签表');
+            $table->increments('id')->unsigned()->comment('分类标签表');
             $table->string('category_label_name',32)->comment('分类标签名称');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');

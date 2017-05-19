@@ -14,11 +14,11 @@ class CreateDataOrdersDetailsTable extends Migration
     public function up()
     {
         Schema::create('data_orders_details', function (Blueprint $table) {
-            $table->increments('id')->comment('商品订单详情表');
+            $table->increments('id')->unsigned()->comment('商品订单详情表');
             $table->char('order_guid',32)->index()->comment('商品订单编号');
-            $table->integer('user_id')->index()->comment('用户ID');
-            $table->integer('goods_id')->index()->comment('商品ID');
-            $table->integer('cargo_id')->index()->comment('货品ID');
+            $table->integer('user_id')->unsigned()->index()->comment('用户ID');
+            $table->integer('goods_id')->unsigned()->index()->comment('商品ID');
+            $table->integer('cargo_id')->unsigned()->index()->comment('货品ID');
             $table->tinyInteger('order_status')->default(1)->comment('1:待付款 2: 待发货 3:待收货 4:待评价 5:完成');
             $table->integer('commodity_number')->comment('货品数量');
             $table->decimal('cargo_price',11,2)->comment('货品价格');

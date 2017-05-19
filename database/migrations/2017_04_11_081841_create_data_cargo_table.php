@@ -14,9 +14,9 @@ class CreateDataCargoTable extends Migration
     public function up()
     {
         Schema::create('data_cargo', function (Blueprint $table) {
-            $table->increments('id')->comment('货品表');
-            $table->integer('category_id')->index()->comment('分类ID');
-            $table->integer('goods_id')->index()->comment('商品ID');
+            $table->increments('id')->unsigned()->comment('货品表');
+            $table->integer('category_id')->unsigned()->index()->comment('分类ID');
+            $table->integer('goods_id')->unsigned()->index()->comment('商品ID');
             $table->string('cargo_name')->comment('货品名称');
             $table->json('cargo_ids')->comment('货品标签');
             $table->string('cargo_cover', 255)->comment('货品封面');

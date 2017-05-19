@@ -14,7 +14,7 @@ class CreateDataFriendLinkTable extends Migration
     public function up()
     {
         Schema::create('data_friend_link', function (Blueprint $table) {
-            $table->increments('id')->comment('友情链接表');
+            $table->increments('id')->unsigned()->comment('友情链接表');
             $table->string('name',32)->comment('友情链接名称');
             $table->tinyInteger('type')->comment('类型 1：图片 2:文字');
             $table->string('url',64)->comment('链接地址');
