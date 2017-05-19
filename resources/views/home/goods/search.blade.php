@@ -80,7 +80,7 @@
                                         <p class="title fl"><a href="/home/goodsDetail/{{ $cargo->id }}">{{ $cargo->cargo_name }}</a></p>
                                         <p class="price fl">
                                             <b>¥</b>
-                                            <strong>{{ $cargo->cargo_price }}</strong>
+                                            <strong>{{ $cargo->cargo_discount }}</strong>
                                         </p>
                                         <p class="number fl">
                                             <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">

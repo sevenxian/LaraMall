@@ -268,7 +268,7 @@
                                     <a href="/home/goodsDetail/{{ $relGoodsActivity->cargo->id }}">
                                         <img src="{{ env('QINIU_DOMAIN') }}{{ $relGoodsActivity->cargo->cargo_cover }}?imageView2/1/w/350/h/350"/>
                                         <div class="pro-title ">{{ str_limit($relGoodsActivity->cargo->cargo_name, 50, '...') }}</div>
-                                        <span class="e-price ">￥{{ $relGoodsActivity->cargo->cargo_price }}</span> <span class="seckill-price"><i>¥</i><del>{{ $relGoodsActivity->promotion_price }}</del></span>
+                                        <span class="e-price ">￥{{ $relGoodsActivity->cargo->cargo_price }}</span> <span class="seckill-price"><i>¥</i><del>{{ $relGoodsActivity->cargo->cargo_discount }}</del></span>
                                     </a>
                                 </li>
                             @endif
@@ -293,7 +293,7 @@
                                     <a href="/home/goodsDetail/{{ $cargo->id }}">
                                         <img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/350/h/350"/>
                                         <div class="pro-title ">{{ str_limit($cargo->cargo_name, 50, '...') }}</div>
-                                        <span class="e-price ">￥{{ $cargo->cargo_price }}</span>
+                                        <span class="e-price ">￥{{ $cargo->cargo_discount }}</span>
                                     </a>
                                 </li>
                             @endif

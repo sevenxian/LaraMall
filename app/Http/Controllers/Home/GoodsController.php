@@ -241,6 +241,7 @@ class GoodsController extends Controller
         $data['category_id'] = $category_id;
         $data['cargos'] = $cargos;
         $data['labelInfo'] = $labelInfo;
+//        dd($labelInfo->toArray());
         $data['labels'] = $labels;
         $data['attrs'] = $attrs;
         $data['tree'] = $tree;

@@ -161,7 +161,7 @@
                                 <li class="price iteminfo_price">
                                     <dt>秒杀价</dt>
                                     <dd><em>¥</em><b
-                                                class="sys_item_price">{{ $data['activity']->cargoActivity->promotion_price }}</b>
+                                                class="sys_item_price">{{ $data['cargo']->cargo_discount }}</b>
                                     </dd>
                                 </li>
                                 <li class="price iteminfo_mktprice">
@@ -171,55 +171,13 @@
                             @else
                                 <li class="price iteminfo_price">
                                     <dt>价格</dt>
-                                    <dd><em>¥</em><b class="sys_item_price">{{ $data['cargo']->cargo_price }}</b></dd>
+                                    <dd><em>¥</em><b class="sys_item_price">{{ $data['cargo']->cargo_discount }}</b></dd>
                                 </li>
                             @endif
                             <div class="clear"></div>
                         </div>
 
-                    {{--<!--地址-->--}}
-                    {{--<dl class="iteminfo_parameter freight">--}}
-                    {{--<dt>配送至</dt>--}}
-                    {{--<div class="iteminfo_freprice">--}}
-                    {{--<div class="am-form-content address">--}}
-                    {{--<select data-am-selected>--}}
-                    {{--<option value="a">浙江省</option>--}}
-                    {{--<option value="b">湖北省</option>--}}
-                    {{--</select>--}}
-                    {{--<select data-am-selected>--}}
-                    {{--<option value="a">温州市</option>--}}
-                    {{--<option value="b">武汉市</option>--}}
-                    {{--</select>--}}
-                    {{--<select data-am-selected>--}}
-                    {{--<option value="a">瑞安区</option>--}}
-                    {{--<option value="b">洪山区</option>--}}
-                    {{--</select>--}}
-                    {{--</div>--}}
-                    {{--<div class="pay-logis">--}}
-                    {{--快递<b class="sys_item_freprice">10</b>元--}}
-                    {{--</div>--}}
-                    {{--</div>--}}
-                    {{--</dl>--}}
-                    {{--<div class="clear"></div>--}}
-
-                    {{--<!--销量-->--}}
-                    {{--<ul class="tm-ind-panel">--}}
-                    {{--<li class="tm-ind-item tm-ind-sellCount canClick">--}}
-                    {{--<div class="tm-indcon"><span class="tm-label">月销量</span><span class="tm-count">1015</span>--}}
-                    {{--</div>--}}
-                    {{--</li>--}}
-                    {{--<li class="tm-ind-item tm-ind-sumCount canClick">--}}
-                    {{--<div class="tm-indcon"><span class="tm-label">累计销量</span><span class="tm-count">6015</span>--}}
-                    {{--</div>--}}
-                    {{--</li>--}}
-                    {{--<li class="tm-ind-item tm-ind-reviewCount canClick tm-line3">--}}
-                    {{--<div class="tm-indcon"><span class="tm-label">累计评价</span><span class="tm-count">640</span>--}}
-                    {{--</div>--}}
-                    {{--</li>--}}
-                    {{--</ul>--}}
-                    {{--<div class="clear"></div>--}}
-
-                    <!--各种规格-->
+                        <!--各种规格-->
                         <dl class="iteminfo_parameter sys_item_specpara">
                             <dt class="theme-login">
                             <div class="cart-title">可选规格<span class="am-icon-angle-right"></span></div>
@@ -541,15 +499,19 @@
 @section('customJs')
     <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
-        var token= "{{ csrf_token() }}";
-        var activity = "@if(!empty($data['activity'])) 1 @else 0 @endif";
-        var cargoActivity = @if(!empty($data['activity']->cargoActivity)) {{ $data['activity']->cargoActivity }} @else false @endif;
+        var token= '{{ csrf_token() }}';
+
+        @if(!empty($data['activity']) && !empty($data['activity']->cargoActivity))
+            var activity = true;
+            var activity_id = '{{ $data['activity']->id }}';
+        @else
+            var activity = false;
+        @endif
+
         var user = '{{ Session::has('user') }}';
         var cargo_id = '{{ $data["cargo"]->id }}';
-        var activity_id = @if(!empty($data['activity']->id)) {{ $data['activity']->id }} @else false @endif;
         var QINIU_DOMAIN = "{{ env('QINIU_DOMAIN') }}";
         var images = "{{ asset('/images/hwbn40x40.jpg') }}";
-
     </script>
     <script src="{{ asset('/handle/goods_detail.js') }}" type="text/javascript"></script>
 @stop

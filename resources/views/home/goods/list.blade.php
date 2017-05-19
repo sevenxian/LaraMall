@@ -123,7 +123,7 @@
                                             <p class="title fl">{{ $cargo->cargo_name }}</p>
                                             <p class="price fl">
                                                 <b>¥</b>
-                                                <strong>{{ $cargo->cargo_price }}</strong>
+                                                <strong>{{ $cargo->cargo_discount }}</strong>
                                             </p>
                                             <p class="number fl">
                                                 <a href="javascript:;" class="collection"
@@ -182,6 +182,6 @@
     <script type="text/javascript" src="/basic/js/quick_links.js"></script>
     <script type="text/javascript" src="/js/check.js"></script>
     <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
-    <script type="text/javascript">var token= "{{ csrf_token() }}"</script>
+    <script type="text/javascript">var token = "{{ csrf_token() }}"</script>
     <script src="{{ asset('/handle/goods_list.js') }}" type="text/javascript"></script>
 @stop
