@@ -43,10 +43,10 @@
                         <li class="qc last"><a href="javascript:;" onclick="layer.msg('暂未开通,敬请期待')">大包装</a></li>
                     </ul>
                     @if(false)
-                    <div class="nav-extra">
-                        <i class="am-icon-user-secret am-icon-md nav-user"></i><b></b>我的福利
-                        <i class="am-icon-angle-right" style="padding-left: 10px;"></i>
-                    </div>
+                        <div class="nav-extra">
+                            <i class="am-icon-user-secret am-icon-md nav-user"></i><b></b>我的福利
+                            <i class="am-icon-angle-right" style="padding-left: 10px;"></i>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -55,12 +55,15 @@
                 <div class="am-u-sm-12 am-u-md-12">
                     <div class="theme-popover">
                         <div class="searchAbout">
-                            <span class="font-pale">电脑 > 电脑整机 > 笔记本</span>
+                            <span class="font-pale">{{ $data['tree'][0]['name'] }}
+                                <em>&gt;</em>{{ $data['tree'][1]['name'] }}
+                                <em>&gt;</em>{{ $data['tree'][2]['name'] }}</span>
                         </div>
                         <ul class="select">
                             <p class="title font-normal">
-                                <span class="fl">笔记本 商品筛选</span>
-                                <span class="total fl">共<strong class="num">997</strong>件相关商品</span>
+                                <span class="fl">{{ $data['tree'][2]['name'] }} 商品筛选 </span>
+                                <span class="total fl">共<strong
+                                            class="num">{{ count($data['cargos']) }}</strong>件相关商品</span>
                             </p>
                             <div class="clear"></div>
                             @if(!empty($data['ev']))
@@ -68,9 +71,13 @@
                                     <dl>
                                         <dt>已选</dt>
                                         <dd class="select-no" style="display: none;"></dd>
-                                        <p class="eliminateCriteria" style="display: block;" onclick="location.href='/home/goodsList/{{ $data['category_id'] }}'">清除</p>
+                                        <p class="eliminateCriteria" style="display: block;"
+                                           onclick="location.href='{{ $GoodsListPresenter->destroy($data['category_id'], $data['sort']) }}'">
+                                            清除</p>
                                         @foreach($data['ev'] as $k => $v)
-                                            <dd class="selected" id="selectA"><a href="{{ $GoodsListPresenter->delSelectedUrl($k, $v, $data['ev']) }}">{{ $data['labels'][$k] }}：{{ $data['attrs'][$v] }}</a></dd>
+                                            <dd class="selected" id="selectA"><a
+                                                        href="{{ $GoodsListPresenter->delSelectedUrl($k, $v, $data['ev'], $data['sort']) }}">{{ $data['labels'][$k] }}
+                                                    ：{{ $data['attrs'][$v] }}</a></dd>
                                         @endforeach
                                     </dl>
                                 </li>
@@ -83,7 +90,9 @@
                                             <dt class="am-badge am-round">{{ $label->category_label_name }}</dt>
                                             <div class="dd-conent">
                                                 @foreach($label->labels as $attr)
-                                                    <dd><a href="{{ $GoodsListPresenter->createUrl($label->id, $attr->id, $data['ev']) }}">{{ $attr->attribute_name }}</a></dd>
+                                                    <dd>
+                                                        <a href="{{ $GoodsListPresenter->createUrl($label->id, $attr->id, $data['ev'], $data['sort']) }}">{{ $attr->attribute_name }}</a>
+                                                    </dd>
                                                 @endforeach
                                             </div>
                                         </dl>
@@ -93,27 +102,32 @@
                         </ul>
                         <div class="clear"></div>
                     </div>
-                    <div class="search-content">
-                        <div class="sort">
-                            <li class="first"><a title="综合">综合排序</a></li>
-                            <li><a title="销量">销量排序</a></li>
-                            <li><a title="价格">价格优先</a></li>
-                            <li class="big"><a title="评价" href="#">评价为主</a></li>
-                        </div>
+                    <div>
+                        <ul class="sort">
+                            <li {{ !isset($_GET['sort']) ? 'class=first' : '' }}><a
+                                        href="{{ $GoodsListPresenter->createSortUrl() }}" title="综合">综合排序</a></li>
+                            <li {{ isset($_GET['sort']) && strpos($_GET['sort'], 'sort') !== false ? 'class=first' : '' }}>
+                                <a href="{{ $GoodsListPresenter->createSortUrl('sort') }}" title="价格">价格</a></li>
+                            <li {{ isset($_GET['sort']) && strpos($_GET['sort'], 'comment') !== false ? 'class=first' : '' }}>
+                                <a href="{{ $GoodsListPresenter->createSortUrl('comment') }}" title="评论数"
+                                   href="#">评论数</a></li>
+                        </ul>
                         <div class="clear"></div>
                         <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 boxes">
                             @foreach($data['cargos'] as $cargo)
                                 @if($cargo->cargo_status == 2)
                                     <li>
                                         <div class="i-pic limit">
-                                            <a href="/home/goodsDetail/{{ $cargo->id }}"><img src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/430/h/430"/></a>
+                                            <a href="/home/goodsDetail/{{ $cargo->id }}"><img
+                                                        src="{{ env('QINIU_DOMAIN') }}{{ $cargo->cargo_cover }}?imageView2/1/w/430/h/430"/></a>
                                             <p class="title fl">{{ $cargo->cargo_name }}</p>
                                             <p class="price fl">
                                                 <b>¥</b>
-                                                <strong>{{ $cargo->cargo_price }}</strong>
+                                                <strong>{{ $cargo->cargo_discount }}</strong>
                                             </p>
                                             <p class="number fl">
-                                                <a href="javascript:;" class="collection" data-cargo-id="{{ $cargo->id }}">
+                                                <a href="javascript:;" class="collection"
+                                                   data-cargo-id="{{ $cargo->id }}">
 
                                                     @if(!empty($cargo->goodscollection->toArray()) && !empty(\Session::get('user')->user_id))
                                                         @foreach($cargo->goodscollection as $item)
@@ -135,50 +149,7 @@
                             @endforeach
                         </ul>
                     </div>
-                    <div class="search-side">
-                        <div class="side-title">
-                            经典搭配
-                        </div>
-                        <li>
-                            <div class="i-pic check">
-                                <img src="/images/cp.jpg"/>
-                                <p class="check-title">萨拉米 1+1小鸡腿</p>
-                                <p class="price fl">
-                                    <b>¥</b>
-                                    <strong>29.90</strong>
-                                </p>
-                                <p class="number fl">
-                                    销量<span>1110</span>
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="i-pic check">
-                                <img src="/images/cp2.jpg"/>
-                                <p class="check-title">ZEK 原味海苔</p>
-                                <p class="price fl">
-                                    <b>¥</b>
-                                    <strong>8.90</strong>
-                                </p>
-                                <p class="number fl">
-                                    销量<span>1110</span>
-                                </p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="i-pic check">
-                                <img src="/images/cp.jpg"/>
-                                <p class="check-title">萨拉米 1+1小鸡腿</p>
-                                <p class="price fl">
-                                    <b>¥</b>
-                                    <strong>29.90</strong>
-                                </p>
-                                <p class="number fl">
-                                    销量<span>1110</span>
-                                </p>
-                            </div>
-                        </li>
-                    </div>
+
                     <div class="clear"></div>
                     <!--分页 -->
                     @if(!$data['cargos']->isEmpty())
@@ -209,7 +180,8 @@
         window.jQuery || document.write('<script src="basic/js/jquery-1.9.min.js"><\/script>');
     </script>
     <script type="text/javascript" src="/basic/js/quick_links.js"></script>
+    <script type="text/javascript" src="/js/check.js"></script>
     <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
-    <script type="text/javascript">var token= "{{ csrf_token() }}"</script>
+    <script type="text/javascript">var token = "{{ csrf_token() }}"</script>
     <script src="{{ asset('/handle/goods_list.js') }}" type="text/javascript"></script>
 @stop

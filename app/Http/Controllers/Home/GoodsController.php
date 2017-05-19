@@ -181,8 +181,13 @@ class GoodsController extends Controller
      */
     public function goodsList(Request $request, $category_id)
     {
-
         $req = $request->all();
+        
+        // 获取分类信息
+        $category = $this->category->select();
+        
+        // 查找家谱树
+        $tree = array_reverse($this->tree($category->toArray(), $category_id));
 
         // 获取标签搜索条件
         if (isset($req['ev']) && !empty($req['ev'])) {
@@ -195,10 +200,18 @@ class GoodsController extends Controller
         } else {
             $data['ev'] = [];
         }
+        
+        // 获取排序搜索条件
+        if(isset($req['sort']) && !empty($req['sort'])){
+            $data['sort'] = $req['sort'];
+        }else{
+            $data['sort'] = '';
+        }
+
+        // 当前页
+        $page = isset($req['page']) ? $req['page'] : 1;
 
         if (!empty($data['ev'])) {
-            // 当前页
-            $page = isset($req['page']) ? $req['page'] : 1;
             // 拼装查询条件
             $where = [];
             foreach ($data['ev'] as $k => $v) {
@@ -214,7 +227,7 @@ class GoodsController extends Controller
             // 获取货品列表
             $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM);
         }
-
+        
         // 获取分类标签信息
         $labelInfo = $this->category->find(['id' => $category_id])->labels;
 
@@ -226,12 +239,12 @@ class GoodsController extends Controller
         $attrs = $this->categoryAttr->selectByWhereIn('category_label_id', $lids)->pluck('attribute_name', 'id')->toArray();
 
         $data['category_id'] = $category_id;
-
         $data['cargos'] = $cargos;
-
         $data['labelInfo'] = $labelInfo;
+//        dd($labelInfo->toArray());
         $data['labels'] = $labels;
         $data['attrs'] = $attrs;
+        $data['tree'] = $tree;
 
         return view('home.goods.list', compact('data'));
     }

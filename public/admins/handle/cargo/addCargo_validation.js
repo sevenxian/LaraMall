@@ -14,13 +14,6 @@ $('#cargo').bootstrapValidator({
                 }
             }
         },
-        cargo_discount: {
-            validators: {
-                notEmpty: {
-                    message: '货品折扣价不能为空!'
-                }
-            }
-        },
         inventory: {
             validators: {
                 notEmpty: {

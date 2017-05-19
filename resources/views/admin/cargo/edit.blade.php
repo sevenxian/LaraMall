@@ -53,12 +53,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="cargo_discount" class="col-md-1 control-label">货品折扣价</label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="cargo_discount" :value="cargo.cargo_discount" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label for="inventory" class="col-md-1 control-label">库存量</label>
                                     <div class="col-md-6">
                                         <input type="text" name="inventory" :value="cargo.inventory" class="form-control">

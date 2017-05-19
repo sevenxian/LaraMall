@@ -28,7 +28,8 @@ class Activity extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author zhulinjie
      */
-    public function relGoodsActivitys(){
+    public function relGoodsActivitys()
+    {
         return $this->hasMany(RelGoodsActivity::class);
     }
 
@@ -41,5 +42,18 @@ class Activity extends Model
     public function cargos()
     {
         return $this->belongsToMany(Cargo::class, 'rel_goods_activitys', 'activity_id', 'cargo_id')->withTimestamps();
+    }
+
+    /**
+     * 限制查询只包括已经结束但未添加结束标记的活动
+     *
+     * @param $query
+     * @param $ctime
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function scopeOver($query, $ctime)
+    {
+        return $query->where('is_over', 0)->where('end_timestamp', '<', $ctime);
     }
 }

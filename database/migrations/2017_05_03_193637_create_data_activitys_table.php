@@ -21,6 +21,7 @@ class CreateDataActivitysTable extends Migration
             $table->integer('start_timestamp')->unsigned()->comment('活动开始时间戳');
             $table->smallInteger('length')->unsigned()->comment('活动时长');
             $table->integer('end_timestamp')->unsigned()->comment('活动结束时间戳');
+            $table->tinyInteger('is_over')->default(0)->comment('结束标识 0 未结束 1 已结束 默认 0');
             $table->timestamps();
         });
     }
