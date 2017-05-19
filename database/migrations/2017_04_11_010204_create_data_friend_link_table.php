@@ -18,7 +18,7 @@ class CreateDataFriendLinkTable extends Migration
             $table->string('name',32)->comment('友情链接名称');
             $table->tinyInteger('type')->comment('类型 1：图片 2:文字');
             $table->string('url',64)->comment('链接地址');
-            $table->string('image')->nullable()->comment('图片名称');
+            $table->string('image',64)->nullable()->comment('图片名称');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
         });

@@ -15,7 +15,6 @@ class CreateDataCategoryAttributesTable extends Migration
     {
         Schema::create('data_category_attributes', function (Blueprint $table) {
             $table->increments('id')->comment('分类标签值表');
-            $table->integer('category_label_id')->index()->comment('分类标签表ID');
             $table->string('attribute_name',32)->comment('标签值');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');

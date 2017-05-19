@@ -18,6 +18,7 @@ class CreateDataGoodsAttributesTable extends Migration
             $table->integer('goods_label_id')->index()->comment('商品标签ID');
             $table->string('goods_label_name',64)->comment('商品标签值名称');
             $table->timestamps();
+            $table->softDeletes()->comment('软删除');
         });
     }
 
