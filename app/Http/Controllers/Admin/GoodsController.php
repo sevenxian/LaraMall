@@ -213,8 +213,16 @@ class GoodsController extends Controller
     public function addGoodsLabel(Request $request)
     {
         $data = $request->all();
-        $res = $this->goodsLabel->insert($data);
-        return responseMsg($res);
+        // 先判断标签是否存在
+        if(!$this->goodsLabel->find($data)){
+            $res = $this->goodsLabel->insert($data);
+            if(!$res){
+                return responseMsg('商品标签添加失败', 400);
+            }
+            return responseMsg($res);
+        }else{
+            return responseMsg('商品标签已经存在', 400);
+        }
     }
 
     /**

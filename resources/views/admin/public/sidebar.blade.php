@@ -41,8 +41,12 @@
                     <span class="arrow {{ $aside->openTag(['goods', 'cargoList', 'cargoActivity']) }}"></span>
                 </a>
                 <ul class="sub" {{ $aside->displayBlock(['goods', 'cargoList', 'cargoActivity']) }}>
+                   {{-- @if(auth('admin')->user())
+                        @if(auth('admin')->user()->hasRole('goods-manager'))
+                            <li><a href="/admin/goods">商品列表</a></li>
+                        @endif
+                    @endif--}}
                     <li><a href="/admin/goods">商品列表</a></li>
-
                     <li><a href="/admin/goods/create">添加商品</a></li>
                     <li><a href="/admin/cargoActivity">活动列表</a></li>
                 </ul>

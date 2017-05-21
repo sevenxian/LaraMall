@@ -73,17 +73,21 @@ new Vue({
             }
 
             // 分类标签值添加请求
-            axios.post('/admin/addCategoryAttr', {category_label_id: category_label_id, attribute_name: attribute_name}).then(response => {
+            axios.post('/admin/addCategoryAttr', {category_id: this.lv3s.id, category_label_id: category_label_id, attribute_name: attribute_name}).then(response => {
                 if(response.data.ServerNo != 200){
                     sweetAlert("操作失败!", response.data.ResultData, "error");
                     return;
                 }
                 // 接收返回数据
                 var data = response.data.ResultData;
+                if(!data){
+                    sweetAlert("操作失败!", '分类标签值已经存在', "error");
+                    return;
+                }
                 // 获取标签索引
                 var index = $(e.target).data('index');
                 // 前端实时添加
-                this.categoryLabels[index].labels.push(data);
+                this.categoryLabels[index].categoryAttrs.push(data);
                 sweetAlert("操作成功!", '分类标签值添加成功', "success");
             // 请求失败的情况
             }).catch(error => {

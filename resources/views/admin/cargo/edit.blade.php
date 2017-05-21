@@ -63,7 +63,7 @@
                                     <div class="col-md-11">
                                         <div class="radios" style="padding-top: 8px;">
                                             <div class="row">
-                                                <div class="col-md-3" v-for="attribute in categoryLabel.labels">
+                                                <div class="col-md-3" v-for="attribute in categoryLabel.categoryAttrs">
                                                     <label class="label_radio" @click="selectLabel">
                                                         <input :name="'categoryLabel'+categoryLabel.id" :value="attribute.id" type="radio" :checked="labelCargo[categoryLabel.id] == attribute.id" />@{{ attribute.attribute_name }}
                                                     </label>

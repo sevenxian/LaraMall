@@ -74,9 +74,9 @@ class HomeGoodsListPresenter
         } else {
             $str = $this->convertUrl($ev);
             if (!$sort) {
-                $url = \Request::url() . '?ev=' . $str . '%' . $labelId . '_' . $attrId;
+                $url = \Request::url() . '?ev=' . $str . ',' . $labelId . '_' . $attrId;
             } else {
-                $url = \Request::url() . '?ev=' . $str . '%' . $labelId . '_' . $attrId . '&sort=' . $sort;
+                $url = \Request::url() . '?ev=' . $str . ',' . $labelId . '_' . $attrId . '&sort=' . $sort;
             }
         }
         return $url;
@@ -93,9 +93,9 @@ class HomeGoodsListPresenter
     {
         $str = '';
         foreach ($ev as $k => $v) {
-            $str .= $k . '_' . $v . '%';
+            $str .= $k . '_' . $v . ',';
         }
-        return rtrim($str, '%');
+        return rtrim($str, ',');
     }
 
     /**
@@ -122,16 +122,27 @@ class HomeGoodsListPresenter
                 $queryString = '';
             }
         }
-
-        switch ($param) {
-            case 'sort':
-                return $queryString ? \Request::url() . '?' . $queryString . '&sort=sort_asc' : \Request::url() . '?sort=sort_asc';
-                break;
-            case 'comment':
-                return $queryString ? \Request::url() . '?' . $queryString . '&sort=comment_asc' : \Request::url() . '?sort=comment_asc';
-                break;
-            default:
-                return $queryString ? \Request::url() . '?' . $queryString : \Request::url();
+        
+        // 说明有排序条件
+        if ($param) {
+            $sort = explode('_', $param);
+            switch ($sort[0]) {
+                // 按销量排序
+                case 'sale':
+                    return $queryString ? \Request::url() . '?' . $queryString . '&sort=' . $param : \Request::url() . '?sort=' . $param;
+                    break;
+                // 按价格排序 
+                case 'sort':
+                    return $queryString ? \Request::url() . '?' . $queryString . '&sort=' . $param : \Request::url() . '?sort=' . $param;
+                    break;
+                // 按评论排序
+                case 'comment':
+                    return $queryString ? \Request::url() . '?' . $queryString . '&sort=' . $param : \Request::url() . '?sort=' . $param;
+                default:
+                    return '/home/index';
+            }
         }
+
+        return $queryString ? \Request::url() . '?' . $queryString : \Request::url();
     }
 }

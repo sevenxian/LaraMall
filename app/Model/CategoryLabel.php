@@ -38,13 +38,13 @@ class CategoryLabel extends Model
     }
 
     /**
-     * 一对多关联 / 一个标签拥有多个标签值
+     * 多对多关联关系 / 一个标签拥有多个标签值
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * @author zhulinjie
      */
-    public function labels()
+    public function attrs()
     {
-        return $this->hasMany(CategoryAttribute::class);
+        return $this->belongsToMany(CategoryAttribute::class, 'rel_category_label_attributes', 'lid', 'aid');
     }
 }
