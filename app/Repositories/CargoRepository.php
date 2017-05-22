@@ -38,16 +38,20 @@ class CargoRepository
 
     /**
      * 通过whereIn获取多条数据
-     * 
+     *
      * @param $fields
      * @param array $ids
-     * @param array $where
+     * @param array $sort
      * @return mixed
      * @author zhulinjie
      */
-    public function selectWhereIn($fields, array $ids, array $where = [])
+    public function selectWhereIn($fields, array $ids, array $sort = [])
     {
-        return $this->model->where($where)->whereIn($fields, $ids)->get();
+        if(empty($sort)){
+            return $this->model->whereIn($fields, $ids)->get();
+        }else{
+            return $this->model->whereIn($fields, $ids)->orderBy($sort[0], $sort[1])->get();
+        }
     }
 
     /**

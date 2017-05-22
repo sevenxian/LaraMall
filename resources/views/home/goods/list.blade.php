@@ -83,13 +83,13 @@
                                 </li>
                             @endif
                             <div class="clear"></div>
-                            @foreach($data['labelInfo'] as $label)
+                            @foreach($data['categoryLabels'] as $label)
                                 @if(!isset($data['ev'][$label->id]))
                                     <li class="select-list">
                                         <dl id="select1">
                                             <dt class="am-badge am-round">{{ $label->category_label_name }}</dt>
                                             <div class="dd-conent">
-                                                @foreach($label->labels as $attr)
+                                                @foreach($label->categoryAttrs as $attr)
                                                     <dd>
                                                         <a href="{{ $GoodsListPresenter->createUrl($label->id, $attr->id, $data['ev'], $data['sort']) }}">{{ $attr->attribute_name }}</a>
                                                     </dd>
@@ -106,10 +106,12 @@
                         <ul class="sort">
                             <li {{ !isset($_GET['sort']) ? 'class=first' : '' }}><a
                                         href="{{ $GoodsListPresenter->createSortUrl() }}" title="综合">综合排序</a></li>
+                            <li {{ isset($_GET['sort']) && strpos($_GET['sort'], 'sale') !== false ? 'class=first' : '' }}>
+                                <a href="{{ $GoodsListPresenter->createSortUrl(strpos($data['sort'], 'sale') === false ? 'sale_asc' : $data['sort']) }}" title="销量">销量</a></li>
                             <li {{ isset($_GET['sort']) && strpos($_GET['sort'], 'sort') !== false ? 'class=first' : '' }}>
-                                <a href="{{ $GoodsListPresenter->createSortUrl('sort') }}" title="价格">价格</a></li>
+                                <a href="{{ $GoodsListPresenter->createSortUrl(strpos($data['sort'], 'sort') === false ? 'sort_asc' : $data['sort']) }}" title="价格">价格</a></li>
                             <li {{ isset($_GET['sort']) && strpos($_GET['sort'], 'comment') !== false ? 'class=first' : '' }}>
-                                <a href="{{ $GoodsListPresenter->createSortUrl('comment') }}" title="评论数"
+                                <a href="{{ $GoodsListPresenter->createSortUrl(strpos($data['sort'], 'comment') === false ? 'comment_asc' : $data['sort']) }}" title="评论数"
                                    href="#">评论数</a></li>
                         </ul>
                         <div class="clear"></div>

@@ -71,7 +71,7 @@ class GoodsCollectionController extends Controller
                         $tmp = json_decode($category_attr_id->category_attr_ids,1);
                         foreach ($tmp as $k => $v)
                         {
-                            $str .= $k.'_'.$v.'%';
+                            $str .= $k.'_'.$v.',';
                         }
                     }
                     $data[$key]['category_attr_id'] = rtrim($str,'%');

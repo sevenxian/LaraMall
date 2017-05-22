@@ -12,7 +12,8 @@ use App\Repositories\GoodsAttributeRepository;
 use App\Repositories\GoodsRepository;
 use App\Repositories\IndexGoodsRepository;
 use App\Repositories\RecommendRepository;
-use App\Repositories\RelGoodsActivityRepository;
+use App\Repositories\RelCategoryAttributeRepository;
+use App\Repositories\RelCategoryLabelAttributeRepository;
 use App\Repositories\RelGoodsAttrRepository;
 use App\Repositories\RelLabelCargoRepository;
 use App\Repositories\RelRecommendGoodRepository;
@@ -28,7 +29,7 @@ class CargoController extends Controller
      * @author zhulinjie
      */
     protected $goods;
-
+    
     /**
      * 分类操作类
      *
@@ -36,7 +37,7 @@ class CargoController extends Controller
      * @author zhulinjie
      */
     protected $category;
-
+    
     /**
      * 分类标签值操作类
      *
@@ -44,7 +45,7 @@ class CargoController extends Controller
      * @author zhulinjie
      */
     protected $categoryAttribute;
-
+    
     /**
      * 商品标签值操作类
      *
@@ -118,6 +119,18 @@ class CargoController extends Controller
     protected $relGA;
 
     /**
+     * @var
+     * @author zhulinjie
+     */
+    protected $relCLA;
+
+    /**
+     * @var
+     * @author zhulinjie
+     */
+    protected $relCA;
+
+    /**
      * CargoController constructor.
      * @param GoodsRepository $goodsRepository
      * @param CategoryRepository $categoryRepository
@@ -135,7 +148,9 @@ class CargoController extends Controller
         IndexGoodsRepository $indexGoodsRepository,
         RecommendRepository $recommendRepository,
         RelRecommendGoodRepository $relRecommendGoodRepository,
-        RelGoodsAttrRepository $relGoodsAttrRepository
+        RelGoodsAttrRepository $relGoodsAttrRepository,
+        RelCategoryLabelAttributeRepository $relCategoryLabelAttributeRepository,
+        RelCategoryAttributeRepository $relCategoryAttributeRepository
     )
     {
         // 注入商品操作类
@@ -162,6 +177,10 @@ class CargoController extends Controller
         $this->relRG = $relRecommendGoodRepository;
         // 注入商品标签值关联操作类
         $this->relGA = $relGoodsAttrRepository;
+        // 注入商品标签键值关联表操作类
+        $this->relCLA = $relCategoryLabelAttributeRepository;
+        // 注入商品标签值关联表操作类
+        $this->relCA = $relCategoryAttributeRepository;
     }
 
     /**
@@ -173,7 +192,7 @@ class CargoController extends Controller
     {
 
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -194,7 +213,7 @@ class CargoController extends Controller
     {
         return view('admin.cargo.addCargo', compact('id'));
     }
-    
+
     /**
      * 获取货品相关信息
      *
@@ -207,22 +226,22 @@ class CargoController extends Controller
         $data = $request->all();
 
         // 获取商品信息
-        $goods = $this->goods->find(['id'=>$data['goods_id']]);
+        $goods = $this->goods->find(['id' => $data['goods_id']]);
         if (!$goods) {
             return responseMsg('该商品不存在', 404);
         }
-        
+
         // 获取商品标签
         $goodsLabels = $goods->labels;
-        
+
         // 获取商品标签值
         foreach ($goodsLabels as $label) {
             $label = $label->attrs;
         }
 
         // 获取货品信息
-        if(isset($data['cargo_id'])){
-            $cargo = $this->cargo->find(['id'=>$data['cargo_id']]);
+        if (isset($data['cargo_id'])) {
+            $cargo = $this->cargo->find(['id' => $data['cargo_id']]);
             if (!$cargo) {
                 return responseMsg('该货品不存在', 404);
             }
@@ -230,9 +249,9 @@ class CargoController extends Controller
 
             // 货品拥有的分类标签键值对
             $labelCargo = $this->relLabelCargo->find(['cargo_id' => $cargo->id]);
-            if($labelCargo){
+            if ($labelCargo) {
                 $res['labelCargo'] = $labelCargo;
-            }else{
+            } else {
                 $res['labelCargo'] = '';
             }
         }
@@ -254,13 +273,22 @@ class CargoController extends Controller
         if (!$lv1s) {
             return responseMsg('该分类不存在', 404);
         }
-        
+
         // 获取分类标签
         $categoryLabels = $lv3s->labels;
 
         // 获取分类标签值
+        $categoryAttrs = $lv3s->attrs;
         foreach ($categoryLabels as $label) {
-            $label = $label->labels;
+            $list = [];
+            foreach($this->relCLA->select(['cid'=>$goods->category_id, 'lid' => $label->id]) as $attr){
+                foreach ($categoryAttrs as $categoryAttr){
+                    if($attr->aid == $categoryAttr->id){
+                        $list[] = $categoryAttr;
+                    }
+                }
+            }
+            $label->categoryAttrs = $list;
         }
         
         $res['goods'] = $goods;
@@ -282,15 +310,41 @@ class CargoController extends Controller
     public function addCategoryAttr(Request $request)
     {
         $data = $request->all();
-        // 添加操作
-        $res = $this->categoryAttribute->insert($data);
-        // 判断操作是否成功
-        if (!$res) {
-            return responseMsg('分类标签值添加失败', 400);
+
+        try{
+            \DB::beginTransaction();
+            $falg = false;
+            // 添加之前判断标签值是否存在
+            $res = $this->categoryAttribute->find(['attribute_name' => $data['attribute_name']]);
+            if(!$res){
+                $falg = true;
+                // 向分类标签值表插入记录
+                $res = $this->categoryAttribute->insert(['attribute_name' => $data['attribute_name']]);
+            }
+//            dd($data);
+            // 判断是否已经存在
+            if(!$this->relCLA->find(['cid'=>$data['category_id'], 'lid' => $data['category_label_id'], 'aid' => $res->id])){
+                $falg = true;
+                // 向分类标签键值关联表中插入记录
+                $this->relCLA->insert(['cid'=>$data['category_id'], 'lid' => $data['category_label_id'], 'aid' => $res->id]);
+            }
+            // 判断是否已经存在
+            if(!$this->relCA->find(['category_id' => $data['category_id'], 'category_attribute_id' => $res->id])){
+                $falg = true;
+                // 向分类标签值关联表中插入记录
+                $this->relCA->insert(['category_id' => $data['category_id'], 'category_attribute_id' => $res->id]);
+            }
+            \DB::commit();
+            if($falg){
+                return responseMsg($res);
+            }
+            return responseMsg('');
+        }catch (\Exception $e){
+            \DB::rollback();
+            return responseMsg($e->getMessage(), 400);
         }
-        return responseMsg($res);
     }
-    
+
     /**
      * 添加商品标签值
      *
@@ -309,7 +363,7 @@ class CargoController extends Controller
         }
         return responseMsg($res);
     }
-    
+
     /**
      * 货品图片上传
      *
@@ -333,7 +387,7 @@ class CargoController extends Controller
         }
         return responseMsg('暂无图片上传', 404);
     }
-    
+
     /**
      * 新增货品操作
      *
@@ -374,10 +428,10 @@ class CargoController extends Controller
         $standardNum = count($goods->labels->toArray());
 
         // 未选择商品规格或者说只选择了部分商品规格
-        if($standardNum != count($goodsAttrIds)){
+        if ($standardNum != count($goodsAttrIds)) {
             return responseMsg('请选择商品规格', 400);
         }
-        
+
         // 组合货品表中需要的数据
         $param['category_id'] = $data['category_id'];
         $param['goods_id'] = $data['goods_id'];
@@ -389,7 +443,7 @@ class CargoController extends Controller
         $param['cargo_discount'] = $param['cargo_price'];
         $param['cargo_original'] = json_encode($data['cargo_original']);
         $param['cargo_info'] = $data['cargo_info'];
-
+        
         // 获取三级分类
         $lv3s = $this->category->find(['id' => $data['category_id']]);
         if (!$lv3s) {
@@ -435,12 +489,12 @@ class CargoController extends Controller
             \DB::beginTransaction();
 
             // 组合查询条件
-            foreach($cargoLabels as $k => $v){
-                $where['cargo_ids->'.$k] = $v;
+            foreach ($cargoLabels as $k => $v) {
+                $where['cargo_ids->' . $k] = $v;
             }
 
             // 新增之前判断相同属性的货品是否存在，如果存在则不添加
-            if($this->cargo->find($where)){
+            if ($this->cargo->find($where)) {
                 throw new \Exception('相同规格的货品已经存在', 400);
             }
 
@@ -467,12 +521,12 @@ class CargoController extends Controller
                     $arr['goods_attr_id'] = $id;
                     $arr['goods_id'] = $data['goods_id'];
                     // 新增之前判断商品是否已经存在这个属性值，如果存在则不添加
-                    if(!$this->relGA->find($arr)){
+                    if (!$this->relGA->find($arr)) {
                         $this->relGA->insert($arr);
                     }
                 }
             }
-            
+
             // 向商品索引表中新增记录
             $indexs['goods_id'] = $data['goods_id'];
             $indexs['cargo_id'] = $cargo->id;
@@ -486,13 +540,13 @@ class CargoController extends Controller
             return responseMsg('货品添加成功');
         } catch (\Exception $e) {
             \DB::rollback();
-            if($e->getCode() == 400){
+            if ($e->getCode() == 400) {
                 return responseMsg($e->getMessage(), $e->getCode());
             }
             return responseMsg('货品添加失败', 400);
         }
     }
-    
+
     /**
      * 货品列表界面
      *
@@ -503,11 +557,11 @@ class CargoController extends Controller
     public function cargoList($id)
     {
         $cargoes = $this->cargo->select();
-        
+
 //        foreach ($cargoes as $cargo){
 //            $this->dispatch(new SendReminderEmail($cargo));
 //        }
-        
+
         return view('admin.cargo.list', compact('id'));
     }
 
@@ -524,13 +578,13 @@ class CargoController extends Controller
 
         // 获取货品列表数据
         $cargos = $this->cargo->paging(['goods_id' => $data['goods_id']], $data['perPage']);
-        
+
         // 获取货品推荐位
-        foreach($cargos as $cargo){
+        foreach ($cargos as $cargo) {
             $recommends = $this->relRG->select(['cargo_id' => $cargo->id]);
             $tmp = [];
-            if(!empty($recommends)){
-                foreach($recommends as $recommend){
+            if (!empty($recommends)) {
+                foreach ($recommends as $recommend) {
                     $tmp[] = $this->recommend->find(['id' => $recommend->recommend_id]);
                 }
             }
@@ -547,7 +601,7 @@ class CargoController extends Controller
 
     /**
      * 获取货品推荐位信息
-     * 
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @author zhulinjie
@@ -583,7 +637,7 @@ class CargoController extends Controller
         $data = $request->all();
 
         // 取消所有推荐位的情况或者是第一次设置推荐位且没有选择任何一个推荐位的情况
-        if(!isset($data['recommend_id'])){
+        if (!isset($data['recommend_id'])) {
             $data['recommend_id'] = [];
         }
 
@@ -608,8 +662,8 @@ class CargoController extends Controller
             // 获取货品推荐位
             $recommends = $this->relRG->select(['cargo_id' => $cargo->id]);
             $arr = [];
-            if(!empty($recommends)){
-                foreach($recommends as $recommend){
+            if (!empty($recommends)) {
+                foreach ($recommends as $recommend) {
                     $arr[] = $this->recommend->find(['id' => $recommend->recommend_id]);
                 }
             }
@@ -679,12 +733,12 @@ class CargoController extends Controller
         if (!$goods) {
             return responseMsg('该商品不存在', 404);
         }
-        
+
         // 获取商品规格数量
         $standardNum = count($goods->labels->toArray());
 
         // 未选择商品规格或者说只选择了部分商品规格
-        if($standardNum != count($goodsAttrIds)){
+        if ($standardNum != count($goodsAttrIds)) {
             return responseMsg('请选择商品规格', 400);
         }
 
@@ -725,15 +779,15 @@ class CargoController extends Controller
         // 分词处理 一级分类名称
         array_push($body, $this->analysis->toUnicode($lv1s->name));
         $body = array_merge($body, $this->analysis->QuickCut($lv1s->name));
-        
+
         // 分词处理 商品标题
         array_push($body, $this->analysis->toUnicode($goods->goods_title));
         $body = array_merge($body, $this->analysis->QuickCut($goods->goods_title));
-        
+
         // 分词处理 货品名称
         array_push($body, $this->analysis->toUnicode($param['cargo_name']));
         $body = array_merge($body, $this->analysis->QuickCut($param['cargo_name']));
-        
+
         // 获取分类标签值
         if ($categoryAttrIds) {
             $categoryAttrs = $this->categoryAttribute->selectByWhereIn('id', $categoryAttrIds);
@@ -743,7 +797,7 @@ class CargoController extends Controller
                 $body = array_merge($body, $this->analysis->QuickCut($categoryAttr->attribute_name));
             }
         }
-        
+
         try {
             \DB::beginTransaction();
 
@@ -753,14 +807,14 @@ class CargoController extends Controller
             $diff = array_diff($cargo_ids, $goodsAttrIds);
             $intersect = array_intersect($goodsAttrIds, $cargo_ids);
 
-            if($intersect != $goodsAttrIds){
+            if ($intersect != $goodsAttrIds) {
                 // 组合查询条件
-                foreach($cargoLabels as $k => $v){
-                    $where['cargo_ids->'.$k] = $v;
+                foreach ($cargoLabels as $k => $v) {
+                    $where['cargo_ids->' . $k] = $v;
                 }
 
                 // 修改之前判断相同属性的货品是否存在，如果存在则不允许修改
-                if($this->cargo->find($where)){
+                if ($this->cargo->find($where)) {
                     throw new \Exception('相同规格的货品已经存在', 400);
                 }
             }
@@ -771,25 +825,25 @@ class CargoController extends Controller
                 $arr['category_attr_ids'] = json_encode($categoryLabels);
                 // 先判断记录是否存在 如果不存在 则为新增操作
                 $relLabelCargo = $this->relLabelCargo->find(['id' => $id]);
-                if(!$relLabelCargo){
+                if (!$relLabelCargo) {
                     $arr['goods_id'] = $data['goods_id'];
                     $arr['cargo_id'] = $id;
                     $this->relLabelCargo->insert($arr);
-                }else{
+                } else {
                     $this->relLabelCargo->update(['id' => $id], $arr);
                 }
             }
-            
+
             // 查找需要删除的商品标签值
             $ids = [];
-            foreach ($diff as $k => $v){
-                if(!$this->cargo->find(['cargo_ids->'.$k => $v])){
+            foreach ($diff as $k => $v) {
+                if (!$this->cargo->find(['cargo_ids->' . $k => $v])) {
                     $ids[] = $v;
                 }
             }
 
             // 删除商品标签值
-            if(!empty($ids)){
+            if (!empty($ids)) {
                 $this->relGA->deleteWhereIn($ids);
             }
 
@@ -797,11 +851,11 @@ class CargoController extends Controller
             if (!empty($goodsAttrIds)) {
                 $arr = [];
                 foreach ($goodsAttrIds as $v) {
-                    if(!in_array($v, $intersect)){
+                    if (!in_array($v, $intersect)) {
                         $arr['goods_attr_id'] = $v;
                         $arr['goods_id'] = $data['goods_id'];
                         // 新增之前判断商品是否已经存在这个属性值，如果存在则不添加
-                        if(!$this->relGA->find($arr)){
+                        if (!$this->relGA->find($arr)) {
                             $this->relGA->insert($arr);
                         }
                     }
@@ -822,7 +876,7 @@ class CargoController extends Controller
             return responseMsg('货品修改成功');
         } catch (\Exception $e) {
             \DB::rollback();
-            if($e->getCode() == 400){
+            if ($e->getCode() == 400) {
                 return responseMsg($e->getMessage(), $e->getCode());
             }
             return responseMsg($e->getMessage(), 400);
@@ -840,7 +894,7 @@ class CargoController extends Controller
     {
         $req = $request->all();
 
-        switch ($req['status']){
+        switch ($req['status']) {
             case 1:
             case 3:
                 $status = 2;
@@ -854,7 +908,7 @@ class CargoController extends Controller
 
         $res = $this->cargo->update(['id' => $req['cargo_id']], ['cargo_status' => $status]);
 
-        if(!$res){
+        if (!$res) {
             return responseMsg($msg . '失败', 400);
         }
 
@@ -863,13 +917,13 @@ class CargoController extends Controller
         // 获取货品推荐位
         $recommends = $this->relRG->select(['cargo_id' => $cargo->id]);
         $arr = [];
-        if(!empty($recommends)){
-            foreach($recommends as $recommend){
+        if (!empty($recommends)) {
+            foreach ($recommends as $recommend) {
                 $arr[] = $this->recommend->find(['id' => $recommend->recommend_id]);
             }
         }
         $cargo->recommends = $arr;
-        
+
         return responseMsg($cargo);
     }
 
