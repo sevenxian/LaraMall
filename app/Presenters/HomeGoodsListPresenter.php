@@ -129,14 +129,17 @@ class HomeGoodsListPresenter
             switch ($sort[0]) {
                 // 按销量排序
                 case 'sale':
+                    $sort[1] == 'asc' ? $param = 'sale_desc' : $param = 'sale_asc';
                     return $queryString ? \Request::url() . '?' . $queryString . '&sort=' . $param : \Request::url() . '?sort=' . $param;
                     break;
                 // 按价格排序 
                 case 'sort':
+                    $sort[1] == 'asc' ? $param = 'sort_desc' : $param = 'sort_asc';
                     return $queryString ? \Request::url() . '?' . $queryString . '&sort=' . $param : \Request::url() . '?sort=' . $param;
                     break;
                 // 按评论排序
                 case 'comment':
+                    $sort[1] == 'asc' ? $param = 'comment_desc' : $param = 'comment_asc';
                     return $queryString ? \Request::url() . '?' . $queryString . '&sort=' . $param : \Request::url() . '?sort=' . $param;
                 default:
                     return '/home/index';

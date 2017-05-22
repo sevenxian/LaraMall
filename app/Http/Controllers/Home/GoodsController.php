@@ -192,7 +192,7 @@ class GoodsController extends Controller
     public function goodsList(Request $request, $category_id)
     {
         $req = $request->all();
-
+        
         // 获取标签搜索条件
         if (isset($req['ev']) && !empty($req['ev'])) {
             $ev = explode(',', $req['ev']);
@@ -211,7 +211,6 @@ class GoodsController extends Controller
         }else{
             $data['sort'] = '';
         }
-
 
         // 当前页
         $page = isset($req['page']) ? $req['page'] : 1;
@@ -232,17 +231,14 @@ class GoodsController extends Controller
                     // 按销量排序
                     case 'sale':
                         $cargos = $this->cargo->selectWhereIn('id', $cargoIds, ['sales_volume', $sort[1]]);
-                        $sort[1] == 'asc' ? $data['sort'] = 'sale_desc' : $data['sort'] = 'sale_asc';
                         break;
                     // 按价格排序
                     case 'sort':
                         $cargos = $this->cargo->selectWhereIn('id', $cargoIds, ['cargo_discount', $sort[1]]);
-                        $sort[1] == 'asc' ? $data['sort'] = 'sort_desc' : $data['sort'] = 'sort_asc';
                         break;
                     // 按评论数排序
                     case 'comment':
                         $cargos = $this->cargo->selectWhereIn('id', $cargoIds, ['number_of_comments', $sort[1]]);
-                        $sort[1] == 'asc' ? $data['sort'] = 'comment_desc' : $data['sort'] = 'comment_asc';
                         break;
                     default:
                         return 'home/index';
@@ -260,17 +256,14 @@ class GoodsController extends Controller
                     // 按销量排序
                     case 'sale':
                         $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM, 'sales_volume', $sort[1]);
-                        $sort[1] == 'asc' ? $data['sort'] = 'sale_desc' : $data['sort'] = 'sale_asc';
                         break;
                     // 按价格排序
                     case 'sort':
                         $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM, 'cargo_discount', $sort[1]);
-                        $sort[1] == 'asc' ? $data['sort'] = 'sort_desc' : $data['sort'] = 'sort_asc';
                         break;
                     // 按评论数排序
                     case 'comment':
                         $cargos = $this->cargo->paging(['category_id' => $category_id], PAGENUM, 'number_of_comments', $sort[1]);
-                        $sort[1] == 'asc' ? $data['sort'] = 'comment_desc' : $data['sort'] = 'comment_asc';
                         break;
                     default:
                         return 'home/index';
