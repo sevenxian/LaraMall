@@ -15,7 +15,7 @@ class DataAdminUserTableSeeder extends Seeder
         \DB::table('data_admin_users')->insert([
             'nickname' => 'admin',
             'tel' => env('ADMIN_LOGIN_NAME'),
-            'password' => bcrypt('admin'),
+            'password' => bcrypt(env('ADMIN_LOGIN_PASSWORD')),
         ]);
     }
 }
