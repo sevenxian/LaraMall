@@ -2,15 +2,19 @@
 
 namespace App\Repositories;
 
-
 use App\Model\UserInfo;
 
+/**
+ * Class UserInfoRepository
+ * @package App\Repositories
+ */
 class UserInfoRepository
 {
+    use BaseRepository;
     /**
      * @var UserInfo
      */
-    protected $userInfo;
+    protected $model;
 
     /**
      * UserInfoRepository constructor.
@@ -19,42 +23,7 @@ class UserInfoRepository
      */
     public function __construct(UserInfo $userInfo)
     {
-        $this->userInfo = $userInfo;
+        $this->model = $userInfo;
     }
 
-    /**
-     * 向用户基本表添加一条数据
-     *
-     * @param array $param
-     * @return static
-     * @author zhangyuchao
-     */
-    public function createUserData(array $param)
-    {
-        return $this->userInfo->create($param);
-    }
-
-    /**
-     * 根据条件查找单挑数据
-     *
-     * @param array $where
-     * @return mixed
-     * @author zhangyuchao
-     */
-    public function find(array $where)
-    {
-        return $this->userInfo->where($where)->first();
-    }
-
-    /**
-     * 更新个人信息
-     *
-     * @param array $where
-     * @param $param
-     * @return mixed
-     */
-    public function updateOneUser(array $where,$param)
-    {
-        return $this->userInfo->where($where)->update($param);
-    }
 }

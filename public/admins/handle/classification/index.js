@@ -4,7 +4,7 @@
  */
 new Vue({
     // 绑定元素
-    el: '.wrapper',
+    el: '#main-content',
     // 响应式参数
     data() {
         return {
@@ -134,6 +134,7 @@ new Vue({
                 layer.closeAll();
             }).catch(error => {
                 // layer 加载层关闭
+                layer.closeAll();
                 sweetAlert("请求失败!", "分类信息请求失败!", "error");
             });
         },
@@ -159,6 +160,7 @@ new Vue({
                 this.emptyForm();
             }).catch(error => {
                 // layer 加载层关闭
+                layer.closeAll();
                 sweetAlert("请求失败!", "用户列表请求失败!", "error");
             });
         },
@@ -225,6 +227,7 @@ new Vue({
                 this.emptyForm();
             }).catch(error => {
                 // layer 加载层关闭
+                layer.closeAll();
                 sweetAlert("请求失败!", "用户列表请求失败!", "error");
             });
         },
@@ -254,6 +257,7 @@ new Vue({
                 return this.datas[index].deleted_at = response.data.ServerTime;
             }).catch(error => {
                 // layer 加载层关闭
+                layer.closeAll();
                 sweetAlert("请求失败!", "操作失败!", "error");
             });
         },
@@ -277,6 +281,7 @@ new Vue({
                 this.labelBind.labelName = '';
             }).catch(error => {
                 // layer 加载层关闭
+                layer.closeAll();
                 sweetAlert("请求失败!", "用户列表请求失败!", "error");
             });
         },
@@ -297,6 +302,7 @@ new Vue({
                 $('#bindModal').modal('hide');
             }).catch(error => {
                 // layer 加载层关闭
+                layer.closeAll();
                 sweetAlert("失败!", "请求失败!", "error");
             });
         },
@@ -326,6 +332,7 @@ new Vue({
                 this.labelBind.labelName = '';
             }).catch(error => {
                 // layer 加载层关闭
+                layer.closeAll();
                 sweetAlert("失败!", "请求失败!", "error");
             });
         }

@@ -10,13 +10,19 @@ namespace App\Repositories;
 
 use App\Model\RelLabelCargo;
 
+/**
+ * Class RelLabelCargoRepository
+ * @package App\Repositories
+ */
 class RelLabelCargoRepository
 {
+    use BaseRepository;
+    
     /**
      * @var RelLabelCargo
      * @author zhulinjie
      */
-    protected $relLabelCargo;
+    protected $model;
 
     /**
      * RelLabelCargoRepository constructor.
@@ -24,18 +30,6 @@ class RelLabelCargoRepository
      */
     public function __construct(RelLabelCargo $relLabelCargo)
     {
-        $this->relLabelCargo = $relLabelCargo;
-    }
-
-    /**
-     * 新增一条数据
-     *
-     * @param $data
-     * @return static
-     * @author zhulinjie
-     */
-    public function add($data)
-    {
-        return $this->relLabelCargo->create($data);
+        $this->model = $relLabelCargo;
     }
 }

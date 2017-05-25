@@ -70,7 +70,7 @@
                                 <div class="am-form-content" style="width:45%">
                                     <input type="tel" id="user-code" placeholder="短信验证码">
                                 </div>
-                                <a class="btn" href="javascript:void(0);" id="sendMobileCode">
+                                <a class="btn" href="javascript:void(0);" id="sendMobileCode" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="codeTime"
                                             style="width:100%;height:100%">获取验证码
                                     </button>
@@ -94,7 +94,7 @@
                                 <div class="am-form-content" style="width:45%" id="bindCode">
                                     <input type="tel" id="user-new-code" placeholder="短信验证码">
                                 </div>
-                                <a class="btn" href="javascript:void(0);">
+                                <a class="btn" href="javascript:void(0);" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="secondSend"
                                             style="width:100%;height:100%">获取验证码
                                     </button>
@@ -153,7 +153,7 @@
                                 <div class="am-form-content" style="width:45%" id="bindCode">
                                     <input type="tel" id="user-new-code" placeholder="短信验证码">
                                 </div>
-                                <a class="btn" href="javascript:void(0);">
+                                <a class="btn" href="javascript:void(0);" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="secondSend"
                                             style="width:100%;height:100%">获取验证码
                                     </button>
@@ -178,15 +178,19 @@
     </div>
 @stop
 @section('customJs')
-    <!-- 初始化倒计时 -->
-    <script> var wait = 60;</script>
-    <!-- 验证函数库 -->
-    <script src="{{ asset('/js/check.js') }}"></script>
+
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/function.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        var token= "{{ csrf_token() }}";
+        var wait = 60;
+    </script>
     @if(!empty(\Session::get('userInfo')->tel))
         <!-- 更换手机号码 -->
-        <script src="{{ asset('/js/againBindTel.js') }}"></script>
+        <script src="{{ asset('/handle/member/safety_changeMobile.js') }}" type="text/javascript"></script>
     @else
         <!-- 绑定手机号码 -->
-        <script src="{{ asset('/js/bindTel.js') }}"></script>
+        <script src="{{ asset('/handle/member/safety_bindMobile.js') }}" type="text/javascript"></script>
     @endif
 @stop

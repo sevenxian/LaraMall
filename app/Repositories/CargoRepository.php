@@ -8,16 +8,24 @@
 
 namespace App\Repositories;
 
-
 use App\Model\Cargo;
+use App\Model\IndexGoods;
+use App\Tools\Analysis;
 
+/**
+ * Class CargoRepository
+ * @package App\Repositories
+ */
 class CargoRepository
 {
+
+    use BaseRepository;
+
     /**
      * @var Cargo
      * @author zhulinjie
      */
-    protected $cargo;
+    protected $model;
 
     /**
      * CargoRepository constructor.
@@ -25,18 +33,53 @@ class CargoRepository
      */
     public function __construct(Cargo $cargo)
     {
-        $this->cargo = $cargo;
+        $this->model = $cargo;
     }
 
     /**
-     * 添加货品
-     * 
-     * @param $data
-     * @return static
+     * 通过whereIn获取多条数据
+     *
+     * @param $fields
+     * @param array $ids
+     * @param array $sort
+     * @return mixed
      * @author zhulinjie
      */
-    public function addCargo($data)
+    public function selectWhereIn($fields, array $ids, array $sort = [])
     {
-        return $this->cargo->create($data);
+        if(empty($sort)){
+            return $this->model->whereIn($fields, $ids)->get();
+        }else{
+            return $this->model->whereIn($fields, $ids)->orderBy($sort[0], $sort[1])->get();
+        }
     }
+
+    /**
+     * 字段数量自增
+     *
+     * @param array $where
+     * @param $field
+     * @param $num
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function incrementForField(array $where,$field,$num = 1)
+    {
+        return $this->model->where($where)->increment($field,$num);
+    }
+
+    /**
+     * 字段数量自减
+     *
+     * @param array $where
+     * @param $field
+     * @param $num
+     * @return mixed
+     * @author zhangyuchao
+     */
+    public function decrementForField(array $where,$field,$num = 1)
+    {
+        return $this->model->where($where)->decrement($field,$num);
+    }
+
 }

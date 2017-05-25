@@ -87,7 +87,7 @@ new Vue({
             // 样式切换
             if ($(e.target).hasClass('c_on')) {
                 $(e.target).removeClass('c_on').addClass('c_off');
-                // 取消选中复先
+                // 取消选中复选框
                 $(e.target).find('input').attr('checked', false);
             } else {
                 $(e.target).removeClass('c_off').addClass('c_on');
@@ -126,7 +126,7 @@ new Vue({
                 sweetAlert("操作成功!", "添加商品标签成功!", "success");
             // 请求失败的情况
             }).catch(error => {
-                sweetAlert("操作失败!", response.request.statusText, "error");
+                sweetAlert("请求失败!", response.request.statusText, "error");
             });
         },
         // 添加商品操作
@@ -193,6 +193,7 @@ new Vue({
                 var fd = new FormData();
                 // 获取表单上传控件
                 var file = this.files[0];
+
                 // 允许上传的图片格式
                 var allowType = ['image/jpeg', 'image/png', 'image/gif'];
 

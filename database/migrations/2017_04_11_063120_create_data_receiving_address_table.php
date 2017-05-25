@@ -14,8 +14,8 @@ class CreateDataReceivingAddressTable extends Migration
     public function up()
     {
         Schema::create('data_receiving_address', function (Blueprint $table) {
-            $table->increments('id')->comment('收货地址管理表');
-            $table->integer('user_id')->index()->comment('用户ID');
+            $table->increments('id')->unsigned()->comment('收货地址管理表');
+            $table->integer('user_id')->unsigned()->index()->comment('用户ID');
             $table->string('consignee',64)->comment('收货人');
             $table->string('tel',32)->comment('收货人手机号');
             $table->string('province',32)->comment('省份');

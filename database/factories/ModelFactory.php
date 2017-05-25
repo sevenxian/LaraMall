@@ -47,7 +47,7 @@ $factory->define(App\Model\GoodsLabel::class, function (Faker\Generator $faker) 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\Model\Goods::class, function (Faker\Generator $faker) {
     $cids = \App\Model\Category::pluck('id')->toArray();
-
+    
     return [
         'category_id' => $faker->randomElement($cids),
         'goods_title' => $faker->sentence,

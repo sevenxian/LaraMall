@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    FlatLab - Flat & Responsive Bootstrap Admin Template
+    添加分类
 @stop
 
 @section('content')

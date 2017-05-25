@@ -4,13 +4,19 @@ namespace App\Repositories;
 
 use App\Model\RelGoodsLabel;
 
+/**
+ * Class RelGoodsLabelRepository
+ * @package App\Repositories
+ */
 class RelGoodsLabelRepository
 {
+    use BaseRepository;
+    
     /**
      * @var RelGoodsLabel
      * @author zhulinjie
      */
-    protected $relGL;
+    protected $model;
 
     /**
      * RelGoodsLabelRepository constructor.
@@ -18,18 +24,18 @@ class RelGoodsLabelRepository
      */
     public function __construct(RelGoodsLabel $relGL)
     {
-        $this->relGL = $relGL;
+        $this->model = $relGL;
     }
 
     /**
-     * 向商品标签关联表中新增一条记录
+     * 删除商品标签
      *
-     * @param $data
-     * @return static
+     * @param $where
+     * @param $ids
      * @author zhulinjie
      */
-    public function add($data)
+    public function deleteWhereNotIn($where, $ids)
     {
-        return $this->relGL->create($data);
+        $this->model->where($where)->whereNotIn('goods_label_id', $ids)->delete();
     }
 }

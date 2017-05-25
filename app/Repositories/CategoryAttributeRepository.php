@@ -8,34 +8,40 @@
 
 namespace App\Repositories;
 
-
 use App\Model\CategoryAttribute;
 
+/**
+ * Class CategoryAttributeRepository
+ * @package App\Repositories
+ */
 class CategoryAttributeRepository
 {
+    use BaseRepository;
+    
     /**
      * 分类标签值操作类
      *
      * @var CategoryAttribute
      * @author zhulinjie
      */
-    protected $categoryAttrbute;
+    protected $model;
 
     public function __construct(CategoryAttribute $categoryAttribute)
     {
         // 注入分类标签值操作类
-        $this->categoryAttrbute = $categoryAttribute;
+        $this->model = $categoryAttribute;
     }
 
     /**
-     * 添加分类标签值
+     * 通过一组$fields获取多条记录
      * 
-     * @param $data
-     * @return static
+     * @param $fields
+     * @param $ids
+     * @return mixed
      * @author zhulinjie
      */
-    public function addCategoryAttribute($data)
+    public function selectByWhereIn($fields, $ids)
     {
-        return $this->categoryAttrbute->create($data);
+        return $this->model->whereIn($fields, $ids)->get();
     }
 }

@@ -109,13 +109,13 @@ class RegisterController extends Controller
     public function sendMobileCode(Request $request)
     {
         // 去用户登录表里边查询
-        $result = $this->indexUserLogin->findOneUserManner(['login_name' => $request['tel']]);
+        $result = $this->indexUserLogin->find(['login_name' => $request['tel']]);
         if ($result) {
             // 返回错误信息
             return responseMsg('手机号码已注册!', 400);
         }
         // 调用发送验证码 代码片段
-        $smsResult = $this->codeSnippet->mobileCodeForSms($request['tel'], 'laravl商城', 'SMS_61965053');
+        $smsResult = $this->codeSnippet->mobileCodeForSms($request['tel'], config('subassembly.autograph'), config('subassembly.template_id'));
         if (!is_bool($smsResult)) {
             return responseMsg($smsResult, 400);
         }
@@ -132,13 +132,13 @@ class RegisterController extends Controller
      */
     public function sendEmailCode(Request $request)
     {
-        $result = $this->indexUserLogin->findOneUserManner(['login_name' => $request['email']]);
+        $result = $this->indexUserLogin->find(['login_name' => $request['email']]);
         if ($result) {
             // 返回错误信息
             return responseMsg('邮箱已注册!', 400);
         }
         // 判断邮箱是否重复发送
-        $emailResult = $this->codeSnippet->sendCodeForEmail('laramall_register', $request['email']);
+        $emailResult = $this->codeSnippet->sendCodeForEmail(config('subassembly.sendCloud_template'), $request['email']);
         if (!is_bool($emailResult)) {
             return responseMsg($emailResult, 400);
         }
@@ -195,7 +195,7 @@ class RegisterController extends Controller
             // 开始事物
             \DB::beginTransaction();
             // 向用户注册原始表 添加一条数据
-            $registerResult = $this->register->createOneUser($request->all());
+            $registerResult = $this->register->insert($request->all());
             // 判断用户注册原始是否成功
             if (empty($registerResult)) {
                 // 抛出异常
@@ -204,14 +204,14 @@ class RegisterController extends Controller
             // 用户注册原始表的ID是用户基本表、用户登录索引表的user_id
             $request['user_id'] = $registerResult->id;
             // 向用户基本表添加一条数据
-            $userInfoResult = $this->userInfo->createUserData($request->all());
+            $userInfoResult = $this->userInfo->insert($request->all());
             // 判断用户基本信息 是否成功
             if (empty($userInfoResult)) {
                 // 抛出异常
                 throw new Exception(config('log.systemLog')[4]);
             }
             // 向用户登录索引表添加一条数据
-            $indexUserResult = $this->indexUserLogin->createOneUserManner($request->all());
+            $indexUserResult = $this->indexUserLogin->insert($request->all());
             // 判断登录索引表是否成功
             if (empty($indexUserResult)) {
                 // 抛出异常
@@ -222,7 +222,7 @@ class RegisterController extends Controller
             // 记录登录类型
             $request['third_party'] = 1;
             // 记录用户登录日志
-            $logUserLoginResult = $this->logUserLogin->addOneUserLoginData($request->all());
+            $logUserLoginResult = $this->logUserLogin->insert($request->all());
             // 用户登录日志记录失败 改为记录文件日志
             if (empty($logUserLoginResult)) {
                 // 拼装系统日志信息

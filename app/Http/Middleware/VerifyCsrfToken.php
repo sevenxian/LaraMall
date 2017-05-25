@@ -13,5 +13,10 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         //
+        '/home/addToShoppingCart',
+        '/home/delShoppingCart',
+        '/home/checkShoppingCart',
+        '/home/order/aliPayNotify',
+        '/home/order/wechatNotify'
     ];
 }

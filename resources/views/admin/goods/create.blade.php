@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="goods_label_id" class="col-md-1 control-label">商品标签</label>
+                                    <label for="goods_label_id" class="col-md-1 control-label">商品规格</label>
                                     <div class="col-md-11">
                                         <div class="checkboxes">
                                             <div class="row" v-if="isGoodsLabels">

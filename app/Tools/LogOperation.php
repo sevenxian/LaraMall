@@ -108,12 +108,16 @@ class LogOperation
             // 保存到log日志
             $this->writeForFile($this->userLogName, $message['content'], $event);
         } else {
+
             // 数据库的event字段为json类型
             $message['events'] = json_encode($event);
             // 操作日志保存到数据库
             $result = $this->writeForDB($message, 2);
             // 操作日志保存数据库失败,到文件
-            if (empty($result)) $this->writeForFile($this->userLogName, $message['content'], $event, true);
+            if (empty($result)) {
+
+                $this->writeForFile($this->userLogName, $message['content'], $event, true);
+            }
         }
     }
 
@@ -142,10 +146,10 @@ class LogOperation
     {
         if ($platformType == 1) {
 
-            return $this->adminLog->writeLog($param);
+            return $this->adminLog->insert($param);
         } else {
 
-            return $this->userLog->writeLog($param);
+            return $this->userLog->insert($param);
         }
 
     }
@@ -190,7 +194,7 @@ class LogOperation
     private function log($logName, $record, $param)
     {
         $log = new Writer(new Logger('signin'));
-        $log->useDailyFiles(storage_path() . $logName.$this->logPath, $this->logSaveTime);
+        $log->useDailyFiles(storage_path() . $logName . $this->logPath, $this->logSaveTime);
         $log->write($this->logLevel, $record, $param);
     }
 

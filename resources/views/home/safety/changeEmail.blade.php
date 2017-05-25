@@ -68,7 +68,7 @@
                                 <div class="am-form-content" style="width:45%">
                                     <input type="tel" id="user-code" placeholder="邮箱验证码">
                                 </div>
-                                <a class="btn" href="javascript:void(0);" id="sendMobileCode">
+                                <a class="btn" href="javascript:void(0);" id="sendMobileCode" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="codeTime"
                                             style="width:100%;height:100%">获取验证码
                                     </button>
@@ -92,7 +92,7 @@
                                 <div class="am-form-content" style="width:45%" id="bindCode">
                                     <input type="tel" id="user-new-code" placeholder="邮箱验证码">
                                 </div>
-                                <a class="btn" href="javascript:void(0);">
+                                <a class="btn" href="javascript:void(0);" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="secondSend"
                                             style="width:100%;height:100%">获取验证码
                                     </button>
@@ -143,7 +143,7 @@
                                 <div class="am-form-content" style="width:55%" id="bindCode">
                                     <input type="tel" id="user-new-email" placeholder="电子邮箱">
                                 </div>
-                                <a class="btn" href="javascript:void(0);">
+                                <a class="btn" href="javascript:void(0);" style="padding:0px">
                                     <button class="am-btn am-btn-danger" type="button" id="sendEmail"
                                             style="width:100%;height:100%">点击绑定
                                     </button>
@@ -166,15 +166,19 @@
     </div>
 @stop
 @section('customJs')
-    <!-- 初始化倒计时 -->
-    <script> var wait = 60;</script>
-    <!-- 验证函数库 -->
-    <script src="{{ asset('/js/check.js') }}"></script>
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/function.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        var token= "{{ csrf_token() }}";
+        var wait = 60;
+    </script>
+
     @if(!empty(\Session::get('userInfo')->email))
         <!-- 更换电子邮箱 -->
-        <script src="{{ asset('/js/againBindEmail.js') }}"></script>
+        <script src="{{ asset('/handle/member/safety_changeEmail.js') }}" type="text/javascript"></script>
     @else
         <!-- 绑定电子邮箱 -->
-        <script src="{{ asset('/js/bindEmail.js') }}"></script>
+        <script src="{{ asset('/handle/member/safety_bingEmail.js') }}" type="text/javascript"></script>
     @endif
 @stop

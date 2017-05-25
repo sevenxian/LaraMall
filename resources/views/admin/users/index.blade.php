@@ -57,7 +57,7 @@
                     </section>
                 </div>
                 <div class="col-lg-12">
-                    <section class="panel userList">
+                    <section class="panel " id="userList">
                         <header class="panel-heading" style="padding: 15px;">
                             <form class="form-horizontal tasi-form">
                                 <div class="form-group">

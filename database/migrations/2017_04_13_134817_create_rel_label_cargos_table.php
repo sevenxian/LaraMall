@@ -14,8 +14,8 @@ class CreateRelLabelCargosTable extends Migration
     public function up()
     {
         Schema::create('rel_label_cargos', function (Blueprint $table) {
-            $table->increments('id')->unsigned()->comment('分类标签值与货品关联表');
-            $table->integer('category_attr_id')->unsigned()->index()->comment('分类标签值ID');
+            $table->increments('id')->unsigned()->unsigned()->comment('分类标签值与货品关联表');
+            $table->json('category_attr_ids')->comment('分类标签值ID');
             $table->integer('goods_id')->unsigned()->index()->comment('商品ID');
             $table->integer('cargo_id')->unsigned()->index()->comment('货品ID');
             $table->timestamps();

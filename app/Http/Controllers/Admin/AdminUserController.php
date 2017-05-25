@@ -85,7 +85,7 @@ class AdminUserController extends Controller
     public function syncRoles(Request $request, $id)
     {
         // 查询当前角色
-        $user = $this->adminUser->getOneData(['id' => $id]);
+        $user = $this->adminUser->find(['id' => $id]);
         // 同步角色权限
         $user->syncRoles($request->all());
     }
@@ -99,14 +99,13 @@ class AdminUserController extends Controller
      */
     public function store(Request $request)
     {
-
         // 密码判断
         if ($request['password'] != $request['rel_password']) {
             // 返回结果
             return responseMsg('两次密码输入不一致', 400);
         }
         // 判断手机号码是否存在
-        $tel = $this->adminUser->getOneData(['tel' => $request['tel']]);
+        $tel = $this->adminUser->find(['tel' => $request['tel']]);
         if (!empty($tel)) {
             // 返回结果
             return responseMsg('手机号码已存在', 400);
@@ -116,7 +115,7 @@ class AdminUserController extends Controller
         $param['tel'] = trim($request['tel']);
         $param['nickname'] = trim($request['nickname']);
         // 插入数据
-        $result = $this->adminUser->createByUser($param);
+        $result = $this->adminUser->insert($param);
         // 数据插入失败 返回错误信息
         if (!$result) {
             // 返回结果
@@ -129,7 +128,7 @@ class AdminUserController extends Controller
         // 组装操作日志内容
         $logMessage = Common::logMessageForInside(auth('admin')->user()->id, config('log.adminLog')[2]);
         // 填写操作日志
-        $this->log->writeAdminLog($logMessage);
+        $this->log->writeAdminLog($logMessage,false);
 
         return responseMsg($data);
     }
@@ -144,7 +143,7 @@ class AdminUserController extends Controller
     public function show($id)
     {
         // 获取所有权限
-        $roles = $this->role->fetchRoles();
+        $roles = $this->role->select();
         // 判断是否有权限数据
         if (!$roles->toArray()) {
             // 暂无权限
@@ -202,14 +201,14 @@ class AdminUserController extends Controller
             return responseMsg('两次密码输入不一致', 400);
         }
         // 查询单挑数据 判断密码是否更新
-        $data = $this->adminUser->getOneData(['id' => $request['id']]);
+        $data = $this->adminUser->find(['id' => $request['id']]);
         // 检测原始密码与新密码
         if (Hash::check($password, $data->password)) {
 
             return responseMsg('新密码与原始密码一致', 400);
         }
         // 数据操作
-        $result = $this->adminUser->updateOneData(['id' => $request['id']], ['password' => bcrypt($password)]);
+        $result = $this->adminUser->update(['id' => $request['id']], ['password' => bcrypt($password)]);
         // 判断是否执行成功
         if (empty($result)) {
             // 返回错误信息
@@ -218,7 +217,7 @@ class AdminUserController extends Controller
         // 拼装日志信息
         $logMessage = Common::logMessageForInside(auth('admin')->user()->id,config('log.adminLog')[3]);
         // 写入日志
-        $this->log->writeAdminLog($logMessage);
+        $this->log->writeAdminLog($logMessage,false);
 
         // 返回正确信息
         return responseMsg('重置密码成功', 200);
@@ -238,7 +237,7 @@ class AdminUserController extends Controller
             // 返回错误信息
             return responseMsg('非法操作', 400);
         }
-        $result = $this->adminUser->deleteOneData($id);
+        $result = $this->adminUser->delete(['id' => $id]);
         // 数据判断
         if (empty($result)) {
 
@@ -275,7 +274,7 @@ class AdminUserController extends Controller
                 break;
         }
         // 获取列表数据
-        $result = $this->adminUser->getAllData($where, $request['perPage']);
+        $result = $this->adminUser->paging($where, $request['perPage']);
         // 数据是否获取成功
         if (empty($result)) {
             // 返回错误信息

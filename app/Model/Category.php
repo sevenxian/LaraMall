@@ -42,6 +42,17 @@ class Category extends Model
     }
 
     /**
+     * ORM 对应关系 / 获取子类信息
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @author zhulinjie
+     */
+    public function childrenCategory()
+    {
+        return $this->hasMany(static::class, 'pid', 'id');
+    }
+
+    /**
      * 多对多关联关系 / 一个分类下面有多个标签
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -49,6 +60,18 @@ class Category extends Model
      */
     public function labels()
     {
-        return $this->belongsToMany(CategoryLabel::class, 'rel_category_labels', 'category_id', 'category_label_id')->withTimestamps();
+        return $this->belongsToMany(CategoryLabel::class, 'rel_category_labels', 'category_id', 'category_label_id');
+    }
+
+    /**
+     * 多对多关联关系 / 一个分类下面有多个标签值
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @author: Luoyan
+     */
+    public function attrs()
+    {
+        
+        return $this->belongsToMany(CategoryAttribute::class, 'rel_category_attributes', 'category_id', 'category_attribute_id');
     }
 }

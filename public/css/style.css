@@ -44,7 +44,7 @@ ul.am-tabs-nav.am-nav.am-nav-tabs {width:100%;background:#fff;}
 .clearfixRight{font-size:12px;}
 
 /*价格*/
-.tb-detail-price{text-align: center;}
+.tb-detail-price{text-align: center; padding: 50px 0;}
 .tb-detail-price .price em{font-family: arial;}
 .iteminfo_mktprice .sys_item_mktprice{text-decoration:line-through;padding-top:7px ;padding-bottom: 0px;}
 .iteminfo_price{ color:#c00;}
@@ -290,7 +290,7 @@ div.zoomMask { position:absolute; background:url(../images/mask.png)repeat scrol
 .tb-detail-price li {display: block;margin:0px 10px;}
 .tb-detail-price li  dt {width: 70px;float:left;text-align: left;margin-top:2px;}
 .price.iteminfo_price dt{margin-top:5px ;}
-.sys_item_price{font-size: 24px;font-weight: bold;}
+.sys_item_price{font-size: 18px;font-weight: bold;}
 .sys_item_mktprice{font-size:14px ;}
 .shopPromotion.gold .gold-list p{margin-top:8px;color:#E4393C;font-weight: bold;}
   	

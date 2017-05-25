@@ -11,11 +11,13 @@ use App\Model\Role;
  */
 class RoleRepository
 {
+    use BaseRepository;
+
     /**
      * @var Role
      * @author Luoyan
      */
-    protected $role;
+    protected $model;
 
     /**
      * 模型注入
@@ -26,57 +28,7 @@ class RoleRepository
      */
     public function __construct(Role $role)
     {
-        $this->role = $role;
-    }
-
-    /**
-     * 创建角色
-     *
-     * @param array $data
-     * @return static
-     * @author: Luoyan
-     */
-    public function createRole(array $data)
-    {
-        return $this->role->create($data);
-    }
-
-    /**
-     * 分类搜索分页
-     *
-     * @param int $perPage
-     * @param array $where
-     * @return mixed
-     * @author: Luoyan
-     */
-    public function aclPaginate($perPage = 10, array $where = [])
-    {
-        return $this->role->where($where)->orderBy('created_at', 'desc')->paginate($perPage);
-    }
-
-    /**
-     * 根据 id 修改信息
-     *
-     * @param $id
-     * @param array $data
-     * @return mixed
-     * @author: Luoyan
-     */
-    public function updateById($id, array $data)
-    {
-        return $this->role->where('id', $id)->update($data);
-    }
-
-    /**
-     * 根据 id 查询一条数据
-     *
-     * @param $id
-     * @return mixed
-     * @author: Luoyan
-     */
-    public function findById($id)
-    {
-        return $this->role->find($id);
+        $this->model = $role;
     }
 
     /**
@@ -88,17 +40,6 @@ class RoleRepository
      */
     public function fetchPermissionsTheIds($id)
     {
-        return $this->role->where('id', $id)->first()->permissions()->pluck('id');
-    }
-
-    /**
-     * 获取角色
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     * @author: Luoyan
-     */
-    public function fetchRoles()
-    {
-        return $this->role->all();
+        return $this->model->where('id', $id)->first()->permissions()->pluck('id');
     }
 }

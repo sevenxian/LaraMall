@@ -10,11 +10,13 @@ use App\Model\RelCategoryLabel;
  */
 class RelCategoryLabelRepository
 {
+    use BaseRepository;
+    
     /**
      * @var RelCategoryLabel
      * @author Luoyan
      */
-    protected $relCategoryLabel;
+    protected $model;
 
     /**
      * 关联表模型注入
@@ -25,19 +27,6 @@ class RelCategoryLabelRepository
      */
     public function __construct(RelCategoryLabel $relCategoryLabel)
     {
-        $this->relCategoryLabel = $relCategoryLabel;
-    }
-
-    /**
-     * 根据传入字符串获取一列字段
-     *
-     * @param array $where
-     * @param string $column
-     * @return mixed
-     * @author: Luoyan
-     */
-    public function fetchListsFor(array $where, $column = 'id')
-    {
-        return $this->relCategoryLabel->where($where)->pluck($column);
+        $this->model = $relCategoryLabel;
     }
 }

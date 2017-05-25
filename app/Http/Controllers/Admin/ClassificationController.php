@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
  */
 class ClassificationController extends Controller
 {
-
     /**
      * 文件操作
      *
@@ -76,7 +75,7 @@ class ClassificationController extends Controller
         $this->fileDo($request);
 
         // 录入分类信息，并且判断录入结果
-        if ($this->category->createByCategory($request->all())) {
+        if ($this->category->insert($request->all())) {
             // 录入成功跳转分类列表
             return redirect()->route('classification.index');
         }
@@ -95,7 +94,7 @@ class ClassificationController extends Controller
     public function categoryList(Request $request)
     {
         // 获取分页或搜索后的数据
-        return $this->category->categoryPaginate($request->get('perPage'), $request->get('where'));
+        return $this->category->paging($request->get('where'), $request->get('perPage'), 'created_at', 'desc');
     }
 
     /**
@@ -130,7 +129,7 @@ class ClassificationController extends Controller
         // 除去请求中得 _token 字段
         $data = $request->except(['_token', 'image']);
         // 修改分类数据, 判断返回结果
-        if ($this->category->updateById($id, $data)) {
+        if ($this->category->update(['id' => $id], $data)) {
             // 查询更新后的值
             $data = $this->category->findByIdWithParent($id);
 
@@ -176,7 +175,7 @@ class ClassificationController extends Controller
         // 文件处理函数
         $this->fileDo($request);
         // 录入分类信息，并且判断录入结果
-        if ($this->category->createByCategory($request->all())) {
+        if ($this->category->insert($request->all())) {
             // 录入成功跳转分类列表
             return responseMsg('添加成功!');
         }
@@ -199,9 +198,9 @@ class ClassificationController extends Controller
         if ($request->get('boolean') && $this->category->softRstore($id)) {
             return responseMsg('启用成功!');
         }
-
+        
         // 软删除一条数据并判断结果
-        if ($this->category->softDeletes($id)) {
+        if ($this->category->delete(['id' => $id])) {
             // 成功提示消息
             return responseMsg('禁用成功!');
         }

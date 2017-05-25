@@ -14,8 +14,8 @@ class CreateDataCategoryTable extends Migration
     public function up()
     {
         Schema::create('data_category', function (Blueprint $table) {
-            $table->increments('id')->comment('分类表');
-            $table->integer('pid')->index()->comment('父级ID');
+            $table->increments('id')->unsigned()->comment('分类表');
+            $table->integer('pid')->unsigned()->index()->comment('父级ID');
             $table->string('name',32)->comment('分类名称');
             $table->tinyInteger('level')->comment('分类层级');
             $table->string('describe',255)->nullable()->comment('分类描述');

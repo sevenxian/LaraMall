@@ -4,12 +4,18 @@ namespace App\Repositories;
 
 use App\Model\IndexGoods;
 
+/**
+ * Class IndexGoodsRepository
+ * @package App\Repositories
+ */
 class IndexGoodsRepository
 {
+    use BaseRepository;
+    
     /**
      * @var IndexGoods
      */
-    protected $indexGoods;
+    protected $model;
 
     /**
      * IndexGoodsRepository constructor.
@@ -17,11 +23,18 @@ class IndexGoodsRepository
      */
     public function __construct(IndexGoods $indexGoods)
     {
-        $this->indexGoods = $indexGoods;
+        $this->model = $indexGoods;
     }
 
-    public function add($data)
+    /**
+     * 搜索
+     * 
+     * @param $body
+     * @return mixed
+     * @author zhulinjie
+     */
+    public function search($body)
     {
-        return $this->indexGoods->create($data);
+        return \DB::select("select cargo_id from index_goods where match(body) against('".$body."')");
     }
 }

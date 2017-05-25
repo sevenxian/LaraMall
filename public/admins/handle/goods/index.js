@@ -74,13 +74,18 @@ new Vue({
                 console.log(response);
                 // layer 加载层关闭
                 layer.closeAll();
+                // 判断请求结果
+                if(response.data.ServerNo != 200){
+                    sweetAlert("请求失败!", response.data.ResultData, "error");
+                    return;
+                }
                 // 响应式更新数据
                 this.goods = response.data.ResultData.data;
                 this.pagination = response.data.ResultData;
             }).catch(error => {
                 // layer 加载层关闭
                 layer.closeAll();
-                sweetAlert("请求失败!", "用户列表请求失败!", "error");
+                sweetAlert("请求失败!", response.request.statusText, "error");
             });
         },
         // 改变页码
@@ -103,6 +108,29 @@ new Vue({
                 this.search = {goods_title: goods_title};
             }
             this.fetchDatas(this.pagination.current_page);
+        },
+        // 更改商品状态
+        updateStatus(e){
+            var goods_id = $(e.target).data('goods_id');
+            var index = $(e.target).data('index');
+            var status = e.target.getAttribute('data-status');
+
+            layer.load(2);
+            
+            axios.post('/admin/updateGoodsStatus', {status: status, goods_id: goods_id}).then(response => {
+                console.log(response);
+                layer.closeAll('loading');
+                // 判断请求结果
+                if(response.data.ServerNo != 200){
+                    sweetAlert("请求失败!", response.data.ResultData, "error");
+                    return;
+                }
+                this.$set(this.goods, index, response.data.ResultData);
+                this.status = response.data.ResultData.goods_status;
+            }).catch(error => {
+                sweetAlert("请求失败!", response.request.statusText, "error");
+                layer.closeAll('loading');
+            });
         }
     }
 });

@@ -67,8 +67,13 @@
     @include('home.public.footer')
 @stop
 @section('customJs')
-    <script src="{{ asset('/js/check.js') }}"></script>
-    <script> var loginUrl = "{{ url('/home/doLogin') }}" </script>
-    <script src="{{ asset('/js/login.js') }}"></script>
+    <script src="{{ asset('/handle/member/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('/handle/sendAjax.js') }}" type="text/javascript"></script>
+    <script type="text/javascript"></script>
+    <script src="{{ asset('/handle/login.js') }}" type="text/javascript"></script>
+    <script>
+        var loginUrl = "{{ url('/home/doLogin') }}";
+        var token= "{{ csrf_token() }}";
+    </script>
 
 @stop

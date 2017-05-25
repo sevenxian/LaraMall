@@ -14,13 +14,15 @@ class CreateIndexGoodsTable extends Migration
     public function up()
     {
         Schema::create('index_goods', function (Blueprint $table) {
-            $table->increments('id')->comment('商品索引表');
-            $table->integer('goods_id')->comment('商品ID');
-            $table->integer('cargo_id')->comment('货品ID');
+            $table->increments('id')->unsigned()->comment('商品索引表');
+            $table->integer('goods_id')->unsigned()->index()->comment('商品ID');
+            $table->integer('cargo_id')->unsigned()->index()->comment('货品ID');
             $table->text('body')->comment('中文分词后的内容');
             $table->timestamps();
             $table->softDeletes()->comment('软删除');
         });
+        // 添加全文本索引
+        \DB::statement('ALTER TABLE `index_goods` ADD FULLTEXT(`body`)');
     }
 
     /**
@@ -32,4 +34,5 @@ class CreateIndexGoodsTable extends Migration
     {
         Schema::dropIfExists('index_goods');
     }
+
 }
