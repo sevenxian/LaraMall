@@ -18,6 +18,18 @@ Route::get('/', function () {
     return redirect('home/index');
 });
 
+Route::any('/up', function () {
+    $auth = new \Qiniu\Auth(env('QINIU_ACCESS_KEY'), env('QINIU_SECRET_KEY'));
+    $token = $auth->uploadToken(env('QINIU_BUCKET'), null, 3600);
+
+    return response()->json(['uptoken' => $token]);
+});
+
+Route::any('/get_key', function () {
+
+    return response()->json(['key' => hexUuid()]);
+});
+
 /**
  * 公共路由
  * 路由前缀 common
