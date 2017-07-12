@@ -41,7 +41,7 @@ var EchartsData = new Vue({
             option = {
                 title : {
                     text: '注册方式统计',
-                    subtext: 'LAMP兄弟连教学使用',
+                    subtext: '测试用例',
                     x:'center'
                 },
                 tooltip : {
@@ -81,7 +81,7 @@ var EchartsData = new Vue({
             option = {
                 title : {
                     text: '订单成交率统计',
-                    subtext: 'LAMP兄弟连教学使用',
+                    subtext: '测试用例',
                     x:'center'
                 },
                 tooltip : {
